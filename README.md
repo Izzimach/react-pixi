@@ -52,6 +52,8 @@ var CupcakeComponent = React.createClass({
 });
 ```
 
+[Sample Cupcake component](docs/react-pixi-devshot.png?rawpage)
+
 Note that at the moment you need to mount onto a DOM component so your top-level component will probably be a React.PIXI.Stage.
 
 Look in the examples directory for more in-depth examples
