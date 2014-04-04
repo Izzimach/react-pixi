@@ -1,0 +1,13 @@
+{
+  "name" : "pixi",
+  "version" : "0.0.0.1",
+  "app" : {
+    "launch" : {
+      "local_path" : "test1.html"
+    }
+  },
+  "icons" : {
+    "128" : "icon.png"
+  }
+}
+
