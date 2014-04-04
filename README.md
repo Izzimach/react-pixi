@@ -1,6 +1,8 @@
 react-pixi
 ==========
 
+[![Build Status](https://travis-ci.org/Izzimach/react-pixi.svg?branch=master)](https://travis-ci.org/Izzimach/react-pixi)
+
 Create/control a [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) canvas using [React](https://github.com/facebook/react).
 
 
@@ -11,6 +13,11 @@ You will need node and npm. You should probably install gulp globally as well.
 ```
 npm install -g gulp
 npm install
+```
+
+Simply running
+
+```
 gulp
 ```
 
@@ -52,7 +59,7 @@ var CupcakeComponent = React.createClass({
 });
 ```
 
-[Sample Cupcake component](docs/react-pixi-devshot.png?rawpage)
+![Sample Cupcake component](docs/react-pixi-devshot.png)
 
 Note that at the moment you need to mount onto a DOM component so your top-level component will probably be a React.PIXI.Stage.
 
