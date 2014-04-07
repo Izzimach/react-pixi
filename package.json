@@ -33,7 +33,8 @@
     "karma": "~0.12.3",
     "karma-phantomjs-launcher": "git://github.com/karma-runner/karma-phantomjs-launcher#master",
     "karma-chrome-launcher": "~0.1.3",
-    "karma-jasmine": "~0.1.5"
+    "karma-jasmine": "~0.1.5",
+    "react-tools": "~0.10.0"
   },
   "scripts": {
     "test": "gulp test"

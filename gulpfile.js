@@ -11,11 +11,12 @@ var SERVERPORT = 8080;
 var SOURCEGLOB = './src/**/*.js';
 var OUTPUTFILE = 'build/react-pixi.js';
 var karmaconfiguration = {
-    browsers:['PhantomJS'],
-    files: ['build/react-pixi.js',
+    browsers:['PhantomJS','Chrome'],
+    files: ['vendor/pixi.js',
+            'build/react-pixi.js',
             // need a shim to work with the ancient version of Webkit used in PhantomJS
             'vendor/phantomjs-shims.js',
-            'test/tests.js'],
+            'test/**/*.js'],
     frameworks:['jasmine'],
     singleRun:true
 };

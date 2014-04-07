@@ -48,7 +48,7 @@ var ExampleStage = React.createClass({
     return React.PIXI.Stage({width:this.props.width, height:this.props.height},
         [
           React.PIXI.TilingSprite({image:'bg_castle.png', width:this.props.width, height:this.props.height, key:1}, null),
-          CupcakeComponent({topping:'vanilla', xposition:this.props.xposition, key:2}),
+          CupcakeComponent({topping:'vanilla', xposition:this.props.xposition, ref:'cupcake', key:2}),
           React.PIXI.Text({text:'Vector text', x:this.props.xposition, y:10, anchor: new PIXI.Point(0.5,0), key:3}, null),
           React.PIXI.BitmapText({text:'Bitmap text', x:this.props.xposition, y:180, tint:0xff88ff88, style: {font:'40 PrintedCircuitBoard'}, key:4}, null),
         ]);
