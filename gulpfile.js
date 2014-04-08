@@ -7,11 +7,15 @@ var livereload = require('gulp-livereload');
 var gutil = require('gulp-util');
 var karma = require('karma');
 
+var isTravisCI = (typeof process.env.TRAVIS !== 'undefined' && process.env.TRAVIS === 'true');
+
 var SERVERPORT = 8080;
 var SOURCEGLOB = './src/**/*.js';
 var OUTPUTFILE = 'build/react-pixi.js';
 var browserlist = ['PhantomJS'];
-if (typeof process.env.TRAVIS == 'undefined') {
+if (isTravisCI) {
+  browserlist.push('Firefox');
+} else {
   browserlist.push('Chrome');
 }
 var karmaconfiguration = {
