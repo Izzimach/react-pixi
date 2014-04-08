@@ -10,8 +10,12 @@ var karma = require('karma');
 var SERVERPORT = 8080;
 var SOURCEGLOB = './src/**/*.js';
 var OUTPUTFILE = 'build/react-pixi.js';
+var browserlist = ['PhantomJS'];
+if (typeof process.env.TRAVIS == 'undefined') {
+  browserlist.push('Chrome');
+}
 var karmaconfiguration = {
-    browsers:['PhantomJS','Chrome'],
+    browsers: browserlist,
     files: ['vendor/pixi.js',
             'build/react-pixi.js',
             // need a shim to work with the ancient version of Webkit used in PhantomJS
