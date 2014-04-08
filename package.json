@@ -12,7 +12,11 @@
     "name": "Gary Haussmann",
     "email": "gjhaussmann@gmail.com"
   },
-  "license": "MIT",
+  "repository": {
+    "type":"git",
+    "url":"https://github.com/Izzimach/react-pixi"
+  },
+  "license": "Apache-2.0",
   "main": "pixi-react.js",
   "dependencies": {
     "react": "0.10.0"
