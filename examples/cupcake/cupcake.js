@@ -5,6 +5,8 @@
 var React = require('react');
 React.PIXI = require('react-pixi');
 
+var assetpath = '../assets/';
+
 //
 // Here's a cupcake component that gloms together two sprites to render a cupcake
 //
@@ -17,10 +19,10 @@ var CupcakeComponent = React.createClass({
   displayName: 'CupcakeComponent',
   // maps from cupcake toppings to the appropriate sprite
   spritemapping : {
-  'vanilla' : 'creamVanilla.png',
-  'chocolate' : 'creamChoco.png',
-  'mocha' : 'creamMocha.png',
-  'pink' : 'creamPink.png',
+  'vanilla' : assetpath + 'creamVanilla.png',
+  'chocolate' : assetpath + 'creamChoco.png',
+  'mocha' : assetpath + 'creamMocha.png',
+  'pink' : assetpath + 'creamPink.png',
   },
 
   render : function () {
@@ -29,7 +31,7 @@ var CupcakeComponent = React.createClass({
     return React.PIXI.DisplayObjectContainer({x:xposition, y:100 },
       [
         React.PIXI.Sprite({image:creamimagename, y:-35, anchor: new PIXI.Point(0.5,0.5), key:'topping'}, null),
-        React.PIXI.Sprite({image:'cupCake.png', y:35, anchor: new PIXI.Point(0.5,0.5), key:'cake'}, null)
+        React.PIXI.Sprite({image:assetpath + 'cupCake.png', y:35, anchor: new PIXI.Point(0.5,0.5), key:'cake'}, null)
       ]
     );
   }
@@ -47,10 +49,10 @@ var ExampleStage = React.createClass({
   render: function() {
     return React.PIXI.Stage({width:this.props.width, height:this.props.height},
         [
-          React.PIXI.TilingSprite({image:'bg_castle.png', width:this.props.width, height:this.props.height, key:1}, null),
+          React.PIXI.TilingSprite({image:assetpath + 'bg_castle.png', width:this.props.width, height:this.props.height, key:1}, null),
           CupcakeComponent({topping:'vanilla', xposition:this.props.xposition, ref:'cupcake', key:2}),
-          React.PIXI.Text({text:'Vector text', x:this.props.xposition, y:10, anchor: new PIXI.Point(0.5,0), key:3}, null),
-          React.PIXI.BitmapText({text:'Bitmap text', x:this.props.xposition, y:180, tint:0xff88ff88, style: {font:'40 PrintedCircuitBoard'}, key:4}, null),
+          React.PIXI.Text({text:'Vector text', x:this.props.xposition, y:10, style:{font:'40px Times'}, anchor: new PIXI.Point(0.5,0), key:3}, null),
+          React.PIXI.BitmapText({text:'Bitmap text', x:this.props.xposition, y:180, tint:0xff88ff88, style: {font:'40 Comic_Neue_Angular'}, key:4}, null),
         ]);
   }
 });
@@ -67,7 +69,7 @@ function pixistart() {
           React.renderComponent(ExampleStage({width:w, height:h, xposition:200}), renderelement);
     }
 
-    var fontloader = new PIXI.BitmapFontLoader('pcb-bitmap.fnt');
+    var fontloader = new PIXI.BitmapFontLoader(assetpath + 'comic_neue_angular_bold.fnt');
     fontloader.on('loaded', PutReact);
     fontloader.load();
 }

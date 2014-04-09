@@ -2,11 +2,11 @@
 fileVersion=1
 
 # font settings
-fontName=PrintedCircuitBoard
-fontFile=printed-circuit-board/PrintedCircuitBoard.otf
+fontName=Comic Neue Angular
+fontFile=../../../Fonts/comic-neue-1.1/ComicNeue-Angular-Bold.ttf
 charSet=0
-fontSize=50
-aa=2
+fontSize=40
+aa=1
 scaleH=100
 useSmoothing=1
 isBold=0
@@ -50,6 +50,6 @@ invB=0
 outlineThickness=0
 
 # selected chars
-chars=32-34,36,39,44-46,48-59,63,65-90,96-122,161,167-168,180,183,191-214,216-246,248-255
+chars=0-0,13,32-93,95,97-126,160,162-163,165,169,171,173-174,176,182,187,191
 
 # imported icon images
