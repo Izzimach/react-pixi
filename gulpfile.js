@@ -43,11 +43,11 @@ var karmaconfiguration = {
     singleRun:true
 };
 
-
 function errorHandler(err) {
   gutil.log(err);
   this.emit('end'); // so that gulp knows the task is done
 }
+
 
 gulp.task('lint', function() {
   return gulp.src(SOURCEGLOB)
@@ -64,18 +64,15 @@ gulp.task('browserify', ['lint'], function() {
   // throw an exception and terminate gulp unless we catch the error event.
   return bundler.bundle().on('error', errorHandler)
     .pipe(vsource(OUTPUTFILE + '.js'))
-    .pipe(gulp.dest('build'));
-});
+    .pipe(streamify(header(banner, {pkg:pkg})))  // wat
+    .pipe(gulp.dest('build'))
 
-gulp.task('compress', ['browserify'], function() {
-  return gulp.src('build/' + OUTPUTFILE + '.js')
-    .pipe(uglify())
+     // might as well compress it while we're here
+
+    .pipe(streamify(uglify({preserveComments:'some'})))
     .pipe(rename(OUTPUTFILE + '.min.js'))
     .pipe(gulp.dest('build'));
 });
-
-// need to add uglify in here eventually
-
 
 gulp.task('watch', ['browserify'], function() {
   gulp.watch(SOURCEGLOB, ['browserify']);
@@ -93,7 +90,7 @@ gulp.task('livereload', ['lint','browserify'], function() {
   var livereloadserver = livereload();
 
   gulp.watch([SOURCEGLOB], ['browserify']);
-  gulp.watch(OUTPUTFILE, function(file) {
+  gulp.watch(['build/**/*.js', 'examples/**/*.js','examples/**/*.html'], function(file) {
     livereloadserver.changed(file.path);
   });
 });

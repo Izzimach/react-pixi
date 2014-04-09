@@ -1,6 +1,6 @@
 {
   "name": "react-pixi",
-  "version": "0.1.0",
+  "version": "0.1.0-EXPERIMENTAL",
   "description": "Construct PIXI.js scenes using React",
   "keywords": [
     "react",
@@ -17,7 +17,7 @@
     "url": "https://github.com/Izzimach/react-pixi"
   },
   "license": "Apache-2.0",
-  "main": "pixi-react.js",
+  "main": "build/pixi-react.js",
   "dependencies": {
     "react": "0.10.0"
   },
@@ -25,7 +25,7 @@
     "gulp": "~3.6.0",
     "vinyl-source-stream": "~0.1.1",
     "browserify": "~3.37.0",
-    "gulp-streamify": "0.0.4",
+    "gulp-streamify": "0.0.5",
     "gulp-jshint": "~1.5.1",
     "gulp-livereload": "~1.2.0",
     "http": "0.0.0",
