@@ -1,9 +1,8 @@
-The Printed Circuit Board font is public domain, created by LJH Fonts (http://jlhfonts.blogspot.de/). This includes files:
- - PrintedCircuitBoard.otf
+The Comic Neue font is public domain create by Craig Rozynski (comicneue.Comic)
 
-The derived Printed CircuitBoard bitmap font is public domain, this includes files:
- - pcb-bitmap.fnt
- - pcb-bitmap_0.png
+The following bitmap font files derived from Comic Neue are public domain:
+ - examples/assets/comic_neue_angular_bold.fnt
+ - examples/assets/comic_neue_angular_bold_0.png
 
 The following graphics files are CC0 (public domain), created by Kenney Vleugels (www.kenney.nl):
  - bg_castle.png

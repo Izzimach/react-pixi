@@ -1,17 +1,31 @@
+
 var gulp = require('gulp');
 var vsource = require('vinyl-source-stream');
-var browserify = require('browserify');
 var streamify = require('gulp-streamify');
 var jshint = require('gulp-jshint');
 var livereload = require('gulp-livereload');
 var gutil = require('gulp-util');
+var header = require('gulp-header');
+var uglify = require('gulp-uglify');
+var rename = require('gulp-rename');
+
 var karma = require('karma');
+var browserify = require('browserify');
+var pkg = require('./package.json');
 
 var isTravisCI = (typeof process.env.TRAVIS !== 'undefined' && process.env.TRAVIS === 'true');
-
 var SERVERPORT = 8080;
 var SOURCEGLOB = './src/**/*.js';
-var OUTPUTFILE = 'build/react-pixi.js';
+var OUTPUTFILE = 'react-pixi';
+
+var banner = ['/**',
+             ' * <%= pkg.name %>',
+             ' * @version <%= pkg.version %>',
+             ' * @license <%= pkg.license %>',
+             ' */',
+             ''].join('\n');
+
+// Travis has firefox, not chrome
 var browserlist = ['PhantomJS'];
 if (isTravisCI) {
   browserlist.push('Firefox');
@@ -49,8 +63,15 @@ gulp.task('browserify', ['lint'], function() {
   // If we're running a gulp.watch and browserify finds and error, it will
   // throw an exception and terminate gulp unless we catch the error event.
   return bundler.bundle().on('error', errorHandler)
-    .pipe(vsource(OUTPUTFILE))
-    .pipe(gulp.dest('.'));
+    .pipe(vsource(OUTPUTFILE + '.js'))
+    .pipe(gulp.dest('build'));
+});
+
+gulp.task('compress', ['browserify'], function() {
+  return gulp.src('build/' + OUTPUTFILE + '.js')
+    .pipe(uglify())
+    .pipe(rename(OUTPUTFILE + '.min.js'))
+    .pipe(gulp.dest('build'));
 });
 
 // need to add uglify in here eventually
