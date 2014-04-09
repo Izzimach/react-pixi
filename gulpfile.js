@@ -1,30 +1,53 @@
+
 var gulp = require('gulp');
 var vsource = require('vinyl-source-stream');
-var browserify = require('browserify');
 var streamify = require('gulp-streamify');
 var jshint = require('gulp-jshint');
 var livereload = require('gulp-livereload');
 var gutil = require('gulp-util');
-var karma = require('karma');
+var header = require('gulp-header');
+var uglify = require('gulp-uglify');
+var rename = require('gulp-rename');
 
+var karma = require('karma');
+var browserify = require('browserify');
+var pkg = require('./package.json');
+
+var isTravisCI = (typeof process.env.TRAVIS !== 'undefined' && process.env.TRAVIS === 'true');
 var SERVERPORT = 8080;
 var SOURCEGLOB = './src/**/*.js';
-var OUTPUTFILE = 'build/react-pixi.js';
+var OUTPUTFILE = 'react-pixi';
+
+var banner = ['/**',
+             ' * <%= pkg.name %>',
+             ' * @version <%= pkg.version %>',
+             ' * @license <%= pkg.license %>',
+             ' */',
+             ''].join('\n');
+
+// Travis has firefox, not chrome
+var browserlist = ['PhantomJS'];
+if (isTravisCI) {
+  browserlist.push('Firefox');
+} else {
+  browserlist.push('Chrome');
+}
 var karmaconfiguration = {
-    browsers:['PhantomJS'],
-    files: ['build/react-pixi.js',
+    browsers: browserlist,
+    files: ['vendor/pixi.js',
+            'build/react-pixi.js',
             // need a shim to work with the ancient version of Webkit used in PhantomJS
             'vendor/phantomjs-shims.js',
-            'test/tests.js'],
+            'test/**/*.js'],
     frameworks:['jasmine'],
     singleRun:true
 };
-
 
 function errorHandler(err) {
   gutil.log(err);
   this.emit('end'); // so that gulp knows the task is done
 }
+
 
 gulp.task('lint', function() {
   return gulp.src(SOURCEGLOB)
@@ -40,12 +63,16 @@ gulp.task('browserify', ['lint'], function() {
   // If we're running a gulp.watch and browserify finds and error, it will
   // throw an exception and terminate gulp unless we catch the error event.
   return bundler.bundle().on('error', errorHandler)
-    .pipe(vsource(OUTPUTFILE))
-    .pipe(gulp.dest('.'));
+    .pipe(vsource(OUTPUTFILE + '.js'))
+    .pipe(streamify(header(banner, {pkg:pkg})))  // wat
+    .pipe(gulp.dest('build'))
+
+     // might as well compress it while we're here
+
+    .pipe(streamify(uglify({preserveComments:'some'})))
+    .pipe(rename(OUTPUTFILE + '.min.js'))
+    .pipe(gulp.dest('build'));
 });
-
-// need to add uglify in here eventually
-
 
 gulp.task('watch', ['browserify'], function() {
   gulp.watch(SOURCEGLOB, ['browserify']);
@@ -63,7 +90,7 @@ gulp.task('livereload', ['lint','browserify'], function() {
   var livereloadserver = livereload();
 
   gulp.watch([SOURCEGLOB], ['browserify']);
-  gulp.watch(OUTPUTFILE, function(file) {
+  gulp.watch(['build/**/*.js', 'examples/**/*.js','examples/**/*.html'], function(file) {
     livereloadserver.changed(file.path);
   });
 });
