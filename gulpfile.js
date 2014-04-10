@@ -25,13 +25,12 @@ var banner = ['/**',
              ' */',
              ''].join('\n');
 
-// Travis has firefox, not chrome
+// Included Firefox when using Travis
 var browserlist = ['PhantomJS'];
 if (isTravisCI) {
   browserlist.push('Firefox');
-} else {
-  browserlist.push('Chrome');
 }
+
 var karmaconfiguration = {
     browsers: browserlist,
     files: ['vendor/pixi.js',
