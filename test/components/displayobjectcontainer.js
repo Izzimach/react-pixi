@@ -30,6 +30,20 @@ describe("PIXI DisplayObjectContainer Component", function() {
 
   var maxtestchildren = 10;
 
+
+  it("maintains proper references to the parent DisplayObject", function() {
+    var reactinstance = React.renderComponent(
+        variableChildrenComponent({width:300,height:300,childCount:1}),
+        fixture);
+
+    var stage = reactinstance.refs['stage'].displayObject;
+    var testpoint = reactinstance.refs['testpoint'].displayObject;
+
+    expect(testpoint.parent).toBe(stage);
+
+    React.unmountComponentAtNode(fixture);
+  });
+
   it("can hold a variable number of children", function() {
 
     for (var numchildren = 0; numchildren < maxtestchildren; numchildren++) {
