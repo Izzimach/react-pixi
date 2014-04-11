@@ -280,7 +280,6 @@ var PIXIStage = definePIXIComponent(
   receiveComponent: function(nextComponent, transaction) {
     var props = nextComponent.props;
 
-    //console.log("resize at " + props.width + "," + props.height);
     if (this.props.width != props.width || this.props.width != props.height) {
       this.pixirenderer.resize(+props.width, +props.height);
     }
@@ -329,7 +328,7 @@ var CommonDisplayObjectContainerImplementation = {
   receiveComponent: function(nextComponent, transaction) {
     var props = nextComponent.props;
     this.applyDisplayObjectProps(this.props, props);
-    this.applySpecificDisplayObjectProps({}, this.props);
+    this.applySpecificDisplayObjectProps(this.props, props);
 
     this.updateChildren(props.children, transaction);
     this.props = props;
