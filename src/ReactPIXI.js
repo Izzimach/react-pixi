@@ -251,7 +251,6 @@ var PIXIStage = definePIXIComponent(
     this.setApprovedDOMProperties(props);
     this.applyDisplayObjectProps(props,this.props);
 
-    // children not supported yet
     var transaction = ReactComponent.ReactReconcileTransaction.getPooled();
     transaction.perform(
       this.mountAndAddChildren,
@@ -298,7 +297,6 @@ var PIXIStage = definePIXIComponent(
     if (typeof this._rAFID !== 'undefined') {
       window.cancelAnimationFrame(this._rAFID);
     }
-    // children not supported yet
     this.unmountChildren();
   },
 
@@ -317,7 +315,7 @@ var CommonDisplayObjectContainerImplementation = {
 
   mountComponent: function(transaction) {
     ReactComponentMixin.mountComponent.apply(this, arguments);
-    this.displayObject = this.createDisplayObject(arguments);//new PIXI.DisplayObjectContainer();
+    this.displayObject = this.createDisplayObject(arguments);
     this.applyDisplayObjectProps({}, this.props);
     this.applySpecificDisplayObjectProps({}, this.props);
 
