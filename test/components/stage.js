@@ -1,22 +1,23 @@
 
-function createTestFixture() {
-  var fixture = window.document.createElement('div');
-  fixture.id = 'test-fixture';
-  window.document.body.appendChild(fixture);
-  return fixture;
-}
-
-function removeTestFixture() {
-  var fixture = window.document.getElementById('test-fixture');
-  fixture.parentNode.removeChild(fixture);
-  return null;
-}
 
 describe("PIXI Stage Component", function() {
   var React = require('react');
   React.PIXI = require('react-pixi');
 
   var stagecomponent = React.PIXI.Stage({width:300, height:300});
+
+  function createTestFixture() {
+    var fixture = window.document.createElement('div');
+    fixture.id = 'test-fixture';
+    window.document.body.appendChild(fixture);
+    return fixture;
+  }
+
+  function removeTestFixture() {
+    var fixture = window.document.getElementById('test-fixture');
+    fixture.parentNode.removeChild(fixture);
+    return null;
+  }
 
   beforeEach(createTestFixture);
 
@@ -47,5 +48,23 @@ describe("PIXI Stage Component", function() {
     // stages are their own stage
     expect(stageobject.stage).toBe(stageobject);
 
+    React.unmountComponentAtNode(fixture);
+  });
+
+  it("destroys the canvas when the stage is unmounted", function() {
+    var fixture = window.document.getElementById('test-fixture');
+
+    reactinstance = React.renderComponent(stagecomponent,fixture);
+
+    // this should unmount the stage and remove the canvas
+    var reactinstance = React.renderComponent(React.DOM.div(), fixture);
+
+    expect(fixture.childNodes.length).toBe(1);
+    expect(fixture.childNodes[0].nodeName).not.toBe('CANVAS');
+    expect(fixture.childNodes[0].childNodes.length).toBe(0);
+
+    React.unmountComponentAtNode(fixture);
+
+    expect(fixture.childNodes.length).toBe(0);
   });
 });

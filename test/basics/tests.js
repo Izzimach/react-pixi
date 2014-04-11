@@ -1,3 +1,4 @@
+
 describe("React and React.PIXI modules", function() {
   var React = require('react');
   React.PIXI = require('react-pixi');
