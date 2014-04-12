@@ -13,7 +13,6 @@ var karma = require('karma');
 var browserify = require('browserify');
 var pkg = require('./package.json');
 
-var isTravisCI = (typeof process.env.TRAVIS !== 'undefined' && process.env.TRAVIS === 'true');
 var SERVERPORT = 8080;
 var SOURCEGLOB = './src/**/*.js';
 var OUTPUTFILE = 'react-pixi';
@@ -25,12 +24,7 @@ var banner = ['/**',
              ' */',
              ''].join('\n');
 
-// Included Firefox when using Travis
 var browserlist = ['PhantomJS'];
-if (isTravisCI) {
-  browserlist.push('Firefox');
-}
-
 var karmaconfiguration = {
     browsers: browserlist,
     files: ['vendor/pixi.dev.js',
