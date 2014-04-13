@@ -1,3 +1,5 @@
+var exec = require('child_process').exec;
+var path = require('path');
 
 var gulp = require('gulp');
 var vsource = require('vinyl-source-stream');
@@ -29,9 +31,10 @@ var karmaconfiguration = {
     browsers: browserlist,
     files: ['vendor/pixi.dev.js',
             'build/react-pixi.js',
-            // need a shim to work with the ancient version of Webkit used in PhantomJS
-            'vendor/phantomjs-shims.js',
-            'test/**/*.js'],
+            'vendor/phantomjs-shims.js', // need a shim to work with the ancient version of Webkit used in PhantomJS
+            'test/pixels/renderReactPIXIToImageURL.js', // need this to test pixel rendering
+            'test/basics/*.js',
+            'test/components/*.js'],
     frameworks:['jasmine'],
     singleRun:true
 };
@@ -41,6 +44,14 @@ function errorHandler(err) {
   this.emit('end'); // so that gulp knows the task is done
 }
 
+gulp.task('help', function() {
+  console.log('Possible tasks:');
+  console.log('"default" - compile react-pixi into build/react-pixi.js');
+  console.log('"watch" - watch react-pixi source files and rebuild');
+  console.log('"test" - run tests in test directory');
+  console.log('"livereload" - compile and launch web server/reload server');
+  console.log('"pixelrefs" - generate reference images for render-specific tests');
+});
 
 gulp.task('lint', function() {
   return gulp.src(SOURCEGLOB)
@@ -95,6 +106,19 @@ gulp.task('test', ['browserify'], function() {
   });
 });
 
+gulp.task('pixelrefs', function() {
+  var command = path.normalize('./node_modules/.bin/phantomjs');
+  var child = exec(command + ' test/pixels/generatetestrender.js',
+                  function(error, stdout, stderr) {
+                    gutil.log('result of reference image generation:\n' + stdout);
+                    if (stderr.length > 0) {
+                      gutil.log('stderr: ' + stderr);
+                    }
+                    if (error !== null) {
+                      gutil.log('exec error: ' + error);
+                    }
+                  });
+});
 
 gulp.task('default', ['lint','browserify']);
 
