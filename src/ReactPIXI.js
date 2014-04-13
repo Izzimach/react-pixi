@@ -231,8 +231,6 @@ var PIXIStage = definePIXIComponent(
       title: nextProps.title
     };
 
-    // We hack the internals of ReactDOMComponent to only update some DOM
-    // properties that won't override anything important that's internal to ART.
     this.props = nextPropsSubset;
     this._updateDOMProperties(prevPropsSubset);
 
@@ -244,7 +242,8 @@ var PIXIStage = definePIXIComponent(
     var props = this.props;
     var renderelement = this.getDOMNode();
 
-    this.displayObject = new PIXI.Stage(0x66FF99);
+    var backgroundcolor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
+    this.displayObject = new PIXI.Stage(backgroundcolor);
     this.pixirenderer = PIXI.autoDetectRenderer(props.width, props.height, renderelement);
 
     this.props = {style:{}};
