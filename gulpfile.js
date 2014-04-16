@@ -32,9 +32,12 @@ var karmaconfiguration = {
     files: ['vendor/pixi.dev.js',
             'build/react-pixi.js',
             'vendor/phantomjs-shims.js', // need a shim to work with the ancient version of Webkit used in PhantomJS
-            'test/pixels/renderReactPIXIToImageURL.js', // need this to test pixel rendering
+            'node_modules/resemblejs/resemble.js',
+            'test/pixels/pixelTests.js',
             'test/basics/*.js',
-            'test/components/*.js'],
+            'test/components/*.js',
+            {pattern:'test/pixels/*.png',included:false, served:true} // for render tests
+           ],
     frameworks:['jasmine'],
     singleRun:true
 };

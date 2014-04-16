@@ -7,33 +7,54 @@
 var webPage = require('webpage');
 var fs = require('fs');
 
-phantom.injectJs('node_modules/js-base64/base64.js');
-
 var page = webPage.create();
 
 page.viewportSize = {width:400,height:400};
 
-page.onCallback = function(data) {
+page.onConsoleMessage = function(msg) {
+  console.log('Web page log message: ' + msg);
+};
 
-  //page.render('argh.png');
-  //console.log(data);
-  for (var renderindex=0; renderindex < data.length; renderindex++) {
+//
+// the pixelTests function renders the test images, converts them to binary data,
+// and then calls the phantomjs callback with the data
+//
+
+page.onCallback = function(refimages) {
+
+  for (var renderindex=0; renderindex < refimages.length; renderindex++) {
     var filename = 'test/pixels/testrender' + renderindex.toString() + '.png';
-    fs.write(filename,data[renderindex], 'wb');
-    console.log('Write test render file ' + filename);
+
+    fs.write(filename,refimages[renderindex], 'wb');
+    console.log('Wrote test render file ' + filename);
   }
   phantom.exit();
 }
 
 page.open('test/pixels/generatetestrender.html', function() {
 
-  // render a React component and then get the canvas pixels
-
+  // invoke pixelTests to render images and return them via the phantomjs callback
   var fixture = page.evaluateAsync(function() {
-    var fixture = document.getElementById('test-fixture');
 
-    var renderresults = pixelTests(fixture);
-    return fixture;
+    // this code executes in the webpage context!
+    var fixture = document.getElementById('test-fixture');
+    console.log("Got test fixture");
+    var renderresults = pixelTests(fixture, './', function(results) {
+      console.log('Got reference images');
+
+      // pixelTests() generates base64 encoded images, so convert them to raw
+      // binary PNGs before returning them
+
+      var binaryresults = [];
+      results.forEach(function(refimage) {
+        // split into two parts; the base64 header and the actual data.  we just want the data
+        var renderURLbits = refimage.split(',');
+        binaryresults.push(window.atob(renderURLbits[1]));
+      });
+      window.callPhantom(binaryresults);
+    });
+
+    return renderresults;
   });
 });
 

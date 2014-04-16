@@ -23,14 +23,14 @@ function drawTestRenders(mountpoint, testimages) {
     }
   });
 
-  var reactinstance = React.renderComponent(SpriteTestComponent({spriteprops:{x:100,y:100, anchor:halfanchor, image:testimages[0]}}), mountpoint);
+  var reactinstance = React.renderComponent(SpriteTestComponent({spriteprops:{x:100,y:100, anchor:halfanchor, image:testimages[0], key:'urgh'}}), mountpoint);
 
   // now make multiple renders with slightly different sprite props. For each set of sprite props
   // we record a snapshot. These snapshots are compared with the known 'good' versions.
 
   var spritetestprops = [
-    { x:100, y:100, anchor:halfanchor, image:testimages[0]},
-    { x:110, y:110, anchor:halfanchor, image:testimages[0]},
+    { x:110, y:100, anchor:halfanchor, image:testimages[0]},
+    { x:100, y:110, anchor:halfanchor, image:testimages[0]},
     { x:100, y:100, anchor: new PIXI.Point(0,0), image:testimages[0]},
     { x:100, y:100, anchor:halfanchor, rotation:90, image:testimages[0]},
     { x:100, y:100, anchor:halfanchor, scale: 2, image:testimages[0]}
@@ -39,16 +39,14 @@ function drawTestRenders(mountpoint, testimages) {
   var renderresults = [];
 
   spritetestprops.forEach(function (curprops) {
+    curprops.key = 'urgh'; // re-use the same sprite instance
     reactinstance.setProps({spriteprops:curprops});
 
     // convert the rendered image to a data blob we can use
     var renderer = reactinstance.refs['stage'].pixirenderer;
     var renderURL = renderer.view.toDataURL('image/png');
 
-    // split into two parts; the base64 header and the actual data.  we just want the data
-    var renderURLbits = renderURL.split(',');
-
-    renderresults.push(window.atob(renderURLbits[1]));
+    renderresults.push(renderURL);
   });
 
   React.unmountComponentAtNode(mountpoint);
@@ -56,8 +54,7 @@ function drawTestRenders(mountpoint, testimages) {
   return renderresults;
 }
 
-function pixelTests(fixture) {
-  var testimagepath = './';
+function pixelTests(fixture, testimagepath, resultscallback) {
   var testimages =
       [
         testimagepath + 'testsprite.png'
@@ -69,9 +66,14 @@ function pixelTests(fixture) {
 
   loader.on('onComplete', function() {
     var results = drawTestRenders(fixture, testimages);
-    if (typeof window.callPhantom === 'function') {
-      window.callPhantom(results);
+    if (resultscallback) {
+      resultscallback(results);
     }
+
   });
+  console.log("Loading test sprite...");
   loader.load();
+
+  return null;
 }
+
