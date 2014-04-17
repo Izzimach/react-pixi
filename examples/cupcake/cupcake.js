@@ -57,7 +57,7 @@ var ExampleStage = React.createClass({
   }
 });
 
-function pixistart() {
+function cupcakestart() {
     var renderelement = document.getElementById("pixi-box");
 
     var w = window.innerWidth-6;
