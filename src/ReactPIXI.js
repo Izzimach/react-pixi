@@ -63,6 +63,19 @@ function definePIXIComponent(name) {
 // A DisplayObject has x/y/scale properties
 //
 
+var PIXIHandlers = [
+  'click',
+  'mousedown',
+  'mouseout',
+  'mouseover',
+  'mouseup',
+  'mouseupoutside',
+  'tap',
+  'touchstart',
+  'touchend',
+  'touchendoutside'
+];
+
 var DisplayObjectMixin = merge(ReactComponentMixin, {
 
   applyDisplayObjectProps: function(oldProps, props) {
@@ -93,6 +106,18 @@ var DisplayObjectMixin = merge(ReactComponentMixin, {
       displayObject.scale.x = 1;
       displayObject.scale.y = 1;
     }
+
+    // interactivity and event processing
+    displayObject.interactive = typeof props.interactive !== 'undefined' ? props.interactive : false;
+
+    // hook up event callbacks
+    PIXIHandlers.forEach(function (pixieventtype) {
+      if (typeof props[pixieventtype] !== 'undefined') {
+        displayObject[pixieventtype] = props[pixieventtype];
+      } else {
+        delete displayObject[pixieventtype];
+      }
+    });
   },
 
   mountComponentIntoNode: function() {
@@ -261,12 +286,12 @@ var PIXIStage = definePIXIComponent(
     this.renderStage();
 
     var that = this;
-    that._rAFID = window.requestAnimFrame( animate );
+    that._rAFID = window.requestAnimFrame( rapidrender );
 
-    function animate(timestamp) {
+    function rapidrender(timestamp) {
 
         that._timestamp = timestamp;
-        that._rAFID = window.requestAnimationFrame( animate );
+        that._rAFID = window.requestAnimationFrame( rapidrender );
 
         // render the stage
         that.renderStage();
