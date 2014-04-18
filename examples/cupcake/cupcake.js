@@ -2,10 +2,12 @@
 // Basic React.PIXI example using a custom 'Cupcake' Component which consists of two sprites
 //
 
+/* jshint strict: false */
+
 var React = require('react');
 React.PIXI = require('react-pixi');
 
-var assetpath = function(filename) { return '../assets/' + filename; }
+var assetpath = function(filename) { return '../assets/' + filename; };
 
 //
 // Here's a cupcake component that gloms together two sprites to render a cupcake
@@ -57,6 +59,7 @@ var ExampleStage = React.createClass({
   }
 });
 
+/* jshint unused:false */
 function cupcakestart() {
     var renderelement = document.getElementById("pixi-box");
 
@@ -66,7 +69,6 @@ function cupcakestart() {
     function PutReact()
     {
           React.renderComponent(ExampleStage({width:w, height:h, xposition:200, topping:'vanilla'}), renderelement);
-          //React.renderComponent(ExampleStage({width:w, height:h, xposition:200, topping:'pink'}), renderelement);
     }
 
     var fontloader = new PIXI.BitmapFontLoader(assetpath('comic_neue_angular_bold.fnt'));

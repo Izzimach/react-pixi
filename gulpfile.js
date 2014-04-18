@@ -17,6 +17,8 @@ var pkg = require('./package.json');
 
 var SERVERPORT = 8080;
 var SOURCEGLOB = './src/**/*.js';
+var EXAMPLESGLOB = './examples/**/*.js';
+
 var OUTPUTFILE = 'react-pixi';
 
 var banner = ['/**',
@@ -57,7 +59,7 @@ gulp.task('help', function() {
 });
 
 gulp.task('lint', function() {
-  return gulp.src(SOURCEGLOB)
+  return gulp.src([SOURCEGLOB,EXAMPLESGLOB])
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
 });

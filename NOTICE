@@ -4,10 +4,14 @@ The following bitmap font files derived from Comic Neue are public domain:
  - examples/assets/comic_neue_angular_bold.fnt
  - examples/assets/comic_neue_angular_bold_0.png
 
-The following graphics files are CC0 (public domain), created by Kenney Vleugels (www.kenney.nl):
+The following graphics files in examples/assets are CC0 (public domain), created by Kenney Vleugels (www.kenney.nl):
  - bg_castle.png
- - enemies_spritesheet.png
- - enemies_spritesheet.txt
+ - cupCake.png
+ - cherry.png
+ - creamChoco.png
+ - creamMocca.png
+ - creamPink.png
+ - creamVanilla.png
 
 The following files are Copyright 2013-2014 Facebook, Inc. and included under the Apache License v2.0:
  - vendor/phantomjs-shims.phantomjs
@@ -15,3 +19,7 @@ The following files are Copyright 2013-2014 Facebook, Inc. and included under th
 The following files are Copyright 2013-2014 Mathew Groves and included under the MIT License:
  - vendor/pixi.js
  - vendor/pixi.dev.js
+
+The following file is Copyright 2012-2013 The Dojo Foundation and included under the MIT License:
+ - vendor/lodash.min.js
+
