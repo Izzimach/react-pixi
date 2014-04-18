@@ -271,9 +271,8 @@ var PIXIStage = definePIXIComponent(
     this.displayObject = new PIXI.Stage(backgroundcolor);
     this.pixirenderer = PIXI.autoDetectRenderer(props.width, props.height, renderelement);
 
-    this.props = {style:{}};
     this.setApprovedDOMProperties(props);
-    this.applyDisplayObjectProps(props,this.props);
+    this.applyDisplayObjectProps({},this.props);
 
     var transaction = ReactComponent.ReactReconcileTransaction.getPooled();
     transaction.perform(
