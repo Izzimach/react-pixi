@@ -8,10 +8,8 @@
 
 // tell jshint that we use lodash
 /* global _ : false */
+/* global React */
 /* jshint strict: false */
-
-var React = require('react');
-React.PIXI = require('react-pixi');
 
 var g_assetpath = function(filename) { return '../assets/' + filename; };
 

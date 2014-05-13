@@ -21,19 +21,21 @@ Simply running
 gulp
 ```
 
-Will package up react-pixi along with React and put the result in build/react-pixi.js. Unlike standard React, you'll need
-to pull in the desired React and React.PIXI modules in your javascript code:
+Will package up react-pixi along with React and put the result in build/react-pixi.js. If you include this into your webpage via
+a script tag:
 
 ```
-var React = require('react');
-React.PIXI = require(react-pixi');
+<script src="react-pixi.js"></script>
 ```
+
+Then React will appear in the global namespace and the new pixi.js components are available under React.PIXI
 
 
 ## Rendering Pixi.js elements
 
 To render Pixi.js elements like a Stage or Sprite you reference them the same way you referenced DOM elements in
 vanilla React.  For example, to construct a CupcakeComponent that consists of two Sprites:
+
 
 ```
 var CupcakeComponent = React.createClass({

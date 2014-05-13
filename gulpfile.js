@@ -2,6 +2,7 @@ var exec = require('child_process').exec;
 var path = require('path');
 
 var gulp = require('gulp');
+var concat = require('gulp-concat');
 var vsource = require('vinyl-source-stream');
 var streamify = require('gulp-streamify');
 var jshint = require('gulp-jshint');
@@ -64,16 +65,22 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('browserify', ['lint'], function() {
+gulp.task('browserify',['lint'], function() {
   var bundler = browserify();
-  bundler.require('./src/ReactPIXI.js', {expose:'react-pixi'});
   bundler.require('react');
+  bundler.require('./src/ReactPIXI.js',{expose:'react-pixi'});
+
+  return bundler.bundle().on('error', errorHandler)
+    .pipe(vsource('react-pixi-commonjs.js'))
+    .pipe(gulp.dest('build'));
+});
+
+gulp.task('bundle', ['browserify'], function() {
 
   // If we're running a gulp.watch and browserify finds and error, it will
   // throw an exception and terminate gulp unless we catch the error event.
-  return bundler.bundle().on('error', errorHandler)
-    .pipe(vsource(OUTPUTFILE + '.js'))
-    .pipe(streamify(header(banner, {pkg:pkg})))  // wat
+  return gulp.src(['build/react-pixi-commonjs.js','src/react-pixi-exposeglobals.js'])
+    .pipe(concat('react-pixi.js'))
     .pipe(gulp.dest('build'))
 
      // might as well compress it while we're here
@@ -83,11 +90,11 @@ gulp.task('browserify', ['lint'], function() {
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('watch', ['browserify'], function() {
+gulp.task('watch', ['bundle'], function() {
   gulp.watch(SOURCEGLOB, ['browserify']);
 });
 
-gulp.task('livereload', ['lint','browserify'], function() {
+gulp.task('livereload', ['lint','bundle'], function() {
   var nodestatic = require('node-static');
   var fileserver = new nodestatic.Server('.');
   require('http').createServer(function(request, response) {
@@ -98,13 +105,13 @@ gulp.task('livereload', ['lint','browserify'], function() {
 
   var livereloadserver = livereload();
 
-  gulp.watch([SOURCEGLOB], ['browserify']);
+  gulp.watch([SOURCEGLOB], ['bundle']);
   gulp.watch(['build/**/*.js', 'examples/**/*.js','examples/**/*.html'], function(file) {
     livereloadserver.changed(file.path);
   });
 });
 
-gulp.task('test', ['browserify'], function() {
+gulp.task('test', ['bundle'], function() {
   karma.server.start(karmaconfiguration, function (exitCode) {
     gutil.log('Karma has exited with code ' + exitCode);
     process.exit(exitCode);
@@ -125,5 +132,5 @@ gulp.task('pixelrefs', function() {
                   });
 });
 
-gulp.task('default', ['lint','browserify']);
+gulp.task('default', ['lint','bundle']);
 

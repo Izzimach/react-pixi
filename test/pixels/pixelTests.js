@@ -5,9 +5,6 @@
 //
 
 function drawTestRenders(mountpoint, testimages) {
-  var React = require('react');
-  React.PIXI = require('react-pixi');
-
   var halfanchor = new PIXI.Point(0.5,0.5);
 
   var SpriteTestComponent = React.createClass({

@@ -1,9 +1,6 @@
 
 
 describe("PIXI Stage Component", function() {
-  var React = require('react');
-  React.PIXI = require('react-pixi');
-
   var stagecomponent = React.PIXI.Stage({width:300, height:300});
 
   function createTestFixture() {

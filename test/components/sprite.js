@@ -4,9 +4,6 @@
 
 describe("PIXI Sprite Component", function() {
 
-  var React = require('react');
-  React.PIXI = require('react-pixi');
-
   // need to prepend 'base' to the path since that's how the karma webserver
   // routes static file serving
   var imagePath = 'base/test/pixels/';

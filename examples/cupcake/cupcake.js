@@ -3,9 +3,7 @@
 //
 
 /* jshint strict: false */
-
-var React = require('react');
-React.PIXI = require('react-pixi');
+/* global React */
 
 var assetpath = function(filename) { return '../assets/' + filename; };
 
