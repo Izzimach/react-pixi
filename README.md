@@ -28,7 +28,7 @@ a script tag:
 <script src="react-pixi.js"></script>
 ```
 
-Then React will appear in the global namespace and the new pixi.js components are available under React.PIXI
+Then "React" will appear in the global namespace and the new React-PIXI components are available under "ReactPIXI"
 
 
 ## Rendering Pixi.js elements
@@ -51,10 +51,10 @@ var CupcakeComponent = React.createClass({
   render : function () {
     var creamimagename = this.spritemapping[this.props.topping];
     var xposition = this.props.xposition;
-    return React.PIXI.DisplayObjectContainer({x:xposition, y:100 },
+    return ReactPIXI.DisplayObjectContainer({x:xposition, y:100 },
       [
-        React.PIXI.Sprite({image:creamimagename, y:-35, anchor: new PIXI.Point(0.5,0.5), key:'topping'}, null),
-        React.PIXI.Sprite({image:'cupCake.png', y:35, anchor: new PIXI.Point(0.5,0.5), key:'cake'}, null)
+        ReactPIXI.Sprite({image:creamimagename, y:-35, anchor: new PIXI.Point(0.5,0.5), key:'topping'}, null),
+        ReactPIXI.Sprite({image:'cupCake.png', y:35, anchor: new PIXI.Point(0.5,0.5), key:'cake'}, null)
       ]
     );
   }
@@ -77,8 +77,5 @@ gulp test
 
 ## Caveats
 
-Lots of things are still missing. Specifically:
-- No PIXI filters.
-- Events are not generated and fed back to React.
-- You can't use JSX to generate PIXI components.
-
+-PIXI filters aren't supported.
+-Callbacks are just callbacks. They don't feed into React's event system.

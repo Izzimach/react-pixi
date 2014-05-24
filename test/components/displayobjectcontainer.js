@@ -12,7 +12,7 @@ describe("PIXI DisplayObjectContainer Component", function() {
     render: function () {
       var children = [];
       for (var childindex=0; childindex < this.props.childCount; childindex++) {
-        var somechild = React.PIXI.DisplayObjectContainer(
+        var somechild = ReactPIXI.DisplayObjectContainer(
           {
             key:childindex,
             ref:'child' + childindex.toString(),
@@ -21,7 +21,7 @@ describe("PIXI DisplayObjectContainer Component", function() {
         );
         children.push(somechild);
       }
-      return React.PIXI.Stage({width:this.props.width, height:this.props.height, ref:'stage'}, [React.PIXI.DisplayObjectContainer({key:'argh', ref:'testpoint'}, children)]);
+      return ReactPIXI.Stage({width:this.props.width, height:this.props.height, ref:'stage'}, [ReactPIXI.DisplayObjectContainer({key:'argh', ref:'testpoint'}, children)]);
     }
   });
 

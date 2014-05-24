@@ -1,7 +1,7 @@
 
 
 describe("PIXI Stage Component", function() {
-  var stagecomponent = React.PIXI.Stage({width:300, height:300});
+  var stagecomponent = ReactPIXI.Stage({width:300, height:300});
 
   function createTestFixture() {
     var fixture = window.document.createElement('div');

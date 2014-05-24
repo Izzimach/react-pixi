@@ -9,16 +9,16 @@ describe("React and React.PIXI modules", function() {
 
   it("exist and are loaded", function() {
     expect(React).toBeDefined();
-    expect(React.PIXI).toBeDefined();
+    expect(ReactPIXI).toBeDefined();
   });
 
   it("has all the components you expect", function() {
     expect(React.DOM).toBeDefined();
-    expect(React.PIXI.Stage).toBeDefined();
-    expect(React.PIXI.DisplayObjectContainer).toBeDefined();
-    expect(React.PIXI.Text).toBeDefined();
-    expect(React.PIXI.BitmapText).toBeDefined();
-    expect(React.PIXI.TilingSprite).toBeDefined();
+    expect(ReactPIXI.Stage).toBeDefined();
+    expect(ReactPIXI.DisplayObjectContainer).toBeDefined();
+    expect(ReactPIXI.Text).toBeDefined();
+    expect(ReactPIXI.BitmapText).toBeDefined();
+    expect(ReactPIXI.TilingSprite).toBeDefined();
   });
 });
 

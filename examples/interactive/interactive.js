@@ -1,5 +1,5 @@
 //
-// Basic React.PIXI example using pixi events to add/remove sprites.
+// Basic ReactPIXI example using pixi events to add/remove sprites.
 // Note that in order for a sprite to be clickable the sprite has
 // to be interactive (sprite.interactive = true)
 //
@@ -8,7 +8,8 @@
 
 // tell jshint that we use lodash
 /* global _ : false */
-/* global React */
+/* global React : false */
+/* global ReactPIXI : false */
 /* jshint strict: false */
 
 var g_assetpath = function(filename) { return '../assets/' + filename; };
@@ -78,12 +79,12 @@ function removeSpriteById(spriteid) {
 var SpriteAppButtons = React.createClass({
   displayName:'SpriteAppButtons',
   render: function() {
-    return React.PIXI.DisplayObjectContainer(
+    return ReactPIXI.DisplayObjectContainer(
       {},
       [
-        React.PIXI.Sprite({x:100,y:150,key:'cherry', image: g_assetpath('cherry.png'),interactive:true,click: addRandomSprite}),
-        React.PIXI.Text({x:10,y:10, key:'label1', text:'Click the cherry to add a lollipop sprite', style:{font:'25px Times'}}),
-        React.PIXI.Text({x:10,y:80, key:'label2', text:'Click on lollipop sprites to remove them', style:{font:'25px Times'}})
+        ReactPIXI.Sprite({x:100,y:150,key:'cherry', image: g_assetpath('cherry.png'),interactive:true,click: addRandomSprite}),
+        ReactPIXI.Text({x:10,y:10, key:'label1', text:'Click the cherry to add a lollipop sprite', style:{font:'25px Times'}}),
+        ReactPIXI.Text({x:10,y:80, key:'label2', text:'Click on lollipop sprites to remove them', style:{font:'25px Times'}})
       ]
     );
   }
@@ -96,11 +97,11 @@ var SpriteAppButtons = React.createClass({
 var DynamicSprites = React.createClass({
   displayName:'DynamicSprites',
   render: function() {
-    return React.PIXI.DisplayObjectContainer(
+    return ReactPIXI.DisplayObjectContainer(
       // need the DoC to be interactive
       {},
       // the children are all the dynamic sprites
-      _.map(this.props.sprites, function(spriteprops) { return React.PIXI.Sprite(spriteprops);})
+      _.map(this.props.sprites, function(spriteprops) { return ReactPIXI.Sprite(spriteprops);})
     );
   }
 });
@@ -115,7 +116,7 @@ var DynamicSprites = React.createClass({
 var SpriteApp = React.createClass({
   displayName: 'BunchOfSprites',
   render: function() {
-    return React.PIXI.Stage(
+    return ReactPIXI.Stage(
       // stage props
       {width: this.props.width, height: this.props.height, backgroundcolor: 0xa08080, interactive:true},
       // children components are the buttons and the dynamic sprites

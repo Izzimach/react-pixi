@@ -10,12 +10,12 @@ function drawTestRenders(mountpoint, testimages) {
   var SpriteTestComponent = React.createClass({
     displayName:'SpriteTextComponent',
     render: function () {
-      return React.PIXI.Stage(
+      return ReactPIXI.Stage(
         // props
         {width:200,height:200, backgroundcolor:0x66ff88, ref:'stage'},
         // children
         [
-          React.PIXI.Sprite(this.props.spriteprops)
+          ReactPIXI.Sprite(this.props.spriteprops)
         ]);
     }
   });

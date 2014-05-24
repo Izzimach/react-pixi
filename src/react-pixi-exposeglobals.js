@@ -3,5 +3,5 @@
 //
 
 window.React = require('react');
-window.React.PIXI = require('react-pixi');
+window.ReactPIXI = require('react-pixi');
 
