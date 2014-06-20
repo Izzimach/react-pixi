@@ -333,6 +333,7 @@ var PIXIStage = definePIXIComponent(
 // If you're making something that inherits from DisplayObjectContainer,
 // mixin these methods and implement your own version of
 // createDisplayObject and applySpecificDisplayObjectProps
+//
 
 var CommonDisplayObjectContainerImplementation = {
 
@@ -360,6 +361,8 @@ var CommonDisplayObjectContainerImplementation = {
   }
 
 };
+
+
 
 var DisplayObjectContainer = definePIXIComponent(
   'DisplayObjectContainer',
@@ -527,6 +530,43 @@ var BitmapText = definePIXIComponent(
   CommonDisplayObjectContainerImplementation,
   BitmapTextComponentMixin );
 
+//
+// The "Custom DisplayObject" allows for user-specified object
+// construction and applying properties
+//
+
+var CustomDisplayObjectContainerImplementation = {
+  mountComponent: function(transaction) {
+    ReactComponentMixin.mountComponent.apply(this, arguments);
+    this.displayObject = this.customDisplayObject(arguments);
+    this.applyCustomProps({}, this.props);
+
+    this.mountAndAddChildren(this.props.children, transaction);
+    return this.displayObject;
+  },
+
+  receiveComponent: function(nextComponent, transaction) {
+    var props = nextComponent.props;
+    this.applyCustomProps(this.props, props);
+
+    this.updateChildren(props.children, transaction);
+    this.props = props;
+  },
+
+  unmountComponent: function() {
+    this.unmountChildren();
+  }
+};
+
+var CustomPIXIComponent = function (custommixin) {
+  return definePIXIComponent(
+    'CustomDisplayObject',
+    ReactComponentMixin,
+    DisplayObjectContainerMixin,
+    CustomDisplayObjectContainerImplementation,
+    custommixin);
+};
+
 // module data
 
 module.exports =  {
@@ -535,5 +575,6 @@ module.exports =  {
   Sprite: Sprite,
   Text: Text,
   BitmapText : BitmapText,
-  TilingSprite: TilingSprite
+  TilingSprite: TilingSprite,
+  CreateCustomPIXIComponent : CustomPIXIComponent
 };
