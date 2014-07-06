@@ -30,10 +30,8 @@ var CupcakeComponent = React.createClass({
     var creamimagename = this.spritemapping[this.props.topping];
     var xposition = this.props.xposition;
     return ReactPIXI.DisplayObjectContainer({x:xposition, y:100 },
-      [
-        ReactPIXI.Sprite({image:creamimagename, y:-35, anchor: new PIXI.Point(0.5,0.5), key:'topping'}, null),
-        ReactPIXI.Sprite({image:assetpath('cupCake.png'), y:35, anchor: new PIXI.Point(0.5,0.5), key:'cake'}, null)
-      ]
+      ReactPIXI.Sprite({image:creamimagename, y:-35, anchor: new PIXI.Point(0.5,0.5), key:'topping'}, null),
+      ReactPIXI.Sprite({image:assetpath('cupCake.png'), y:35, anchor: new PIXI.Point(0.5,0.5), key:'cake'}, null)
     );
   }
 });
@@ -48,13 +46,13 @@ var CupcakeComponent = React.createClass({
 var ExampleStage = React.createClass({
   displayName: 'ExampleStage',
   render: function() {
-    var children = [
+    return ReactPIXI.Stage(
+      {width:this.props.width, height:this.props.height},
       ReactPIXI.TilingSprite({image:assetpath('bg_castle.png'), width:this.props.width, height:this.props.height, key:1}, null),
       CupcakeComponent({topping:this.props.topping, xposition:this.props.xposition, ref:'cupcake', key:2}),
       ReactPIXI.Text({text:'Vector text', x:this.props.xposition, y:10, style:{font:'40px Times'}, anchor: new PIXI.Point(0.5,0), key:3}, null),
       ReactPIXI.BitmapText({text:'Bitmap text', x:this.props.xposition, y:180, tint:0xff88ff88, style: {font:'40 Comic_Neue_Angular'}, key:4}, null)
-    ];
-    return ReactPIXI.Stage({width:this.props.width, height:this.props.height}, children);
+    );
   }
 });
 

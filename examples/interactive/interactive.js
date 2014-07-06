@@ -81,11 +81,9 @@ var SpriteAppButtons = React.createClass({
   render: function() {
     return ReactPIXI.DisplayObjectContainer(
       {},
-      [
-        ReactPIXI.Sprite({x:100,y:150,key:'cherry', image: g_assetpath('cherry.png'),interactive:true,click: addRandomSprite}),
-        ReactPIXI.Text({x:10,y:10, key:'label1', text:'Click the cherry to add a lollipop sprite', style:{font:'25px Times'}}),
-        ReactPIXI.Text({x:10,y:80, key:'label2', text:'Click on lollipop sprites to remove them', style:{font:'25px Times'}})
-      ]
+      ReactPIXI.Sprite({x:100,y:150,key:'cherry', image: g_assetpath('cherry.png'),interactive:true,click: addRandomSprite}),
+      ReactPIXI.Text({x:10,y:10, key:'label1', text:'Click the cherry to add a lollipop sprite', style:{font:'25px Times'}}),
+      ReactPIXI.Text({x:10,y:80, key:'label2', text:'Click on lollipop sprites to remove them', style:{font:'25px Times'}})
     );
   }
 });
@@ -97,11 +95,13 @@ var SpriteAppButtons = React.createClass({
 var DynamicSprites = React.createClass({
   displayName:'DynamicSprites',
   render: function() {
-    return ReactPIXI.DisplayObjectContainer(
-      // need the DoC to be interactive
-      {},
-      // the children are all the dynamic sprites
-      _.map(this.props.sprites, function(spriteprops) { return ReactPIXI.Sprite(spriteprops);})
+    var args = [{}];
+    this.props.sprites.forEach(function(spriteprops) {
+      args.push(ReactPIXI.Sprite(spriteprops));
+    });
+    return ReactPIXI.DisplayObjectContainer.apply(
+      null,
+      args
     );
   }
 });
