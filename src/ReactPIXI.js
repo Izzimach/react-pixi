@@ -306,6 +306,10 @@ var PIXIStage = definePIXIComponent(
       this.pixirenderer.resize(+props.width, +props.height);
     }
 
+    if (typeof props.backgroundcolor === "number") {
+      this.displayObject.setBackgroundColor(props.backgroundcolor);
+    }
+
     this.setApprovedDOMProperties(props);
     this.applyDisplayObjectProps(this.props, props);
 
