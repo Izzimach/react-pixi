@@ -29,7 +29,7 @@ var banner = ['/**',
              ' */',
              ''].join('\n');
 
-var browserlist = ['PhantomJS'];
+var browserlist = ['Firefox'];
 var karmaconfiguration = {
     browsers: browserlist,
     files: ['vendor/pixi.dev.js',

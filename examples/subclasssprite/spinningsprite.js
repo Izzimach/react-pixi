@@ -10,20 +10,22 @@
 
 var assetpath = function(filename) { return '../assets/' + filename; };
 
-var SpinningSprite = function(rotationspeed) {
-  PIXI.Sprite.call(this);
+var SpinningSprite = function(spriteimage, rotationspeed) {
+  PIXI.Sprite.call(this, PIXI.Texture.fromImage(spriteimage));
   this.rotationspeed = rotationspeed;
 
-  this.animrequestID = window.requestAnimationFrame(this.newFrame);
+  var that = this;
+
+  var newFrame = function(timestamp) {
+    that.rotation = that.rotationspeed * timestamp * 0.001;
+    that.animrequestID = window.requestAnimationFrame(newFrame);
+  }
+
+  this.animrequestID = window.requestAnimationFrame(newFrame);
 };
 
 SpinningSprite.prototype = Object.create( PIXI.Sprite.prototype, {
-  constructor : SpinningSprite,
-
-  newFrame : function(timestamp) {
-    this.rotation = this.rotationspeed * timestamp * 0.001;
-    this.animrequestID = window.requestAnimationFrame(this.newFrame);
-  },
+  constructor: SpinningSprite,
 
   cancelAnimation : function() {
     if (this.animrequestID !== null) {
@@ -34,12 +36,35 @@ SpinningSprite.prototype = Object.create( PIXI.Sprite.prototype, {
 });
 
 var SpinningSpriteComponent = ReactPIXI.CreateCustomPIXIComponent({
-  customDisplayObject : function() {
-
+  customDisplayObject: function() {
+    var rotationspeed = this.props.rotation || 0;
+    var spriteimage = this.props.image;
+    return new SpinningSprite(spriteimage, rotationspeed);
   },
 
   applyCustomProps : function(oldProps, newProps) {
+    var displayObject = this.displayObject;
 
+    if ((typeof newProps.image !== 'undefined') && newProps.image !== oldProps.image) {
+      displayObject.setTexture(PIXI.Texture.fromImage(newProps.image));
+    }
+
+    if (typeof newProps.anchor !== 'undefined') {
+      displayObject.anchor.x = newProps.anchor.x;
+      displayObject.anchor.y = newProps.anchor.y;
+    }
+
+    if (typeof newProps.tint !== 'undefined') {
+      displayObject.tint = newProps.tint;
+    }
+
+    if (typeof newProps.blendMode !== 'undefined') {
+      this.displayObject.blendMode = newProps.blendMode;
+    }
+
+    if (typeof newProps.rotation !== 'undefined') {
+      this.displayObject.rotationspeed = newProps.rotation;
+    }
   }
 });
 
@@ -53,10 +78,8 @@ var SpinningSpriteComponent = ReactPIXI.CreateCustomPIXIComponent({
 var SpinStage = React.createClass({
   displayName: 'ExampleStage',
   render: function() {
-    var children = [
-      SpinningSpriteComponent({x:this.props.spinx, y:this.props.spiny, rotation:this.props.spinrotation}, null)
-    ];
-    return ReactPIXI.Stage({width:this.props.width, height:this.props.height}, children);
+    var child = SpinningSpriteComponent({x:this.props.spinx, y:this.props.spiny, rotation:this.props.spinrotation, image:'../assets/cherry.png'}, null);
+    return ReactPIXI.Stage({width:this.props.width, height:this.props.height}, child);
   }
 });
 
@@ -67,6 +90,6 @@ function spinningspritestart() {
     var w = window.innerWidth-6;
     var h = window.innerHeight-6;
 
-    React.renderComponent(SpinStage({width:w, height:h, spinx:100, spiny:100, spinrotation:1}), renderelement);
+    React.renderComponent(SpinStage({width:w, height:h, spinx:100, spiny:100, spinrotation:5.6}), renderelement);
 }
 

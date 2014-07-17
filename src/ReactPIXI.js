@@ -543,6 +543,7 @@ var CustomDisplayObjectContainerImplementation = {
   mountComponent: function(transaction) {
     ReactComponentMixin.mountComponent.apply(this, arguments);
     this.displayObject = this.customDisplayObject(arguments);
+    this.applyDisplayObjectProps({}, this.props);
     this.applyCustomProps({}, this.props);
 
     this.mountAndAddChildren(this.props.children, transaction);
@@ -551,6 +552,7 @@ var CustomDisplayObjectContainerImplementation = {
 
   receiveComponent: function(nextComponent, transaction) {
     var props = nextComponent.props;
+    this.applyDisplayObjectProps(this.props, props);
     this.applyCustomProps(this.props, props);
 
     this.updateChildren(props.children, transaction);
