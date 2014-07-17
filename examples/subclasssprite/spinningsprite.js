@@ -19,7 +19,7 @@ var SpinningSprite = function(spriteimage, rotationspeed) {
   var newFrame = function(timestamp) {
     that.rotation = that.rotationspeed * timestamp * 0.001;
     that.animrequestID = window.requestAnimationFrame(newFrame);
-  }
+  };
 
   this.animrequestID = window.requestAnimationFrame(newFrame);
 };
