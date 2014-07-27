@@ -1,5 +1,13 @@
+//
+// system-level requires
+//
+
 var exec = require('child_process').exec;
 var path = require('path');
+
+//
+// gulp-specific tools
+//
 
 var gulp = require('gulp');
 var concat = require('gulp-concat');
@@ -12,13 +20,25 @@ var header = require('gulp-header');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 
+//
+// testing/packaging
+//
+
 var karma = require('karma');
 var browserify = require('browserify');
 var pkg = require('./package.json');
 
+//
+// config for the web server used to serve examples
+//
+
 var SERVERPORT = 8080;
 var SOURCEGLOB = './src/**/*.js';
 var EXAMPLESGLOB = './examples/**/*.js';
+
+//
+// final built output goes into build/<OUTPUTFILE>.js
+//
 
 var OUTPUTFILE = 'react-pixi';
 
@@ -117,6 +137,10 @@ gulp.task('test', ['bundle'], function() {
     process.exit(exitCode);
   });
 });
+
+//
+// generate the bitmap references used in testing
+//
 
 gulp.task('pixelrefs', function() {
   var command = path.normalize('./node_modules/.bin/phantomjs');
