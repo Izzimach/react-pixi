@@ -17,7 +17,7 @@
     "url": "https://github.com/Izzimach/react-pixi"
   },
   "license": "Apache-2.0",
-  "main": "build/pixi-react.js",
+  "main": "build/react-pixi.js",
   "dependencies": {
     "react": "0.10.0"
   },
