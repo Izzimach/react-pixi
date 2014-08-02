@@ -19,7 +19,7 @@
   "license": "Apache-2.0",
   "main": "build/react-pixi.js",
   "dependencies": {
-    "react": "0.10.0"
+    "react": "0.11.1"
   },
   "devDependencies": {
     "http": "0.0.0",

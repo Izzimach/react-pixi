@@ -25,9 +25,11 @@
 
 var DOMPropertyOperations = require('react/lib/DOMPropertyOperations');
 var ReactComponent = require('react/lib/ReactComponent');
+var ReactUpdates = require('react/lib/ReactUpdates');
 //var ReactMount = require('react/lib/ReactMount');
 var ReactMultiChild = require('react/lib/ReactMultiChild');
 var ReactBrowserComponentMixin = require('react/lib/ReactBrowserComponentMixin');
+var ReactDescriptor = require('react/lib/ReactDescriptor');
 var ReactDOMComponent = require('react/lib/ReactDOMComponent');
 var ReactComponentMixin = ReactComponent.Mixin;
 
@@ -41,22 +43,20 @@ var merge = require('react/lib/merge');
 function definePIXIComponent(name) {
 
   var ReactPIXIComponent = function() {};
-  ReactPIXIComponent.displayName = name;
   ReactPIXIComponent.prototype.type = ReactPIXIComponent;
-
   for (var i = 1; i < arguments.length; i++) {
     mixInto(ReactPIXIComponent, arguments[i]);
   }
 
-  var ConvenienceConstructor = function() {
-    var instance = new ReactPIXIComponent();
-
-    // Children can be either an array or more than one argument
-    instance.construct.apply(instance, arguments);
-    return instance;
+  var Constructor = function(props, owner) {
+    this.construct(props,owner);
   };
-  ConvenienceConstructor.type = ReactPIXIComponent;
-  return ConvenienceConstructor;
+  Constructor.prototype = new ReactPIXIComponent();
+  Constructor.prototype.constructor = Constructor;
+  Constructor.displayName = name;
+
+  var factory = ReactDescriptor.createFactory(Constructor);
+  return factory;
 }
 
 //
@@ -227,7 +227,7 @@ var PIXIStage = definePIXIComponent(
       transaction,
       mountDepth
     );
-    transaction.getReactMountReady().enqueue(this, this.componentDidMount);
+    transaction.getReactMountReady().enqueue(this.componentDidMount, this);
     // Temporary placeholder
     var idMarkup = DOMPropertyOperations.createMarkupForID(rootID);
     return '<canvas ' + idMarkup + '></canvas>';
@@ -264,7 +264,7 @@ var PIXIStage = definePIXIComponent(
   },
 
   componentDidMount: function() {
-    var props = this.props;
+    var props = this._descriptor.props;
     var renderelement = this.getDOMNode();
 
     var backgroundcolor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
@@ -274,14 +274,14 @@ var PIXIStage = definePIXIComponent(
     this.setApprovedDOMProperties(props);
     this.applyDisplayObjectProps({},this.props);
 
-    var transaction = ReactComponent.ReactReconcileTransaction.getPooled();
+    var transaction = ReactUpdates.ReactReconcileTransaction.getPooled();
     transaction.perform(
       this.mountAndAddChildren,
       this,
       props.children,
       transaction
     );
-    ReactComponent.ReactReconcileTransaction.release(transaction);
+    ReactUpdates.ReactReconcileTransaction.release(transaction);
     this.renderStage();
 
     var that = this;
@@ -299,8 +299,17 @@ var PIXIStage = definePIXIComponent(
     this.props = props;
   },
 
-  receiveComponent: function(nextComponent, transaction) {
-    var props = nextComponent.props;
+  receiveComponent: function(nextDescriptor, transaction) {
+    // Descriptors are immutable, so if the descriptor hasn't changed
+    // we don't need to do anything
+    if (nextDescriptor === this._descriptor &&
+        nextDescriptor._owner !== null) {
+      return;
+    }
+
+    ReactComponent.Mixin.receiveComponent.call(this, nextDescriptor, transaction);
+
+    var props = nextDescriptor.props;
 
     if (this.props.width != props.width || this.props.width != props.height) {
       this.pixirenderer.resize(+props.width, +props.height);
@@ -315,8 +324,6 @@ var PIXIStage = definePIXIComponent(
 
     this.updateChildren(props.children, transaction);
     this.renderStage();
-
-    this.props = props;
   },
 
   unmountComponent: function() {
