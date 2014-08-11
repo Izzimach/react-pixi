@@ -43,11 +43,11 @@ var EXAMPLESGLOB = './examples/**/*.js';
 var OUTPUTFILE = 'react-pixi';
 
 var banner = ['/**',
-             ' * <%= pkg.name %>',
-             ' * @version <%= pkg.version %>',
-             ' * @license <%= pkg.license %>',
-             ' */',
-             ''].join('\n');
+              ' * <%= pkg.name %>',
+              ' * @version <%= pkg.version %>',
+              ' * @license <%= pkg.license %>',
+              ' */',
+              ''].join('\n');
 
 var browserlist = ['Firefox'];
 var karmaconfiguration = {
