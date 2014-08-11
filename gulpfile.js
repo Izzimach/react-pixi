@@ -19,6 +19,7 @@ var gutil = require('gulp-util');
 var header = require('gulp-header');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
+var replace = require('gulp-replace');
 
 //
 // testing/packaging
@@ -92,6 +93,10 @@ gulp.task('browserify',['lint'], function() {
 
   return bundler.bundle().on('error', errorHandler)
     .pipe(vsource('react-pixi-commonjs.js'))
+
+    // this basically sets the developer/production build flag
+    .pipe(streamify(replace("process.env.NODE_ENV", "\"production\"")))
+
     .pipe(gulp.dest('build'));
 });
 
@@ -101,16 +106,19 @@ gulp.task('bundle', ['browserify'], function() {
   // throw an exception and terminate gulp unless we catch the error event.
   return gulp.src(['build/react-pixi-commonjs.js','src/react-pixi-exposeglobals.js'])
     .pipe(concat('react-pixi.js'))
-    .pipe(gulp.dest('build'))
-
-     // might as well compress it while we're here
-
-    .pipe(streamify(uglify({preserveComments:'some'})))
-    .pipe(rename(OUTPUTFILE + '.min.js'))
+    .pipe(streamify(replace("process.env.NODE_ENV", "\"development\"")))
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('watch', ['bundle'], function() {
+gulp.task('bundle-min', ['browserify'], function() {
+  return gulp.src(['build/react-pixi-commonjs.js','src/react-pixi-exposeglobals.js'])
+    .pipe(concat('react-pixi.min.js'))
+    .pipe(streamify(replace("process.env.NODE_ENV", "\"production\"")))
+    .pipe(streamify(uglify({preserveComments:'some'})))
+    .pipe(gulp.dest('build'));
+});
+
+gulp.task('watch', ['bundle', 'bundle-min'], function() {
   gulp.watch(SOURCEGLOB, ['browserify']);
 });
 
@@ -125,13 +133,13 @@ gulp.task('livereload', ['lint','bundle'], function() {
 
   var livereloadserver = livereload();
 
-  gulp.watch([SOURCEGLOB], ['bundle']);
+  gulp.watch([SOURCEGLOB], ['bundle','bundle-min']);
   gulp.watch(['build/**/*.js', 'examples/**/*.js','examples/**/*.html'], function(file) {
     livereloadserver.changed(file.path);
   });
 });
 
-gulp.task('test', ['bundle'], function() {
+gulp.task('test', ['bundle', 'bundle-min'], function() {
   karma.server.start(karmaconfiguration, function (exitCode) {
     gutil.log('Karma has exited with code ' + exitCode);
     process.exit(exitCode);
@@ -156,5 +164,5 @@ gulp.task('pixelrefs', function() {
                   });
 });
 
-gulp.task('default', ['lint','bundle']);
+gulp.task('default', ['lint','bundle', 'bundle-min']);
 
