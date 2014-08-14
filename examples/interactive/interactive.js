@@ -94,6 +94,9 @@ var SpriteAppButtons = React.createClass({
 
 var DynamicSprites = React.createClass({
   displayName:'DynamicSprites',
+  propTypes: {
+    sprites: React.PropTypes.arrayOf(React.PropTypes.object)
+  },
   render: function() {
     var args = [{}];
     this.props.sprites.forEach(function(spriteprops) {
