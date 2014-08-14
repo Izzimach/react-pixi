@@ -93,10 +93,6 @@ gulp.task('browserify',['lint'], function() {
 
   return bundler.bundle().on('error', errorHandler)
     .pipe(vsource('react-pixi-commonjs.js'))
-
-    // this basically sets the developer/production build flag
-    .pipe(streamify(replace("process.env.NODE_ENV", "\"production\"")))
-
     .pipe(gulp.dest('build'));
 });
 

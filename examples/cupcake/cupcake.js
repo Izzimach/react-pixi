@@ -26,6 +26,11 @@ var CupcakeComponent = React.createClass({
   'pink' : assetpath('creamPink.png'),
   },
 
+  propTypes: {
+    xposition: React.PropTypes.number.isRequired,
+    topping: React.PropTypes.string.isRequired,
+  },
+
   render : function () {
     var creamimagename = this.spritemapping[this.props.topping];
     var xposition = this.props.xposition;
