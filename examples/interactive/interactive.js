@@ -123,10 +123,8 @@ var SpriteApp = React.createClass({
       // stage props
       {width: this.props.width, height: this.props.height, backgroundcolor: 0xa08080, interactive:true},
       // children components are the buttons and the dynamic sprites
-      [
-        DynamicSprites({key:'sprites', sprites:this.props.sprites}),
-        SpriteAppButtons({key:'gui'})
-      ]
+      DynamicSprites({key:'sprites', sprites:this.props.sprites}),
+      SpriteAppButtons({key:'gui'})
     );
   }
 });
