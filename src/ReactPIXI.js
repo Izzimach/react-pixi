@@ -203,7 +203,7 @@ var StageMixin = merge(DisplayObjectContainerMixin, {
 
 
 //
-// The 'Stage' component includes both7 the pixi.js stage and
+// The 'Stage' component includes both the pixi.js stage and
 // the canvas DOM element that pixi renders onto.
 //
 // Maybe split these into two components? Putting a DOM node and a pixi DisplayObject into
@@ -220,18 +220,15 @@ var PIXIStage = definePIXIComponent(
   ReactComponentMixin,
   StageMixin, {
 
+    /* jshint unused: vars */
   mountComponent: function(rootID, transaction, mountDepth) {
-    ReactComponentMixin.mountComponent.call(
-      this,
-      rootID,
-      transaction,
-      mountDepth
-    );
+    ReactComponentMixin.mountComponent.apply(this, arguments);
     transaction.getReactMountReady().enqueue(this.componentDidMount, this);
     // Temporary placeholder
     var idMarkup = DOMPropertyOperations.createMarkupForID(rootID);
     return '<canvas ' + idMarkup + '></canvas>';
   },
+    /* jshint unused: true */
 
   setApprovedDOMProperties: function(nextProps) {
     var prevProps = this.props;
@@ -347,8 +344,8 @@ var PIXIStage = definePIXIComponent(
 //
 
 var CommonDisplayObjectContainerImplementation = {
-
-  mountComponent: function(transaction) {
+  /* jshint unused: vars */
+  mountComponent: function(rootID, transaction, mountDepth) {
     ReactComponentMixin.mountComponent.apply(this, arguments);
     this.displayObject = this.createDisplayObject(arguments);
     this.applyDisplayObjectProps({}, this.props);
@@ -357,6 +354,7 @@ var CommonDisplayObjectContainerImplementation = {
     this.mountAndAddChildren(this.props.children, transaction);
     return this.displayObject;
   },
+  /* jshint unused: true */
 
   receiveComponent: function(nextComponent, transaction) {
     var props = nextComponent.props;
@@ -547,7 +545,8 @@ var BitmapText = definePIXIComponent(
 //
 
 var CustomDisplayObjectContainerImplementation = {
-  mountComponent: function(transaction) {
+  /* jshint unused: vars */
+  mountComponent: function(rootID, transaction, mountDepth) {
     ReactComponentMixin.mountComponent.apply(this, arguments);
     this.displayObject = this.customDisplayObject(arguments);
     this.applyDisplayObjectProps({}, this.props);
@@ -556,6 +555,7 @@ var CustomDisplayObjectContainerImplementation = {
     this.mountAndAddChildren(this.props.children, transaction);
     return this.displayObject;
   },
+  /* jshint unused: true */
 
   receiveComponent: function(nextComponent, transaction) {
     var props = nextComponent.props;
