@@ -21,7 +21,7 @@ describe("PIXI DisplayObjectContainer Component", function() {
         );
         children.push(somechild);
       }
-      return ReactPIXI.Stage({width:this.props.width, height:this.props.height, ref:'stage'}, [ReactPIXI.DisplayObjectContainer({key:'argh', ref:'testpoint'}, children)]);
+      return ReactPIXI.Stage({width:this.props.width, height:this.props.height, ref:'stage'}, ReactPIXI.DisplayObjectContainer({key:'argh', ref:'testpoint'}, children));
     }
   });
 
