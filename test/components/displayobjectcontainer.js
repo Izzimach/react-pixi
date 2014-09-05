@@ -4,9 +4,11 @@ describe("PIXI DisplayObjectContainer Component", function() {
   fixture.id = 'test-fixture';
   window.document.body.appendChild(fixture);
 
-  // this component just renders a DisplayObjectContainer which
+  //
+  // This component just renders a DisplayObjectContainer which
   // has some specific number of DisplayObjectContainer objects as children.
   // you specify the number of children as props.childCount
+  //
   var variableChildrenComponent = React.createClass({
     displayName: 'VariableChildrenComponent',
     render: function () {
@@ -128,6 +130,56 @@ describe("PIXI DisplayObjectContainer Component", function() {
     React.unmountComponentAtNode(fixture);
   });
 
-  fixture.parentNode.removeChild(fixture);
+  it("correctly replaces PIXI objects instead of setting HTML markup when replacing components in-place", function() {
+    //
+    // This occurs when a composite element is updated in-place. To create this (admittedly uncommon)
+    // situation we create a composite component that changes the key of its child while everything else
+    // (including the key of the composite element) remains unchanged.  In this case _updateChildren in ReactMultiChildMixin
+    // will update in-place and then updateComponent in ReactCompositeComponentMixin will try to nuke and replace the child
+    // component since the keys don't match.
+    //
+    var injectedKeyComponent = ReactPIXI.createClass({
+      displayName: 'injectedKeyComponent',
+      render: function () {
+        var propswithkey = _.clone(this.props);
+        propswithkey.key = this.props.injectedkey;
+        return ReactPIXI.DisplayObjectContainer(propswithkey);
+      }
+    });
+    var injectedKeyStage = React.createClass({
+      displayName: 'injectedKeyStage',
+      render: function () {
+        return ReactPIXI.Stage({width:this.props.width, height:this.props.height, ref:'stage'},
+                               injectedKeyComponent({x:100, y:100, key: 'argh', injectedkey:this.props.injectedkey}));
+      }
+    });
 
+    var baseprops = {width:300, height:300, key:'argh'};
+    var addinjectedkey = function(originalprops, injectedkey) {
+      var newprops = _.clone(originalprops);
+      newprops.injectedkey = injectedkey;
+      return newprops;
+    };
+    var props1 = addinjectedkey(baseprops, 'one');
+    var props2 = addinjectedkey(baseprops, 'two');
+
+    var reactinstance = React.renderComponent(injectedKeyStage(props1),fixture);
+
+    // this should destroy and replace the children instead of updating them
+    reactinstance.setProps(props2);
+
+    expect(fixture.childNodes.length).toBe(1);
+    expect(fixture.childNodes[0].nodeName).toBe('CANVAS');
+
+    // the tree from here on down is pixi objects, no DOM nodes
+    expect(fixture.childNodes[0].childNodes.length).toBe(0);
+
+    // examine the pixi objects
+    var stage = reactinstance.refs['stage'].displayObject;
+    expect(stage.children.length).toBe(1);
+
+    React.unmountComponentAtNode(fixture);
+  })
+
+  fixture.parentNode.removeChild(fixture);
 });
