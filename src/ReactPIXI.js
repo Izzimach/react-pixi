@@ -224,7 +224,6 @@ var PIXIStage = definePIXIComponent(
   ReactComponentMixin,
   StageMixin, {
 
-    /* jshint unused: vars */
   mountComponent: function(rootID, transaction, mountDepth) {
     /* jshint unused: vars */
     ReactComponentMixin.mountComponent.apply(this, arguments);
@@ -233,7 +232,6 @@ var PIXIStage = definePIXIComponent(
     var idMarkup = DOMPropertyOperations.createMarkupForID(rootID);
     return '<canvas ' + idMarkup + '></canvas>';
   },
-    /* jshint unused: true */
 
   setApprovedDOMProperties: function(nextProps) {
     var prevProps = this.props;
@@ -359,7 +357,6 @@ var CommonDisplayObjectContainerImplementation = {
     this.mountAndAddChildren(this.props.children, transaction);
     return this.displayObject;
   },
-  /* jshint unused: true */
 
   receiveComponent: function(nextComponent, transaction) {
     var props = nextComponent.props;
@@ -560,7 +557,6 @@ var CustomDisplayObjectContainerImplementation = {
     this.mountAndAddChildren(this.props.children, transaction);
     return this.displayObject;
   },
-  /* jshint unused: true */
 
   receiveComponent: function(nextComponent, transaction) {
     var props = nextComponent.props;
