@@ -14,9 +14,8 @@ function drawTestRenders(mountpoint, testimages) {
         // props
         {width:200,height:200, backgroundcolor:0x66ff88, ref:'stage'},
         // children
-        [
-          ReactPIXI.Sprite(this.props.spriteprops)
-        ]);
+        ReactPIXI.Sprite(this.props.spriteprops)
+        );
     }
   });
 
