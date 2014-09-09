@@ -2,6 +2,8 @@
 logs
 *.log
 
+*.swp
+
 # Runtime data
 pids
 *.pid
@@ -20,6 +22,8 @@ coverage
 build/Release
 
 build
+
+bower_components
 
 # Dependency directory
 # Deployed apps should consider commenting this line out:
