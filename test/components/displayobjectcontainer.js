@@ -23,7 +23,7 @@ describe("PIXI DisplayObjectContainer Component", function() {
         );
         docargs.push(somechild);
       }
-      return ReactPIXI.Stage({width:this.props.width, height:this.props.height, ref:'stage'}, ReactPIXI.DisplayObjectContainer.apply(null, docargs));
+      return ReactPIXI.Stage({width:this.props.width, height:this.props.height, ref:'stage'}, ReactPIXI.DisplayObjectContainer.apply({key:'argh', ref:'testpoint'}, docargs));
     }
   });
 
