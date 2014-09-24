@@ -8,11 +8,13 @@ Create/control a [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) canvas usi
 
 ## Installation
 
-You will need node and npm. You should probably install gulp globally as well.
+You will need node, npm, and bower. You should probably install gulp globally as well.
 
 ```
 npm install -g gulp
+npm install -g bower
 npm install
+bower install
 ```
 
 Simply running
