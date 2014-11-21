@@ -5,8 +5,20 @@ react-pixi
 
 Create/control a [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) canvas using [React](https://github.com/facebook/react).
 
+To control a 3D scene with React, see [react-three](https://github.com/Izzimach/react-three/)
 
-## Installation
+## Install with Bower
+
+```
+bower install react-pixi
+```
+
+Then include one of the javascript files in build, such as build/react-pixi.js.
+Note that react-pixi includes its own internal copy of React (currently 0.11)
+so you should not include the standard React library. Doing so might give wierd results!
+
+
+## Building
 
 You will need node, npm, and bower. You should probably install gulp globally as well.
 

@@ -7,6 +7,12 @@
   ],
   "description": "Control pixi graphics using React",
   "main": "build/react-pixi.js",
+  "ignore" : [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
   "moduleType": [
     "globals",
     "node"
@@ -28,6 +34,6 @@
   ],
   "dependencies": {
     "lodash": "~2.4.1",
-    "pixi.js": "~1.6.1"
+    "pixi.js": "~2.1.1"
   }
 }
