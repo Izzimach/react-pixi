@@ -22,7 +22,6 @@
     "pixi"
   ],
   "license": "AP2",
-  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
