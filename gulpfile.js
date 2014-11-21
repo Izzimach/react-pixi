@@ -75,6 +75,7 @@ function errorHandler(err) {
 gulp.task('help', function() {
   console.log('Possible tasks:');
   console.log('"default" - compile react-pixi into build/react-pixi.js');
+  console.log('"dist" - compile react-pixi into dist/ directory for distribution');
   console.log('"watch" - watch react-pixi source files and rebuild');
   console.log('"test" - run tests in test directory');
   console.log('"livereload" - compile and launch web server/reload server');
@@ -143,6 +144,13 @@ gulp.task('test', ['bundle', 'bundle-min'], function() {
   });
 });
 
+// dist put build results into dist/ for release via bower
+gulp.task('dist', ['bundle', 'bundle-min', 'test'], function() {
+  return gulp.src(['build/**'], {base:'build'})
+    .pipe(gulp.dest('dist'));
+});
+
+
 //
 // generate the bitmap references used in testing
 //
@@ -162,4 +170,3 @@ gulp.task('pixelrefs', function() {
 });
 
 gulp.task('default', ['lint','bundle', 'bundle-min']);
-
