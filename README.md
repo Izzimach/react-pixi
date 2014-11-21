@@ -17,6 +17,8 @@ Then include one of the javascript files in build, such as build/react-pixi.js.
 Note that react-pixi includes its own internal copy of React (currently 0.11)
 so you should not include the standard React library. Doing so might give wierd results!
 
+Note that you also need to include the dependencies: lodash and pixi.js.
+
 
 ## Building
 
