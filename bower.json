@@ -7,11 +7,21 @@
   ],
   "description": "Control pixi graphics using React",
   "main": "build/react-pixi.js",
-  "ignore" : [
+  "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
-    "test"
+    "examples",
+    "src",
+    "test",
+    "tests",
+    "gulpfile.js",
+    "index.html",
+    "package.json",
+    "vendor",
+    "docs",
+    "NOTICE",
+    "README.md"
   ],
   "moduleType": [
     "globals",
@@ -22,15 +32,6 @@
     "pixi"
   ],
   "license": "AP2",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "examples",
-    "src",
-    "test",
-    "tests"
-  ],
   "dependencies": {
     "lodash": "~2.4.1",
     "pixi.js": "~2.1.1"
