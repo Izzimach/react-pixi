@@ -13,11 +13,18 @@ To control a 3D scene with React, see [react-three](https://github.com/Izzimach/
 bower install react-pixi
 ```
 
-Then include one of the javascript files in build, such as build/react-pixi.js.
+Then include one of the javascript files in dist, such as dist/react-pixi.js.  
+If you include this into your webpage via a script tag:
+
+```
+<script src="bower_components/react-pixi/dist/react-pixi.js"></script>
+```
+
+Then "React" will appear in the global namespace and the new React-PIXI components are available under "ReactPIXI"
+Also, you need to include the dependencies: lodash and pixi.js.
+
 Note that react-pixi includes its own internal copy of React (currently 0.11)
 so you should not include the standard React library. Doing so might give wierd results!
-
-Note that you also need to include the dependencies: lodash and pixi.js.
 
 
 ## Building
@@ -37,15 +44,7 @@ Simply running
 gulp
 ```
 
-Will package up react-pixi along with React and put the result in build/react-pixi.js. If you include this into your webpage via
-a script tag:
-
-```
-<script src="react-pixi.js"></script>
-```
-
-Then "React" will appear in the global namespace and the new React-PIXI components are available under "ReactPIXI"
-
+Will package up react-pixi along with React and put the result in build/react-pixi.js.
 
 ## Rendering Pixi.js elements
 
