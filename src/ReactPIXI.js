@@ -269,7 +269,7 @@ var PIXIStage = definePIXIComponent(
 
     var backgroundcolor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
     this.displayObject = new PIXI.Stage(backgroundcolor);
-    this.pixirenderer = PIXI.autoDetectRenderer(props.width, props.height, {view:renderelement});
+    this.pixirenderer = PIXI.autoDetectRecommendedRenderer(props.width, props.height, {view:renderelement});
 
     this.setApprovedDOMProperties(props);
     this.applyDisplayObjectProps({},this.props);
