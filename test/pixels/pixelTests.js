@@ -36,11 +36,12 @@ function drawTestRenders(mountpoint, testimages) {
 
   spritetestprops.forEach(function (curprops) {
     curprops.key = 'urgh'; // re-use the same sprite instance
-    reactinstance.setProps({spriteprops:curprops});
+    //reactinstance.setProps({spriteprops:curprops});
+    React.renderComponent(SpriteTestComponent({spriteprops:curprops}), mountpoint);
 
     // convert the rendered image to a data blob we can use
     var renderer = reactinstance.refs['stage'].pixirenderer;
-    var renderURL = renderer.view.toDataURL('image/png');
+    var renderURL = reactinstance.refs['stage'].getDOMNode().toDataURL('image/png');
 
     renderresults.push(renderURL);
   });
@@ -72,4 +73,3 @@ function pixelTests(fixture, testimagepath, resultscallback) {
 
   return null;
 }
-

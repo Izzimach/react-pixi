@@ -58,6 +58,7 @@ var karmaconfiguration = {
             'build/react-pixi.js',
             'vendor/phantomjs-shims.js', // need a shim to work with the ancient version of Webkit used in PhantomJS
             'node_modules/resemblejs/resemble.js',
+            'test/createTestFixtureMountPoint.js',
             'test/pixels/pixelTests.js',
             'test/basics/*.js',
             'test/components/*.js',

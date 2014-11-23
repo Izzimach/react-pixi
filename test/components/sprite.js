@@ -11,21 +11,23 @@ describe("PIXI Sprite Component", function() {
     return [imagePath, 'testrender',index,'.png'].join('');
   };
 
-  var fixture = window.document.createElement('div');
-  fixture.id = 'test-fixture';
-  window.document.body.appendChild(fixture);
+  var mountpoint = null;
 
+  beforeEach(function() { mountpoint = createTestFixtureMountPoint(); });
+  afterEach(function() { removeTestFixtureMountPoint(mountpoint); });
+
+  
   it("puts pixels on the canvas", function(done) {
-    pixelTests(fixture, imagePath, function (results) {
+    pixelTests(mountpoint, imagePath, function (results) {
       expect(results).toBeDefined();
       expect(results.length).toBeGreaterThan(0);
 
       var comparesperformed = 0;
       for (var compareindex=0; compareindex < results.length; compareindex++) {
         var refimageURI = pixelReferenceImage(compareindex);
-        var testimage = results[compareindex];
+        var testimageURI = results[compareindex];
 
-        resemble(testimage)
+        resemble(testimageURI)
           .compareTo(refimageURI)
           .onComplete(function (data) {
             expect(data).toBeDefined();
@@ -33,6 +35,9 @@ describe("PIXI Sprite Component", function() {
             expect(data.isSameDimensions).toEqual(true);
             if (data.misMatchPercentage > 0.2) {
               console.log("mismatch is " + data.misMatchPercentage.toString());
+              console.log("reference image URI is " + refimageURI);
+              console.log("test image URI is " + testimageURI);
+              console.log("mismatch image data URI is " + data.getImageDataUrl());
             }
             expect(data.misMatchPercentage).toBeLessThan(0.2);
 
@@ -45,6 +50,4 @@ describe("PIXI Sprite Component", function() {
 
     });
   });
-
-  fixture.parentNode.removeChild(fixture);
 });
