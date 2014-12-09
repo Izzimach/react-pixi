@@ -26,13 +26,11 @@ var React = require('react/lib/react');
 var DOMPropertyOperations = require('react/lib/DOMPropertyOperations');
 var ReactComponent = require('react/lib/ReactComponent');
 var ReactUpdates = require('react/lib/ReactUpdates');
-//var ReactMount = require('react/lib/ReactMount');
 var ReactMultiChild = require('react/lib/ReactMultiChild');
 var ReactBrowserComponentMixin = require('react/lib/ReactBrowserComponentMixin');
 var ReactDescriptor = require('react/lib/ReactDescriptor');
 var ReactDOMComponent = require('react/lib/ReactDOMComponent');
 var ReactComponentMixin = ReactComponent.Mixin;
-//var ReactCompositeComponent = require('react/lib/ReactCompositeComponent');
 
 var mixInto = require('react/lib/mixInto');
 var merge = require('react/lib/merge');
