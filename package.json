@@ -22,27 +22,23 @@
     "react": "0.11.1"
   },
   "devDependencies": {
-    "browserify": "~4.1.0",
-    "gulp": "~3.6.0",
+    "browserify": "~7.0.0",
+    "envify": "^3.2.0",
+    "gulp": "~3.8.10",
     "gulp-concat": "~2.2.0",
-    "gulp-header": "~1.2.0",
     "gulp-jshint": "~1.5.1",
     "gulp-livereload": "~1.2.0",
-    "gulp-rename": "~1.2.0",
-    "gulp-replace": "^0.4.0",
-    "gulp-streamify": "0.0.5",
-    "gulp-uglify": "~0.2.1",
+    "gulp-uglify": "^1.0.2",
     "gulp-util": "~2.2.14",
     "jshint-stylish": "~0.1.5",
     "karma": "~0.12.23",
-    "karma-chrome-launcher": "~0.1.3",
     "karma-firefox-launcher": "~0.1.3",
     "karma-jasmine": "~0.2.2",
     "node-static": "~0.7.3",
-    "phantomjs": "^1.9.9",
-    "react-tools": "~0.10.0",
+    "react-tools": "~0.11.0",
     "resemblejs": "~1.2.0",
-    "vinyl-source-stream": "~0.1.1"
+    "vinyl-source-stream": "~0.1.1",
+    "vinyl-transform": "^1.0.0"
   },
   "scripts": {
     "test": "gulp test"

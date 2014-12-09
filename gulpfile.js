@@ -12,14 +12,12 @@ var path = require('path');
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var vsource = require('vinyl-source-stream');
-var streamify = require('gulp-streamify');
+var vtransform = require('vinyl-transform');
 var jshint = require('gulp-jshint');
 var livereload = require('gulp-livereload');
 var gutil = require('gulp-util');
-var header = require('gulp-header');
 var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var replace = require('gulp-replace');
+var envify = require('envify/custom');
 
 //
 // testing/packaging
@@ -105,15 +103,15 @@ gulp.task('bundle', ['browserify'], function() {
   // throw an exception and terminate gulp unless we catch the error event.
   return gulp.src(['build/react-pixi-commonjs.js','src/react-pixi-exposeglobals.js'])
     .pipe(concat('react-pixi.js'))
-    .pipe(streamify(replace("process.env.NODE_ENV", "\"development\"")))
+    .pipe(vtransform(envify({NODE_ENV:"development"})))
     .pipe(gulp.dest('build'));
 });
 
 gulp.task('bundle-min', ['browserify'], function() {
   return gulp.src(['build/react-pixi-commonjs.js','src/react-pixi-exposeglobals.js'])
     .pipe(concat('react-pixi.min.js'))
-    .pipe(streamify(replace("process.env.NODE_ENV", "\"production\"")))
-    .pipe(streamify(uglify({preserveComments:'some'})))
+    .pipe(vtransform(envify({NODE_ENV:"production"})))
+    .pipe(uglify({preserveComments:'some'}))
     .pipe(gulp.dest('build'));
 });
 

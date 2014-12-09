@@ -21,7 +21,7 @@
 
 "use strict";
 
-var React = require('react/react.js');
+var React = require('react/lib/react');
 
 var DOMPropertyOperations = require('react/lib/DOMPropertyOperations');
 var ReactComponent = require('react/lib/ReactComponent');
