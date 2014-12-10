@@ -14,6 +14,7 @@ var concat = require('gulp-concat');
 var vsource = require('vinyl-source-stream');
 var vtransform = require('vinyl-transform');
 var jshint = require('gulp-jshint');
+var template = require('gulp-template');
 var livereload = require('gulp-livereload');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
@@ -143,12 +144,33 @@ gulp.task('test', ['bundle', 'bundle-min'], function() {
   });
 });
 
-// dist put build results into dist/ for release via bower
+// dist puts build results into dist/ for release via bower
 gulp.task('dist', ['bundle', 'bundle-min', 'test'], function() {
   return gulp.src(['build/**'], {base:'build'})
     .pipe(gulp.dest('dist'));
 });
 
+// put the react-pixi javascript files into dist-clojars so that we
+// can run leiningen there
+gulp.task('clojars-dist', ['dist'], function() {
+  return gulp.src(['dist/**'], {base:'dist'})
+    .pipe(gulp.dest('dist-clojars/src'));
+});
+
+// generate project file for clojars using the current version specified in
+// package.json
+gulp.task('clojars-project', function() {
+  return gulp.src(['src/project_template.clj'], {base:'src'})
+    .pipe(concat("project.clj"))
+    .pipe(template({version:pkg.version}))
+    .pipe(gulp.dest('dist-clojars/'));
+});
+
+gulp.task('clojars-deploy', ['clojars-dist','clojars-project','test'], function() {
+  // user must run lein deploy in the subdir
+  gutil.log('ready to deploy');
+  gutil.log('chdir into the "dist-clojars" directory and run "lein deploy clojars"');
+});
 
 //
 // generate the bitmap references used in testing

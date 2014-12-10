@@ -1,6 +1,6 @@
 {
   "name": "react-pixi",
-  "version": "0.1.0-EXPERIMENTAL",
+  "version": "0.1.0-SNAPSHOT",
   "description": "Construct PIXI.js scenes using React",
   "keywords": [
     "react",
@@ -38,7 +38,8 @@
     "react-tools": "~0.11.0",
     "resemblejs": "~1.2.0",
     "vinyl-source-stream": "~0.1.1",
-    "vinyl-transform": "^1.0.0"
+    "vinyl-transform": "^1.0.0",
+    "gulp-template": "~1.1.1"
   },
   "scripts": {
     "test": "gulp test"
