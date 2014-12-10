@@ -79,7 +79,7 @@ function removeSpriteById(spriteid) {
 var SpriteAppButtons = React.createClass({
   displayName:'SpriteAppButtons',
   render: function() {
-    return ReactPIXI.DisplayObjectContainer(
+    return ReactPIXI.DisplayObject(
       {},
       ReactPIXI.Sprite({x:100,y:150,key:'cherry', image: g_assetpath('cherry.png'),interactive:true,click: addRandomSprite}),
       ReactPIXI.Text({x:10,y:10, key:'label1', text:'Click the cherry to add a lollipop sprite', style:{font:'25px Times'}}),
@@ -102,7 +102,7 @@ var DynamicSprites = React.createClass({
     this.props.sprites.forEach(function(spriteprops) {
       args.push(ReactPIXI.Sprite(spriteprops));
     });
-    return ReactPIXI.DisplayObjectContainer.apply(
+    return ReactPIXI.DisplayObject.apply(
       null,
       args
     );
@@ -123,8 +123,8 @@ var SpriteApp = React.createClass({
       // stage props
       {width: this.props.width, height: this.props.height, backgroundcolor: 0xa08080, interactive:true},
       // children components are the buttons and the dynamic sprites
-      DynamicSprites({key:'sprites', sprites:this.props.sprites}),
-      SpriteAppButtons({key:'gui'})
+      React.createElement(DynamicSprites, {key:'sprites', sprites:this.props.sprites}),
+      React.createElement(SpriteAppButtons, {key:'gui'})
     );
   }
 });
@@ -141,7 +141,7 @@ function interactiveexamplestart() {
 
   function PutReact()
   {
-    g_reactinstance = React.renderComponent(SpriteApp(g_applicationstate), renderelement);
+    g_reactinstance = React.render(React.createElement(SpriteApp,g_applicationstate), renderelement);
   }
 
   var assetloader = new PIXI.AssetLoader([
@@ -153,4 +153,3 @@ function interactiveexamplestart() {
   assetloader.on('onComplete', PutReact);
   assetloader.load();
 }
-

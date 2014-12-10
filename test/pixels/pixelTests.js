@@ -20,7 +20,7 @@ function drawTestRenders(mountpoint, testimages) {
   });
   var SpriteTest = React.createFactory(SpriteTestComponent);
 
-  var reactinstance = React.render(SpriteTest({spriteprops:{x:100,y:100, anchor:halfanchor, image:testimages[0], key:'urgh'}}), mountpoint);
+  //var reactinstance = React.render(SpriteTest({key:'spriteteststage', spriteprops:{x:100,y:100, anchor:halfanchor, image:testimages[0], key:'urgh'}}), mountpoint);
 
   // now make multiple renders with slightly different sprite props. For each set of sprite props
   // we record a snapshot. These snapshots are compared with the known 'good' versions.
@@ -37,8 +37,7 @@ function drawTestRenders(mountpoint, testimages) {
 
   spritetestprops.forEach(function (curprops) {
     curprops.key = 'urgh'; // re-use the same sprite instance
-    //reactinstance.setProps({spriteprops:curprops});
-    React.render(SpriteTest({spriteprops:curprops}), mountpoint);
+    var reactinstance = React.render(SpriteTest({spriteprops:curprops}), mountpoint);
 
     // convert the rendered image to a data blob we can use
     var renderer = reactinstance.refs['stage'].pixirenderer;
