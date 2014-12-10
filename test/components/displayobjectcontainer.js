@@ -1,4 +1,4 @@
-describe("PIXI DisplayObjectContainer Component", function() {
+describe("PIXI DisplayObject Component", function() {
 
   var mountpoint = null;
 
@@ -15,7 +15,7 @@ describe("PIXI DisplayObjectContainer Component", function() {
     render: function () {
       var docargs = [{key:'argh'}];
       for (var childindex=0; childindex < this.props.childCount; childindex++) {
-        var somechild = ReactPIXI.DisplayObjectContainer(
+        var somechild = ReactPIXI.DisplayObject(
           {
             key:childindex,
             ref:'child' + childindex.toString(),
@@ -25,15 +25,15 @@ describe("PIXI DisplayObjectContainer Component", function() {
         docargs.push(somechild);
       }
 
-      return ReactPIXI.DisplayObjectContainer.apply(null, docargs);
+      return ReactPIXI.DisplayObject.apply(null, docargs);
     }
   });
 
   function variableChildrenTest(numchildren) {
-    return BasicTestFixture({
+    return createTestFixture({
       width:300,
       height:300,
-      subcomponent:variableChildrenComponent,
+      subcomponentfactory: React.createFactory(variableChildrenComponent),
       subcomponentprops:{childCount:numchildren}
     });
   };
@@ -41,7 +41,7 @@ describe("PIXI DisplayObjectContainer Component", function() {
   var maxtestchildren = 10;
 
   it("maintains proper references to the parent DisplayObject", function() {
-    var reactinstance = React.renderComponent(variableChildrenTest(1),mountpoint);
+    var reactinstance = React.render(variableChildrenTest(1),mountpoint);
 
     var stage = reactinstance.refs['stage'].displayObject;
     var testpoint = stage.children[0];
@@ -52,7 +52,7 @@ describe("PIXI DisplayObjectContainer Component", function() {
   it("can hold a variable number of children", function() {
 
     for (var numchildren = 0; numchildren < maxtestchildren; numchildren++) {
-      var reactinstance = React.renderComponent(
+      var reactinstance = React.render(
         variableChildrenTest(numchildren),
         mountpoint);
 
@@ -78,14 +78,14 @@ describe("PIXI DisplayObjectContainer Component", function() {
   });
 
   it ("can add DisplayObjects to an already-mounted tree", function() {
-    var reactinstance = React.renderComponent(
+    var reactinstance = React.render(
       variableChildrenTest(0),
       mountpoint);
 
     for (var numchildren = 1; numchildren < maxtestchildren; numchildren++) {
 
       // this should add another DisplayObject as a child
-      reactinstance = React.renderComponent(
+      reactinstance = React.render(
         variableChildrenTest(numchildren),
         mountpoint);
 
@@ -108,14 +108,14 @@ describe("PIXI DisplayObjectContainer Component", function() {
   });
 
   it("can remove DisplayObjects from an already-mounted tree", function() {
-    var reactinstance = React.renderComponent(
+    var reactinstance = React.render(
       variableChildrenTest(maxtestchildren),
       mountpoint);
 
     for (var numchildren = maxtestchildren-1; numchildren > 0; numchildren--) {
 
       // this should remove an already existing child
-      var reactinstance = React.renderComponent(
+      var reactinstance = React.render(
         variableChildrenTest(numchildren),
         mountpoint);
 
@@ -147,9 +147,10 @@ describe("PIXI DisplayObjectContainer Component", function() {
       render: function () {
         var propswithkey = _.clone(this.props);
         propswithkey.key = this.props.injectedkey;
-        return ReactPIXI.DisplayObjectContainer(propswithkey);
+        return ReactPIXI.DisplayObject(propswithkey);
       }
     });
+    var injectedKeyFactory = React.createFactory(injectedKeyComponent);
 
     // note we use React.createClass, not ReactPIXI.createClass, since the Stage
     // is actually a <canvas> DOM element!
@@ -157,9 +158,10 @@ describe("PIXI DisplayObjectContainer Component", function() {
       displayName: 'injectedKeyStage',
       render: function () {
         return ReactPIXI.Stage({width:this.props.width, height:this.props.height, ref:'stage'},
-                               injectedKeyComponent({x:100, y:100, key: 'argh', injectedkey:this.props.injectedkey}));
+                               injectedKeyFactory({x:100, y:100, key: 'argh', injectedkey:this.props.injectedkey}));
       }
     });
+    var injectedKeyStageFactory = React.createFactory(injectedKeyStage);
 
     // generate two sets of props, identical except that they contain different
     // values of injectedkey.
@@ -180,7 +182,7 @@ describe("PIXI DisplayObjectContainer Component", function() {
     // don't switch to a different key then React will just update the current instance
     // of DisplayObjectContainer instead of try to replace it.
     //
-    var reactinstance = React.renderComponent(injectedKeyStage(props1),mountpoint);
+    var reactinstance = React.render(injectedKeyStageFactory(props1),mountpoint);
 
     // this should destroy and replace the child instance instead of updating it
     reactinstance.setProps(props2);

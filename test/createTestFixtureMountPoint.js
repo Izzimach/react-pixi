@@ -24,14 +24,16 @@ var BasicTestFixture = ReactPIXI.createClass({
   render: function() {
     var stageprops = {width:this.props.width, height:this.props.height, ref:'stage'};
 
-    if (typeof this.props.subcomponent === 'undefined' ||
-        this.props.subcomponent === null) {
+    if (typeof this.props.subcomponentfactory === 'undefined' ||
+        this.props.subcomponentfactory === null) {
       return ReactPIXI.Stage(stageprops);
     } else {
-      return ReactPIXI.Stage(stageprops, this.props.subcomponent(this.props.subcomponentprops));
+      return ReactPIXI.Stage(stageprops, this.props.subcomponentfactory(this.props.subcomponentprops));
     }
   }
 });
+
+var createTestFixture = React.createFactory(BasicTestFixture);
 
 function createTestFixtureMountPoint() {
   var testDOMelement = window.document.getElementById('test-fixture');

@@ -7,7 +7,7 @@
 // - DOM element to mount to
 
 function RenderReactPIXIToImageURL(component, props, mountpoint) {
-  var reactinstance = React.renderComponent(component(props), mountpoint);
+  var reactinstance = React.render(component(props), mountpoint);
 
   // convert the rendered image to a data blob we can use
   var renderer = reactinstance.refs['stage'].pixirenderer;
