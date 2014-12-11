@@ -39,7 +39,8 @@
     "resemblejs": "~1.2.0",
     "vinyl-source-stream": "~0.1.1",
     "vinyl-transform": "^1.0.0",
-    "gulp-template": "~1.1.1"
+    "gulp-template": "~1.1.1",
+    "rimraf": "~2.2.8"
   },
   "scripts": {
     "test": "gulp test"
