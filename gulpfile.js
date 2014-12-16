@@ -6,6 +6,7 @@ var exec = require('child_process').exec;
 var path = require('path');
 var envify = require('envify/custom');
 var rimraf = require('rimraf');
+
 //
 // gulp-specific tools
 //
@@ -19,6 +20,7 @@ var template = require('gulp-template');
 var livereload = require('gulp-livereload');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
+var jsxtransform = require('gulp-react');
 
 //
 // testing/packaging
@@ -116,8 +118,18 @@ gulp.task('bundle-min', ['browserify'], function() {
     .pipe(gulp.dest('build'));
 });
 
+//
+// the JSX example needs to be run through the jsx transform
+//
+gulp.task('jsxtransform', ['bundle'], function() {
+  return gulp.src('examples/jsxtransform/jsxtransform.jsx', {base:'examples/jsxtransform'})
+    .pipe(jsxtransform())
+    .pipe(gulp.dest('examples/jsxtransform'));
+});
+
 gulp.task('watch', ['bundle', 'bundle-min'], function() {
   gulp.watch(SOURCEGLOB, ['browserify']);
+  gulp.watch(['examples/jsxtransform/*.jsx'], ['jsxtransform']);
 });
 
 gulp.task('livereload', ['lint','bundle'], function() {
