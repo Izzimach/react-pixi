@@ -30,12 +30,9 @@ var PixelRefs = React.createClass({
   displayName: 'PixelRefs',
   render: function() {
     var testimageelements = _.map(this.props.testimageURLs, function(imageURL) {
-      return React.DOM.img({src:imageURL, key:imageURL});
+      return React.createElement("img", {src:imageURL, key:imageURL});
     });
-    return React.DOM.div(
-      {},
-      testimageelements
-    );
+    return React.createElement("div", {}, testimageelements);
   }
 });
 var PixelRefsFactory = React.createFactory(PixelRefs);

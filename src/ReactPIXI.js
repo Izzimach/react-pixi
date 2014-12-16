@@ -26,6 +26,7 @@ var React = require('react');
 var DOMPropertyOperations = require('react/lib/DOMPropertyOperations');
 var ReactComponent = require('react/lib/ReactComponent');
 var ReactElement  = require('react/lib/ReactElement');
+var ReactLegacyElement = require('react/lib/ReactLegacyElement');
 var ReactUpdates = require('react/lib/ReactUpdates');
 var ReactMultiChild = require('react/lib/ReactMultiChild');
 var ReactBrowserComponentMixin = require('react/lib/ReactBrowserComponentMixin');
@@ -57,7 +58,10 @@ function createPIXIComponent(name) {
     assign(ReactPIXIComponent.prototype, arguments[i]);
   }
 
-  return ReactPIXIComponent;
+  //return ReactPIXIComponent;
+  return ReactLegacyElement.wrapFactory(
+    ReactElement.createFactory(ReactPIXIComponent)
+  );
 }
 
 //
@@ -693,7 +697,7 @@ function createPIXIClass(spec) {
   });
 
   /* jshint validthis: true */
-  var newclass = React.createClass.call(this, patchedspec);
+  var newclass = React.createClass(patchedspec);
   return newclass;
 
 }
@@ -726,8 +730,8 @@ for (var prop in PIXIComponents) {
     }
 }
 
-module.exports =  assign(PIXIFactories, {
-  components: PIXIComponents,
+module.exports =  assign(PIXIComponents, {
+  factories: PIXIFactories,
   createClass: createPIXIClass,
   CustomPIXIComponent : CustomPIXIComponent
 });

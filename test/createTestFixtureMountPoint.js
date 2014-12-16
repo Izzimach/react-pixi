@@ -26,9 +26,9 @@ var BasicTestFixture = ReactPIXI.createClass({
 
     if (typeof this.props.subcomponentfactory === 'undefined' ||
         this.props.subcomponentfactory === null) {
-      return ReactPIXI.Stage(stageprops);
+      return React.createElement(ReactPIXI.Stage, stageprops);
     } else {
-      return ReactPIXI.Stage(stageprops, this.props.subcomponentfactory(this.props.subcomponentprops));
+      return React.createElement(ReactPIXI.Stage, stageprops, this.props.subcomponentfactory(this.props.subcomponentprops));
     }
   }
 });

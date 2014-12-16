@@ -1,4 +1,5 @@
 describe("PIXI DisplayObject Component", function() {
+  var DisplayObject = React.createFactory(ReactPIXI.DisplayObject);
 
   var mountpoint = null;
 
@@ -10,12 +11,12 @@ describe("PIXI DisplayObject Component", function() {
   // has some specific number of DisplayObjectContainer objects as children.
   // you specify the number of children as props.childCount
   //
-  var variableChildrenComponent = ReactPIXI.createClass({
+  var VariableChildrenComponent = ReactPIXI.createClass({
     displayName: 'variableChildrenComponent',
     render: function () {
       var docargs = [{key:'argh'}];
       for (var childindex=0; childindex < this.props.childCount; childindex++) {
-        var somechild = ReactPIXI.DisplayObject(
+        var somechild = DisplayObject(
           {
             key:childindex,
             ref:'child' + childindex.toString(),
@@ -25,15 +26,15 @@ describe("PIXI DisplayObject Component", function() {
         docargs.push(somechild);
       }
 
-      return ReactPIXI.DisplayObject.apply(null, docargs);
+      return DisplayObject.apply(null, docargs);
     }
   });
 
-  function variableChildrenTest(numchildren) {
+  function VariableChildrenTest(numchildren) {
     return createTestFixture({
       width:300,
       height:300,
-      subcomponentfactory: React.createFactory(variableChildrenComponent),
+      subcomponentfactory: React.createFactory(VariableChildrenComponent),
       subcomponentprops:{childCount:numchildren}
     });
   };
@@ -41,7 +42,7 @@ describe("PIXI DisplayObject Component", function() {
   var maxtestchildren = 10;
 
   it("maintains proper references to the parent DisplayObject", function() {
-    var reactinstance = React.render(variableChildrenTest(1),mountpoint);
+    var reactinstance = React.render(VariableChildrenTest(1),mountpoint);
 
     var stage = reactinstance.refs['stage'].displayObject;
     var testpoint = stage.children[0];
@@ -53,7 +54,7 @@ describe("PIXI DisplayObject Component", function() {
 
     for (var numchildren = 0; numchildren < maxtestchildren; numchildren++) {
       var reactinstance = React.render(
-        variableChildrenTest(numchildren),
+        VariableChildrenTest(numchildren),
         mountpoint);
 
       expect(mountpoint.childNodes.length).toBe(1);
@@ -79,14 +80,14 @@ describe("PIXI DisplayObject Component", function() {
 
   it ("can add DisplayObjects to an already-mounted tree", function() {
     var reactinstance = React.render(
-      variableChildrenTest(0),
+      VariableChildrenTest(0),
       mountpoint);
 
     for (var numchildren = 1; numchildren < maxtestchildren; numchildren++) {
 
       // this should add another DisplayObject as a child
       reactinstance = React.render(
-        variableChildrenTest(numchildren),
+        VariableChildrenTest(numchildren),
         mountpoint);
 
       expect(mountpoint.childNodes.length).toBe(1);
@@ -109,14 +110,14 @@ describe("PIXI DisplayObject Component", function() {
 
   it("can remove DisplayObjects from an already-mounted tree", function() {
     var reactinstance = React.render(
-      variableChildrenTest(maxtestchildren),
+      VariableChildrenTest(maxtestchildren),
       mountpoint);
 
     for (var numchildren = maxtestchildren-1; numchildren > 0; numchildren--) {
 
       // this should remove an already existing child
       var reactinstance = React.render(
-        variableChildrenTest(numchildren),
+        VariableChildrenTest(numchildren),
         mountpoint);
 
       expect(mountpoint.childNodes.length).toBe(1);
@@ -135,6 +136,9 @@ describe("PIXI DisplayObject Component", function() {
   });
 
   it("correctly replaces PIXI objects instead of setting HTML markup when replacing components in-place", function() {
+    var DisplayObject = React.createFactory(ReactPIXI.DisplayObject);
+    var Stage = React.createFactory(ReactPIXI.Stage);
+
     //
     // This occurs when a composite element is updated in-place. To create this (admittedly uncommon)
     // situation we create a composite component that changes the key of its child while everything else
@@ -147,7 +151,7 @@ describe("PIXI DisplayObject Component", function() {
       render: function () {
         var propswithkey = _.clone(this.props);
         propswithkey.key = this.props.injectedkey;
-        return ReactPIXI.DisplayObject(propswithkey);
+        return DisplayObject(propswithkey);
       }
     });
     var injectedKeyFactory = React.createFactory(injectedKeyComponent);
@@ -157,7 +161,7 @@ describe("PIXI DisplayObject Component", function() {
     var injectedKeyStage = React.createClass({
       displayName: 'injectedKeyStage',
       render: function () {
-        return ReactPIXI.Stage({width:this.props.width, height:this.props.height, ref:'stage'},
+        return Stage({width:this.props.width, height:this.props.height, ref:'stage'},
                                injectedKeyFactory({x:100, y:100, key: 'argh', injectedkey:this.props.injectedkey}));
       }
     });
