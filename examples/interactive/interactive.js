@@ -58,6 +58,8 @@ function addRandomSprite() {
   var newsprite = {
     x: Math.random() * g_applicationstate.width,
     y: Math.random() * g_applicationstate.height,
+    alpha: 0.7,
+    blendMode: PIXI.blendModes.SCREEN,
     image: g_assetpath('lollipopGreen.png'),
     key: spriteid,
     interactive:true,
@@ -131,8 +133,8 @@ var SpriteApp = React.createClass({
       // stage props
       {width: this.props.width, height: this.props.height, backgroundcolor: 0xa08080, interactive:true},
       // children components are the buttons and the dynamic sprites
-      React.createElement(DynamicSprites, {key:'sprites', sprites:this.props.sprites}),
-      React.createElement(SpriteAppButtons, {key:'gui'})
+      React.createElement(SpriteAppButtons, {key:'gui'}),
+      React.createElement(DynamicSprites, {key:'sprites', sprites:this.props.sprites})
     );
   }
 });

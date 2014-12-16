@@ -65,10 +65,34 @@ function createPIXIComponent(name) {
 }
 
 //
-// A DisplayObject has x/y/scale properties
+// A DisplayObject has some standard properties and default values
 //
 
-var PIXIHandlers = [
+var gStandardProps = {
+  alpha: 1,
+  buttonMode:false,
+  cacheAsBitmap:null,
+  defaultCursor:'pointer',
+  filterArea:null,
+  filters:null,
+  hitArea:null,
+  interactive:false,
+  mask:null,
+  // can't set parent!
+  pivot: new PIXI.Point(0,0),
+  // position has special behavior
+  renderable:false,
+  rotation:0,
+  scale: new PIXI.Point(1,1),
+  // can't set stage
+  visible:true
+  // can't set worldAlpha
+  // can't set worldVisible
+  // x has special behavior
+  // y has special behavior
+};
+
+var gPIXIHandlers = [
   'click',
   'mousedown',
   'mouseout',
@@ -83,40 +107,45 @@ var PIXIHandlers = [
 
 var DisplayObjectMixin = assign({}, ReactComponentMixin, {
 
+  // Any props listed in propnames are applied to the display object
+  transferDisplayObjectPropsByName: function(oldProps, newProps, propsToCheck) {
+    var displayObject = this.displayObject;
+    for (var propname in propsToCheck) {
+      if (typeof newProps[propname] !== 'undefined') {
+        displayObject[propname] = newProps[propname];
+      } else if (typeof oldProps[propname] !== 'undefined' &&
+                typeof propsToCheck[propname] !== 'undefined') {
+        // the field we use previously but not any more. reset it to
+        // some default value (unless the default is undefined)
+        displayObject[propname] = propsToCheck[propname];
+      }
+    }
+  },
+
   applyDisplayObjectProps: function(oldProps, newProps) {
+    this.transferDisplayObjectPropsByName(oldProps, newProps, gStandardProps);
+
     var displayObject = this.displayObject;
 
-    var x = newProps.x || 0;
-    var y = newProps.y || 0;
-    var rotation = newProps.rotation || 0;
-
-    displayObject.x = x;
-    displayObject.y = y;
-    displayObject.rotation = rotation;
-    if (typeof newProps.visible !== 'undefined') {
-      displayObject.visible = newProps.visible;
-    }
-
-    var scaletype = typeof newProps.scale;
-    if (scaletype === "number") {
-      // if scale is a number, set both X and Y values
-      displayObject.scale.x = newProps.scale;
-      displayObject.scale.y = newProps.scale;
-    } else if (scaletype === "object") {
-      // copy over scale values
-      var scale = newProps.scale !== null ? newProps.scale : 1;
-      displayObject.scale.x = scale.x;
-      displayObject.scale.y = scale.y;
+    // Position can be specified using either 'position' or separate
+    // x/y fields. If neither of these is specified we set them to 0
+    if (typeof newProps.position !== 'undefined') {
+      displayObject.position = newProps.position;
     } else {
-      displayObject.scale.x = 1;
-      displayObject.scale.y = 1;
+      if (typeof newProps.x !== 'undefined') {
+        displayObject.x = newProps.x;
+      } else {
+        displayObject.x = 0;
+      }
+      if (typeof newProps.y !== 'undefined') {
+        displayObject.y = newProps.y;
+      } else {
+        displayObject.y = 0;
+      }
     }
-
-    // interactivity and event processing
-    displayObject.interactive = typeof newProps.interactive !== 'undefined' ? newProps.interactive : false;
 
     // hook up event callbacks
-    PIXIHandlers.forEach(function (pixieventtype) {
+    gPIXIHandlers.forEach(function (pixieventtype) {
       if (typeof newProps[pixieventtype] !== 'undefined') {
         displayObject[pixieventtype] = newProps[pixieventtype];
       } else {
@@ -398,8 +427,14 @@ var DisplayObjectContainer = createPIXIComponent(
     return new PIXI.DisplayObjectContainer();
   },
 
-  applySpecificDisplayObjectProps: function () {
-    // nothing specific for DisplayObjectContainer
+  applySpecificDisplayObjectProps: function (oldProps, newProps) {
+    // don't know if anyone actually sets the width/height manually on a DoC,
+    // but it's here if they need it
+    this.transferDisplayObjectPropsByName(oldProps, newProps,
+      {
+        'width':undefined,
+        'height':undefined
+      });
   }
 });
 
@@ -414,23 +449,20 @@ var SpriteComponentMixin = {
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
+    this.transferDisplayObjectPropsByName(oldProps, newProps,
+      {
+        'anchor':new PIXI.Point(0,0),
+        'tint':0xFFFFFF,
+        'blendMode':PIXI.blendModes.NORMAL,
+        'shader':null,
+        'texture':null // may get overridden by 'image' prop
+      });
+
     var displayObject = this.displayObject;
 
+    // support setting image by name instead of a raw texture ref
     if ((typeof newProps.image !== 'undefined') && newProps.image !== oldProps.image) {
       displayObject.setTexture(PIXI.Texture.fromImage(newProps.image));
-    }
-
-    if (typeof newProps.anchor !== 'undefined') {
-      displayObject.anchor.x = newProps.anchor.x;
-      displayObject.anchor.y = newProps.anchor.y;
-    }
-
-    if (typeof newProps.tint !== 'undefined') {
-      displayObject.tint = newProps.tint;
-    }
-
-    if (typeof newProps.blendMode !== 'undefined') {
-      this.displayObject.blendMode = newProps.blendMode;
     }
   }
 };
@@ -454,20 +486,12 @@ var TilingSpriteComponentMixin = {
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
-    var displayObject = this.displayObject;
-
-    if (typeof newProps.tileScale !== 'undefined') {
-      displayObject.tileScale.x = newProps.tileScale.x;
-      displayObject.tileScale.y = newProps.tileScale.y;
-    }
-    if (typeof newProps.tilePosition !== 'undefined') {
-      displayObject.tilePosition.x = newProps.tilePosition.x;
-      displayObject.tilePosition.y = newProps.tilePosition.y;
-    }
-    if (typeof newProps.tileScaleOffset !== 'undefined') {
-      displayObject.tileScaleOffset.x = newProps.tileScaleOffset.x;
-      displayObject.tileScaleOffset.y = newProps.tileScaleOffset.y;
-    }
+    this.transferDisplayObjectPropsByName(oldProps, newProps,
+      {
+        'tileScale': new PIXI.Point(1,1),
+        'tilePosition' : new PIXI.Point(0,0),
+        'tileScaleOffset' : new PIXI.Point(1,1)
+      });
 
     // also modify values that apply to Sprite
     SpriteComponentMixin.applySpecificDisplayObjectProps.apply(this,arguments);
@@ -497,6 +521,8 @@ var TextComponentMixin = {
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
+    // can't just copy over text props, we have to set the values via methods
+
     var displayObject = this.displayObject;
 
     if (typeof newProps.text !== 'undefined' && newProps.text !== oldProps.text) {
@@ -541,12 +567,13 @@ var BitmapTextComponentMixin = {
     if (typeof newProps.style !== 'undefined' && newProps.style !== oldProps.style) {
       displayObject.setStyle(newProps.style);
     }
-    if (typeof newProps.textWidth !== 'undefined') {
-      displayObject.textWidth = newProps.textWidth;
-    }
-    if (typeof newProps.textHeight !== 'undefined') {
-      displayObject.textHeight = newProps.textHeight;
-    }
+
+    this.transferDisplayObjectPropsByName(oldProps, newProps,
+      {
+        'textWidth':undefined,
+        'textHeight':undefined
+      });
+
     SpriteComponentMixin.applySpecificDisplayObjectProps.apply(this,arguments);
   }
 };

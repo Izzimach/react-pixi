@@ -30,7 +30,7 @@ function drawTestRenders(mountpoint, testimages) {
     { x:100, y:110, anchor:halfanchor, image:testimages[0]},
     { x:100, y:100, anchor: new PIXI.Point(0,0), image:testimages[0]},
     { x:100, y:100, anchor:halfanchor, rotation:90, image:testimages[0]},
-    { x:100, y:100, anchor:halfanchor, scale: 2, image:testimages[0]}
+    { x:100, y:100, anchor:halfanchor, scale: new PIXI.Point(2,2), image:testimages[0]}
   ];
 
   var renderresults = [];
