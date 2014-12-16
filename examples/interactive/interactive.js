@@ -14,7 +14,7 @@
 
 var Stage = React.createFactory(ReactPIXI.Stage);
 var Sprite = React.createFactory(ReactPIXI.Sprite);
-var DisplayObject = React.createFactory(ReactPIXI.DisplayObject);
+var DisplayObjectContainer = React.createFactory(ReactPIXI.DisplayObjectContainer);
 var TilingSprite = React.createFactory(ReactPIXI.TilingSprite);
 var Text = React.createFactory(ReactPIXI.Text);
 var BitmapText = React.createFactory(ReactPIXI.BitmapText);
@@ -87,7 +87,7 @@ function removeSpriteById(spriteid) {
 var SpriteAppButtons = ReactPIXI.createClass({
   displayName:'SpriteAppButtons',
   render: function() {
-    return DisplayObject(
+    return DisplayObjectContainer(
       {},
       Sprite({x:100,y:150,key:'cherry', image: g_assetpath('cherry.png'),interactive:true,click: addRandomSprite}),
       Text({x:10,y:10, key:'label1', text:'Click the cherry to add a lollipop sprite', style:{font:'25px Times'}}),
@@ -110,7 +110,7 @@ var DynamicSprites = ReactPIXI.createClass({
     this.props.sprites.forEach(function(spriteprops) {
       args.push(Sprite(spriteprops));
     });
-    return DisplayObject.apply(
+    return DisplayObjectContainer.apply(
       null,
       args
     );

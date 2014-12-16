@@ -1,5 +1,5 @@
 describe("PIXI DisplayObject Component", function() {
-  var DisplayObject = React.createFactory(ReactPIXI.DisplayObject);
+  var DisplayObjectContainer = React.createFactory(ReactPIXI.DisplayObjectContainer);
 
   var mountpoint = null;
 
@@ -16,7 +16,7 @@ describe("PIXI DisplayObject Component", function() {
     render: function () {
       var docargs = [{key:'argh'}];
       for (var childindex=0; childindex < this.props.childCount; childindex++) {
-        var somechild = DisplayObject(
+        var somechild = DisplayObjectContainer(
           {
             key:childindex,
             ref:'child' + childindex.toString(),
@@ -26,7 +26,7 @@ describe("PIXI DisplayObject Component", function() {
         docargs.push(somechild);
       }
 
-      return DisplayObject.apply(null, docargs);
+      return DisplayObjectContainer.apply(null, docargs);
     }
   });
 
@@ -151,7 +151,7 @@ describe("PIXI DisplayObject Component", function() {
       render: function () {
         var propswithkey = _.clone(this.props);
         propswithkey.key = this.props.injectedkey;
-        return DisplayObject(propswithkey);
+        return DisplayObjectContainer(propswithkey);
       }
     });
     var injectedKeyFactory = React.createFactory(injectedKeyComponent);

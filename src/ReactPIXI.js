@@ -388,8 +388,8 @@ var CommonDisplayObjectContainerImplementation = {
 
 
 
-var DisplayObject = createPIXIComponent(
-  'DisplayObject',
+var DisplayObjectContainer = createPIXIComponent(
+  'DisplayObjectContainer',
   ReactComponentMixin,
   DisplayObjectContainerMixin,
   CommonDisplayObjectContainerImplementation, {
@@ -715,7 +715,7 @@ function createPIXIFactory(ReactPIXIComponent)
 
 var PIXIComponents = {
   Stage : PIXIStage,
-  DisplayObject : DisplayObject,
+  DisplayObjectContainer : DisplayObjectContainer,
   Sprite : Sprite,
   Text : Text,
   BitmapText : BitmapText,

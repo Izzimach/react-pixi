@@ -10,7 +10,7 @@ var assetpath = function(filename) { return '../assets/' + filename; };
 
 var Stage = React.createFactory(ReactPIXI.Stage);
 var Sprite = React.createFactory(ReactPIXI.Sprite);
-var DisplayObject = React.createFactory(ReactPIXI.DisplayObject);
+var DisplayObjectContainer = React.createFactory(ReactPIXI.DisplayObjectContainer);
 var TilingSprite = React.createFactory(ReactPIXI.TilingSprite);
 var Text = React.createFactory(ReactPIXI.Text);
 var BitmapText = React.createFactory(ReactPIXI.BitmapText);
@@ -41,7 +41,7 @@ var CupcakeComponent = ReactPIXI.createClass({
   render : function () {
     var creamimagename = this.spritemapping[this.props.topping];
     var xposition = this.props.xposition;
-    return DisplayObject(
+    return DisplayObjectContainer(
       {x:xposition, y:100 },
       Sprite({image:creamimagename, y:-35, anchor: new PIXI.Point(0.5,0.5), key:'topping'}, null),
       Sprite({image:assetpath('cupCake.png'), y:35, anchor: new PIXI.Point(0.5,0.5), key:'cake'}, null)
