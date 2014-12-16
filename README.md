@@ -7,27 +7,29 @@ Create/control a [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) canvas usi
 
 To control a 3D scene with React, see [react-three](https://github.com/Izzimach/react-three/)
 
-## Install with Bower
+## Install Via Bower
+
+If you just want to use react-pixi and not build it, you can
+install it using bower.
 
 ```
 bower install react-pixi
 ```
 
-Then include one of the javascript files in dist, such as dist/react-pixi.js.  
-If you include this into your webpage via a script tag:
+Then include one of the javascript files in dist, such as dist/react-pixi.js.  You will also need to include Pixi:
 
 ```
+<script src="bower_components/pixi.js/bin/pixi.dev.js"></script>
 <script src="bower_components/react-pixi/dist/react-pixi.js"></script>
 ```
 
-Then "React" will appear in the global namespace and the new React-PIXI components are available under "ReactPIXI"
-Also, you need to include the dependencies: lodash and pixi.js.
+React willappear in the global namespace as `React` and the new React-PIXI components are available under the `ReactPIXI` namespace.
 
-Note that react-pixi includes its own internal copy of React (currently 0.11)
+Note that react-pixi includes its own internal copy of React (currently 0.12.1)
 so you should not include the standard React library. Doing so might give wierd results!
 
 
-## Building
+## Building From Source
 
 You will need node, npm, and bower. You should probably install gulp globally as well.
 
@@ -44,43 +46,68 @@ Simply running
 gulp
 ```
 
-Will package up react-pixi along with React and put the result in build/react-pixi.js.
+Will package up react-pixi along with React and put the result in build/react-pixi.js, which you can include in your web page.
 
 ## Rendering Pixi.js elements
 
-To render Pixi.js elements like a Stage or Sprite you reference them the same way you referenced DOM elements in
-vanilla React.  For example, to construct a CupcakeComponent that consists of two Sprites:
+To render Pixi.js elements like a Stage or Sprite you reference them like other
+components that were created with `React.createClass`.  For React 0.12 and later,
+this means you have to use `React.createElement` or create factories from the
+basic ReactPIXI components. For example, to construct
+ a CupcakeComponent that consists of two Sprites:
 
+```javascript
+var Sprite = React.createFactory(ReactPIXI.Sprite);
+var DisplayObjectContainer = React.createFactory(ReactPIXI.DisplayObjectContainer);
 
-```
-var CupcakeComponent = React.createClass({
+var CupcakeComponent = ReactPIXI.createClass({
   displayName: 'CupcakeComponent',
   // maps from cupcake toppings to the appropriate sprite
   spritemapping : {
-  'vanilla' : 'creamVanilla.png',
-  'chocolate' : 'creamChoco.png',
-  'mocha' : 'creamMocha.png',
-  'pink' : 'creamPink.png',
-  },
-
+    'vanilla' : assetpath('creamVanilla.png'),
+    'chocolate' : assetpath('creamChoco.png'),
+    'mocha' : assetpath('creamMocha.png'),
+    'pink' : assetpath('creamPink.png'),
+    },
   render : function () {
     var creamimagename = this.spritemapping[this.props.topping];
     var xposition = this.props.xposition;
-    return ReactPIXI.DisplayObjectContainer({x:xposition, y:100 },
-      [
-        ReactPIXI.Sprite({image:creamimagename, y:-35, anchor: new PIXI.Point(0.5,0.5), key:'topping'}, null),
-        ReactPIXI.Sprite({image:'cupCake.png', y:35, anchor: new PIXI.Point(0.5,0.5), key:'cake'}, null)
-      ]
+    return DisplayObjectContainer(
+      {x:xposition, y:100 },
+        Sprite({image:creamimagename, y:-35, anchor: new PIXI.Point(0.5,0.5), key:'topping'}, null),
+        Sprite({image:assetpath('cupCake.png'), y:35, anchor: new PIXI.Point(0.5,0.5), key:'cake'}, null)
     );
   }
 });
 ```
-
+(taken from the [cupcake example](examples/cupcake/cupcake.js))
 ![Sample Cupcake component](docs/react-pixi-devshot.png)
 
 Note that at the moment you need to mount onto a DOM component so your top-level component will probably be a ReactPIXI.Stage.
 
-Look in the examples directory for more in-depth examples
+Look in the examples directory for more in-depth examples.
+
+## Rendering via JSX
+
+You can produce display elements using JSX as well. Note that you don't need
+factories in this case.
+
+```javascript
+var Stage = ReactPIXI.Stage;
+var TilingSprite = ReactPIXI.TilingSprite;
+var Text = ReactPIXI.Text;
+
+var ExampleStage = React.createClass({
+  displayName: 'ExampleStage',
+  render: function() {
+    var fontstyle = {font:'40px Times'};
+    return <Stage width={this.props.width} height={this.props.height}>
+    <TilingSprite image={assetpath('bg_castle.png')} width={this.props.width} height={this.props.height} key="1" />
+    <Text text="Vector text" x={this.props.xposition} y={10} style={fontstyle} anchor={new PIXI.Point(0.5,0)} key="2" />
+    </Stage>;
+  }
+});
+```
 
 ## Testing
 
@@ -92,5 +119,5 @@ gulp test
 
 ## Caveats
 
--PIXI filters aren't supported.
--Callbacks are just callbacks. They don't feed into React's event system.
+- PIXI filters aren't currently supported.
+- Callbacks are just callbacks. They don't feed into React's event system.
