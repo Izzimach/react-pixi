@@ -21,21 +21,21 @@
 
 "use strict";
 
-var React = require('react/react.js');
+var React = require('react');
 
 var DOMPropertyOperations = require('react/lib/DOMPropertyOperations');
 var ReactComponent = require('react/lib/ReactComponent');
+var ReactElement  = require('react/lib/ReactElement');
+var ReactLegacyElement = require('react/lib/ReactLegacyElement');
 var ReactUpdates = require('react/lib/ReactUpdates');
-//var ReactMount = require('react/lib/ReactMount');
 var ReactMultiChild = require('react/lib/ReactMultiChild');
 var ReactBrowserComponentMixin = require('react/lib/ReactBrowserComponentMixin');
-var ReactDescriptor = require('react/lib/ReactDescriptor');
 var ReactDOMComponent = require('react/lib/ReactDOMComponent');
 var ReactComponentMixin = ReactComponent.Mixin;
-//var ReactCompositeComponent = require('react/lib/ReactCompositeComponent');
 
-var mixInto = require('react/lib/mixInto');
-var merge = require('react/lib/merge');
+var assign = require('react/lib/Object.assign');
+var emptyObject = require('react/lib/emptyObject');
+
 var shouldUpdateReactComponent = require('react/lib/shouldUpdateReactComponent');
 var instantiateReactComponent = require ('react/lib/instantiateReactComponent');
 var invariant = require('react/lib/invariant');
@@ -44,30 +44,55 @@ var invariant = require('react/lib/invariant');
 // Generates a React component by combining several mixin components
 //
 
-function definePIXIComponent(name) {
+function createPIXIComponent(name) {
 
-  var ReactPIXIComponent = function() {};
-  ReactPIXIComponent.prototype.type = ReactPIXIComponent;
+  var ReactPIXIComponent = function(props) {
+    /* jshint unused: vars */
+    this.node = null;
+    this._mountImage = null;
+    this._renderedChildren = null;
+    this.displayObject = null;
+  };
+  ReactPIXIComponent.displayName = name;
   for (var i = 1; i < arguments.length; i++) {
-    mixInto(ReactPIXIComponent, arguments[i]);
+    assign(ReactPIXIComponent.prototype, arguments[i]);
   }
 
-  var Constructor = function(props, owner) {
-    this.construct(props,owner);
-  };
-  Constructor.prototype = new ReactPIXIComponent();
-  Constructor.prototype.constructor = Constructor;
-  Constructor.displayName = name;
-
-  var factory = ReactDescriptor.createFactory(Constructor);
-  return factory;
+  //return ReactPIXIComponent;
+  return ReactLegacyElement.wrapFactory(
+    ReactElement.createFactory(ReactPIXIComponent)
+  );
 }
 
 //
-// A DisplayObject has x/y/scale properties
+// A DisplayObject has some standard properties and default values
 //
 
-var PIXIHandlers = [
+var gStandardProps = {
+  alpha: 1,
+  buttonMode:false,
+  cacheAsBitmap:null,
+  defaultCursor:'pointer',
+  filterArea:null,
+  filters:null,
+  hitArea:null,
+  interactive:false,
+  mask:null,
+  // can't set parent!
+  pivot: new PIXI.Point(0,0),
+  // position has special behavior
+  renderable:false,
+  rotation:0,
+  scale: new PIXI.Point(1,1),
+  // can't set stage
+  visible:true
+  // can't set worldAlpha
+  // can't set worldVisible
+  // x has special behavior
+  // y has special behavior
+};
+
+var gPIXIHandlers = [
   'click',
   'mousedown',
   'mouseout',
@@ -80,44 +105,49 @@ var PIXIHandlers = [
   'touchendoutside'
 ];
 
-var DisplayObjectMixin = merge(ReactComponentMixin, {
+var DisplayObjectMixin = assign({}, ReactComponentMixin, {
 
-  applyDisplayObjectProps: function(oldProps, props) {
+  // Any props listed in propnames are applied to the display object
+  transferDisplayObjectPropsByName: function(oldProps, newProps, propsToCheck) {
+    var displayObject = this.displayObject;
+    for (var propname in propsToCheck) {
+      if (typeof newProps[propname] !== 'undefined') {
+        displayObject[propname] = newProps[propname];
+      } else if (typeof oldProps[propname] !== 'undefined' &&
+                typeof propsToCheck[propname] !== 'undefined') {
+        // the field we use previously but not any more. reset it to
+        // some default value (unless the default is undefined)
+        displayObject[propname] = propsToCheck[propname];
+      }
+    }
+  },
+
+  applyDisplayObjectProps: function(oldProps, newProps) {
+    this.transferDisplayObjectPropsByName(oldProps, newProps, gStandardProps);
+
     var displayObject = this.displayObject;
 
-    var x = props.x || 0;
-    var y = props.y || 0;
-    var rotation = props.rotation || 0;
-
-    displayObject.x = x;
-    displayObject.y = y;
-    displayObject.rotation = rotation;
-    if (typeof props.visible !== 'undefined') {
-      displayObject.visible = props.visible;
-    }
-
-    var scaletype = typeof props.scale;
-    if (scaletype === "number") {
-      // if scale is a number, set both X and Y values
-      displayObject.scale.x = props.scale;
-      displayObject.scale.y = props.scale;
-    } else if (scaletype === "object") {
-      // copy over scale values
-      var scale = props.scale !== null ? props.scale : 1;
-      displayObject.scale.x = scale.x;
-      displayObject.scale.y = scale.y;
+    // Position can be specified using either 'position' or separate
+    // x/y fields. If neither of these is specified we set them to 0
+    if (typeof newProps.position !== 'undefined') {
+      displayObject.position = newProps.position;
     } else {
-      displayObject.scale.x = 1;
-      displayObject.scale.y = 1;
+      if (typeof newProps.x !== 'undefined') {
+        displayObject.x = newProps.x;
+      } else {
+        displayObject.x = 0;
+      }
+      if (typeof newProps.y !== 'undefined') {
+        displayObject.y = newProps.y;
+      } else {
+        displayObject.y = 0;
+      }
     }
-
-    // interactivity and event processing
-    displayObject.interactive = typeof props.interactive !== 'undefined' ? props.interactive : false;
 
     // hook up event callbacks
-    PIXIHandlers.forEach(function (pixieventtype) {
-      if (typeof props[pixieventtype] !== 'undefined') {
-        displayObject[pixieventtype] = props[pixieventtype];
+    gPIXIHandlers.forEach(function (pixieventtype) {
+      if (typeof newProps[pixieventtype] !== 'undefined') {
+        displayObject[pixieventtype] = newProps[pixieventtype];
       } else {
         delete displayObject[pixieventtype];
       }
@@ -138,7 +168,7 @@ var DisplayObjectMixin = merge(ReactComponentMixin, {
 // It's basically a DisplayObject that can contain children.
 //
 
-var DisplayObjectContainerMixin = merge(merge(DisplayObjectMixin, ReactMultiChild.Mixin), {
+var DisplayObjectContainerMixin = assign({}, DisplayObjectMixin, ReactMultiChild.Mixin, {
 
   moveChild: function(child, toIndex) {
     var childDisplayObject = child._mountImage; // should be a pixi display object
@@ -167,16 +197,17 @@ var DisplayObjectContainerMixin = merge(merge(DisplayObjectMixin, ReactMultiChil
    * @internal
    * @override {ReactMultiChild.Mixin.updateChildren}
    */
-  updateChildren: function(nextChildren, transaction) {
-    this._updateChildren(nextChildren, transaction);
+  updateChildren: function(nextChildren, transaction, context) {
+    this._updateChildren(nextChildren, transaction, context);
   },
 
   // called by any container component after it gets mounted
 
-  mountAndAddChildren: function(children, transaction) {
+  mountAndAddChildren: function(children, transaction, context) {
     var mountedImages = this.mountChildren(
       children,
-      transaction
+      transaction,
+      context
     );
     // Each mount image corresponds to one of the flattened children
     var i = 0;
@@ -188,6 +219,14 @@ var DisplayObjectContainerMixin = merge(merge(DisplayObjectMixin, ReactMultiChil
         i++;
       }
     }
+  },
+
+  updateChildrenAtRoot: function(nextChildren, transaction) {
+    this.updateChildren(nextChildren, transaction, emptyObject);
+  },
+
+  mountAndAddChildrenAtRoot: function(children, transaction) {
+    this.mountAndAddChildren(children, transaction, emptyObject);
   }
 
 });
@@ -201,7 +240,7 @@ var DisplayObjectContainerMixin = merge(merge(DisplayObjectMixin, ReactMultiChil
 //
 // Seems a bit hackish. We could split the PIXIStage into a Stage and a separate canvas component?
 //
-var StageMixin = merge(DisplayObjectContainerMixin, {
+var StageMixin = assign({}, DisplayObjectContainerMixin, {
   mountComponentIntoNode : ReactComponent.Mixin.mountComponentIntoNode
 });
 
@@ -217,14 +256,14 @@ var StageMixin = merge(DisplayObjectContainerMixin, {
 // --GJH
 //
 
-var PIXIStage = definePIXIComponent(
+var PIXIStage = createPIXIComponent(
   'PIXIStage',
   ReactBrowserComponentMixin,
   ReactDOMComponent.Mixin,
   ReactComponentMixin,
   StageMixin, {
 
-  mountComponent: function(rootID, transaction, mountDepth) {
+  mountComponent: function(rootID, transaction, context) {
     /* jshint unused: vars */
     ReactComponentMixin.mountComponent.apply(this, arguments);
     transaction.getReactMountReady().enqueue(this.componentDidMount, this);
@@ -264,7 +303,7 @@ var PIXIStage = definePIXIComponent(
   },
 
   componentDidMount: function() {
-    var props = this._descriptor.props;
+    var props = this.props;
     var renderelement = this.getDOMNode();
 
     var backgroundcolor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
@@ -272,11 +311,11 @@ var PIXIStage = definePIXIComponent(
     this.pixirenderer = PIXI.autoDetectRecommendedRenderer(props.width, props.height, {view:renderelement});
 
     this.setApprovedDOMProperties(props);
-    this.applyDisplayObjectProps({},this.props);
+    this.applyDisplayObjectProps({},props);
 
     var transaction = ReactUpdates.ReactReconcileTransaction.getPooled();
     transaction.perform(
-      this.mountAndAddChildren,
+      this.mountAndAddChildrenAtRoot,
       this,
       props.children,
       transaction
@@ -295,35 +334,34 @@ var PIXIStage = definePIXIComponent(
         // render the stage
         that.renderStage();
     }
-
-    this.props = props;
   },
 
-  receiveComponent: function(nextDescriptor, transaction) {
-    // Descriptors are immutable, so if the descriptor hasn't changed
-    // we don't need to do anything
-    if (nextDescriptor === this._descriptor &&
-        nextDescriptor._owner !== null) {
+  receiveComponent: function(nextElement, transaction, context) {
+    if (nextElement === this._currentElement &&
+        nextElement._owner !== null) {
       return;
     }
 
-    ReactComponent.Mixin.receiveComponent.call(this, nextDescriptor, transaction);
+    ReactComponent.Mixin.receiveComponent.call(this, nextElement, transaction, context);
 
-    var props = nextDescriptor.props;
+    var newProps = nextElement.props;
+    var oldProps = this._currentElement.props;
 
-    if (this.props.width != props.width || this.props.width != props.height) {
-      this.pixirenderer.resize(+props.width, +props.height);
+    if (newProps.width != oldProps.width || newProps.width != oldProps.height) {
+      this.pixirenderer.resize(+newProps.width, +newProps.height);
     }
 
-    if (typeof props.backgroundcolor === "number") {
-      this.displayObject.setBackgroundColor(props.backgroundcolor);
+    if (typeof newProps.backgroundcolor === "number") {
+      this.displayObject.setBackgroundColor(newProps.backgroundcolor);
     }
 
-    this.setApprovedDOMProperties(props);
-    this.applyDisplayObjectProps(this.props, props);
+    this.setApprovedDOMProperties(newProps);
+    this.applyDisplayObjectProps(oldProps, newProps);
 
-    this.updateChildren(props.children, transaction);
+    this.updateChildrenAtRoot(newProps.children, transaction);
     this.renderStage();
+
+    this._currentElement = nextElement;
   },
 
   unmountComponent: function() {
@@ -347,24 +385,28 @@ var PIXIStage = definePIXIComponent(
 //
 
 var CommonDisplayObjectContainerImplementation = {
-  mountComponent: function(rootID, transaction, mountDepth) {
+  mountComponent: function(rootID, transaction, context) {
     /* jshint unused: vars */
     ReactComponentMixin.mountComponent.apply(this, arguments);
-    this.displayObject = this.createDisplayObject(arguments);
-    this.applyDisplayObjectProps({}, this.props);
-    this.applySpecificDisplayObjectProps({}, this.props);
 
-    this.mountAndAddChildren(this.props.children, transaction);
+    var props = this._currentElement.props;
+    this.displayObject = this.createDisplayObject(arguments);
+    this.applyDisplayObjectProps({}, props);
+    this.applySpecificDisplayObjectProps({}, props);
+
+    this.mountAndAddChildren(props.children, transaction, context);
     return this.displayObject;
   },
 
-  receiveComponent: function(nextComponent, transaction) {
-    var props = nextComponent.props;
-    this.applyDisplayObjectProps(this.props, props);
-    this.applySpecificDisplayObjectProps(this.props, props);
+  receiveComponent: function(nextElement, transaction, context) {
+    var newProps = nextElement.props;
+    var oldProps = this._currentElement.props;
 
-    this.updateChildren(props.children, transaction);
-    this.props = props;
+    this.applyDisplayObjectProps(oldProps, newProps);
+    this.applySpecificDisplayObjectProps(oldProps, newProps);
+
+    this.updateChildren(newProps.children, transaction, context);
+    this._currentElement = nextElement;
   },
 
   unmountComponent: function() {
@@ -375,7 +417,7 @@ var CommonDisplayObjectContainerImplementation = {
 
 
 
-var DisplayObjectContainer = definePIXIComponent(
+var DisplayObjectContainer = createPIXIComponent(
   'DisplayObjectContainer',
   ReactComponentMixin,
   DisplayObjectContainerMixin,
@@ -385,8 +427,14 @@ var DisplayObjectContainer = definePIXIComponent(
     return new PIXI.DisplayObjectContainer();
   },
 
-  applySpecificDisplayObjectProps: function () {
-    // nothing specific for DisplayObjectContainer
+  applySpecificDisplayObjectProps: function (oldProps, newProps) {
+    // don't know if anyone actually sets the width/height manually on a DoC,
+    // but it's here if they need it
+    this.transferDisplayObjectPropsByName(oldProps, newProps,
+      {
+        'width':undefined,
+        'height':undefined
+      });
   }
 });
 
@@ -396,33 +444,30 @@ var DisplayObjectContainer = definePIXIComponent(
 
 var SpriteComponentMixin = {
   createDisplayObject : function () {
-    var spriteimage = this.props.image;
+    var spriteimage = this._currentElement.props.image;
     return new PIXI.Sprite(PIXI.Texture.fromImage(spriteimage));
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
+    this.transferDisplayObjectPropsByName(oldProps, newProps,
+      {
+        'anchor':new PIXI.Point(0,0),
+        'tint':0xFFFFFF,
+        'blendMode':PIXI.blendModes.NORMAL,
+        'shader':null,
+        'texture':null // may get overridden by 'image' prop
+      });
+
     var displayObject = this.displayObject;
 
+    // support setting image by name instead of a raw texture ref
     if ((typeof newProps.image !== 'undefined') && newProps.image !== oldProps.image) {
       displayObject.setTexture(PIXI.Texture.fromImage(newProps.image));
-    }
-
-    if (typeof newProps.anchor !== 'undefined') {
-      displayObject.anchor.x = newProps.anchor.x;
-      displayObject.anchor.y = newProps.anchor.y;
-    }
-
-    if (typeof newProps.tint !== 'undefined') {
-      displayObject.tint = newProps.tint;
-    }
-
-    if (typeof newProps.blendMode !== 'undefined') {
-      this.displayObject.blendMode = newProps.blendMode;
     }
   }
 };
 
-var Sprite = definePIXIComponent(
+var Sprite = createPIXIComponent(
   'Sprite',
   ReactComponentMixin,
   DisplayObjectContainerMixin,
@@ -436,25 +481,17 @@ var Sprite = definePIXIComponent(
 var TilingSpriteComponentMixin = {
 
   createDisplayObject : function () {
-    var spriteimage = this.props.image;
-    return new PIXI.TilingSprite(PIXI.Texture.fromImage(spriteimage), this.props.width, this.props.height);
+    var props = this._currentElement.props;
+    return new PIXI.TilingSprite(PIXI.Texture.fromImage(props.image), props.width, props.height);
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
-    var displayObject = this.displayObject;
-
-    if (typeof newProps.tileScale !== 'undefined') {
-      displayObject.tileScale.x = newProps.tileScale.x;
-      displayObject.tileScale.y = newProps.tileScale.y;
-    }
-    if (typeof newProps.tilePosition !== 'undefined') {
-      displayObject.tilePosition.x = newProps.tilePosition.x;
-      displayObject.tilePosition.y = newProps.tilePosition.y;
-    }
-    if (typeof newProps.tileScaleOffset !== 'undefined') {
-      displayObject.tileScaleOffset.x = newProps.tileScaleOffset.x;
-      displayObject.tileScaleOffset.y = newProps.tileScaleOffset.y;
-    }
+    this.transferDisplayObjectPropsByName(oldProps, newProps,
+      {
+        'tileScale': new PIXI.Point(1,1),
+        'tilePosition' : new PIXI.Point(0,0),
+        'tileScaleOffset' : new PIXI.Point(1,1)
+      });
 
     // also modify values that apply to Sprite
     SpriteComponentMixin.applySpecificDisplayObjectProps.apply(this,arguments);
@@ -462,7 +499,7 @@ var TilingSpriteComponentMixin = {
 
 };
 
-var TilingSprite = definePIXIComponent(
+var TilingSprite = createPIXIComponent(
   'TilingSprite',
   ReactComponentMixin,
   DisplayObjectContainerMixin,
@@ -476,12 +513,16 @@ var TilingSprite = definePIXIComponent(
 var TextComponentMixin = {
 
   createDisplayObject: function() {
-    var text = this.props.text || '';
-    var style = this.props.style || {};
+    var props = this._currentElement.props;
+
+    var text = props.text || '';
+    var style = props.style || {};
     return new PIXI.Text(text, style);
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
+    // can't just copy over text props, we have to set the values via methods
+
     var displayObject = this.displayObject;
 
     if (typeof newProps.text !== 'undefined' && newProps.text !== oldProps.text) {
@@ -496,7 +537,7 @@ var TextComponentMixin = {
   }
 };
 
-var Text = definePIXIComponent(
+var Text = createPIXIComponent(
   'Text',
   ReactComponentMixin,
   DisplayObjectContainerMixin,
@@ -509,32 +550,35 @@ var Text = definePIXIComponent(
 
 var BitmapTextComponentMixin = {
   createDisplayObject: function () {
-    var text = this.props.text || '';
-    var style = this.props.style || {};
+    var props = this._currentElement.props;
+
+    var text = props.text || '';
+    var style = props.style || {};
     return new PIXI.BitmapText(text,style);
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
     var displayObject = this.displayObject;
 
-        if (typeof newProps.text !== 'undefined' && newProps.text !== oldProps.text) {
+    if (typeof newProps.text !== 'undefined' && newProps.text !== oldProps.text) {
       displayObject.setText(newProps.text);
     }
     // should do a deep compare here
     if (typeof newProps.style !== 'undefined' && newProps.style !== oldProps.style) {
       displayObject.setStyle(newProps.style);
     }
-    if (typeof newProps.textWidth !== 'undefined') {
-      displayObject.textWidth = newProps.textWidth;
-    }
-    if (typeof newProps.textHeight !== 'undefined') {
-      displayObject.textHeight = newProps.textHeight;
-    }
+
+    this.transferDisplayObjectPropsByName(oldProps, newProps,
+      {
+        'textWidth':undefined,
+        'textHeight':undefined
+      });
+
     SpriteComponentMixin.applySpecificDisplayObjectProps.apply(this,arguments);
   }
 };
 
-var BitmapText = definePIXIComponent(
+var BitmapText = createPIXIComponent(
   'BitmapText',
   ReactComponentMixin,
   DisplayObjectContainerMixin,
@@ -546,25 +590,28 @@ var BitmapText = definePIXIComponent(
 // construction and applying properties
 //
 
-var CustomDisplayObjectContainerImplementation = {
-  mountComponent: function(rootID, transaction, mountDepth) {
-    /* jshint unused: vars */
+var CustomDisplayObjectImplementation = {
+  mountComponent: function(rootID, transaction, context) {
     ReactComponentMixin.mountComponent.apply(this, arguments);
-    this.displayObject = this.customDisplayObject(arguments);
-    this.applyDisplayObjectProps({}, this.props);
-    this.applyCustomProps({}, this.props);
 
-    this.mountAndAddChildren(this.props.children, transaction);
+    var props = this._currentElement.props;
+    this.displayObject = this.customDisplayObject(arguments);
+    this.applyDisplayObjectProps({}, props);
+    this.applyCustomProps({}, props);
+
+    this.mountAndAddChildren(props.children, transaction, context);
     return this.displayObject;
   },
 
-  receiveComponent: function(nextComponent, transaction) {
-    var props = nextComponent.props;
-    this.applyDisplayObjectProps(this.props, props);
-    this.applyCustomProps(this.props, props);
+  receiveComponent: function(nextElement, transaction, context) {
+    var newProps = nextElement.props;
+    var oldProps = this._currentElement.props;
 
-    this.updateChildren(props.children, transaction);
-    this.props = props;
+    this.applyDisplayObjectProps(oldProps, newProps);
+    this.applyCustomProps(oldProps, newProps);
+
+    this.updateChildren(newProps.children, transaction, context);
+    this._currentElement = nextElement;
   },
 
   unmountComponent: function() {
@@ -573,11 +620,11 @@ var CustomDisplayObjectContainerImplementation = {
 };
 
 var CustomPIXIComponent = function (custommixin) {
-  return definePIXIComponent(
+  return createPIXIComponent(
     'CustomDisplayObject',
     ReactComponentMixin,
     DisplayObjectContainerMixin,
-    CustomDisplayObjectContainerImplementation,
+    CustomDisplayObjectImplementation,
     custommixin);
 };
 
@@ -588,13 +635,13 @@ var CustomPIXIComponent = function (custommixin) {
 
 function findDisplayObjectAncestor(componentinstance) {
   // walk up via _owner until we find something with a displayObject hasOwnProperty
-  var componentwalker = componentinstance._descriptor._owner;
+  var componentwalker = componentinstance._currentElement._owner;
   while (typeof componentwalker !== 'undefined') {
     // no owner? then fail
     if (typeof componentwalker._renderedComponent.displayObject !== 'undefined') {
       return componentwalker._renderedComponent.displayObject;
     }
-    componentwalker = componentwalker._descriptor._owner;
+    componentwalker = componentwalker._currentElement._owner;
   }
 
   // we walked all the way up and found no displayObject
@@ -628,7 +675,7 @@ function findDisplayObjectChild(componentinstance) {
 
 function createPIXIClass(spec) {
 
-  var patchedspec = merge(spec, {
+  var patchedspec = assign({}, spec, {
     updateComponent : function(transaction, prevParentDescriptor) {
       ReactComponent.Mixin.updateComponent.call(
         this,
@@ -637,11 +684,10 @@ function createPIXIClass(spec) {
       );
 
       var prevComponentInstance = this._renderedComponent;
-      var prevDescriptor = prevComponentInstance._descriptor;
-      var nextDescriptor = this._renderValidatedComponent();
-
-      if (shouldUpdateReactComponent(prevDescriptor, nextDescriptor)) {
-        prevComponentInstance.receiveComponent(nextDescriptor, transaction);
+      var prevElement = prevComponentInstance._currentElement;
+      var nextElement = this._renderValidatedComponent();
+      if (shouldUpdateReactComponent(prevElement, nextElement)) {
+        prevComponentInstance.receiveComponent(nextElement, transaction);
       } else {
         // We can't just update the current component.
         // So we nuke the current instantiated component and put a new component in
@@ -665,7 +711,7 @@ function createPIXIClass(spec) {
         this.displayObject = null;
 
         // create the new object and stuff it into the place vacated by the old object
-        this._renderedComponent = instantiateReactComponent(nextDescriptor);
+        this._renderedComponent = instantiateReactComponent(nextElement, this._currentElement.type);
         var nextDisplayObject = this._renderedComponent.mountComponent(
           rootID,
           transaction,
@@ -678,20 +724,41 @@ function createPIXIClass(spec) {
   });
 
   /* jshint validthis: true */
-  var newclass = React.createClass.call(this, patchedspec);
+  var newclass = React.createClass(patchedspec);
   return newclass;
 
 }
 
-// module data
+//
+// The default module members are factories instead of components in order to more
+// closely mimic the functionality of React.DOM.
+// Raw components are still available under the 'components' member
+//
 
-module.exports =  {
+function createPIXIFactory(ReactPIXIComponent)
+{
+  return ReactElement.createFactory(ReactPIXIComponent);
+}
+
+var PIXIComponents = {
   Stage : PIXIStage,
   DisplayObjectContainer : DisplayObjectContainer,
-  Sprite: Sprite,
-  Text: Text,
+  Sprite : Sprite,
+  Text : Text,
   BitmapText : BitmapText,
-  TilingSprite: TilingSprite,
-  CreateCustomPIXIComponent : CustomPIXIComponent,
-  createClass: createPIXIClass,
+  TilingSprite : TilingSprite
 };
+
+var PIXIFactories = {};
+for (var prop in PIXIComponents) {
+    if (PIXIComponents.hasOwnProperty(prop)) {
+      var component = PIXIComponents[prop];
+      PIXIFactories[prop] = createPIXIFactory(component);
+    }
+}
+
+module.exports =  assign(PIXIComponents, {
+  factories: PIXIFactories,
+  createClass: createPIXIClass,
+  CustomPIXIComponent : CustomPIXIComponent
+});

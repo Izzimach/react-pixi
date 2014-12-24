@@ -8,6 +8,13 @@
 
 var assetpath = function(filename) { return '../assets/' + filename; };
 
+var Stage = React.createFactory(ReactPIXI.Stage);
+var Sprite = React.createFactory(ReactPIXI.Sprite);
+var DisplayObjectContainer = React.createFactory(ReactPIXI.DisplayObjectContainer);
+var TilingSprite = React.createFactory(ReactPIXI.TilingSprite);
+var Text = React.createFactory(ReactPIXI.Text);
+var BitmapText = React.createFactory(ReactPIXI.BitmapText);
+
 //
 // Here's a cupcake component that gloms together two sprites to render a cupcake
 //
@@ -16,7 +23,7 @@ var assetpath = function(filename) { return '../assets/' + filename; };
 // - cream : type of cupcake topping. any of the keys listed in spritemapping
 //
 
-var CupcakeComponent = React.createClass({
+var CupcakeComponent = ReactPIXI.createClass({
   displayName: 'CupcakeComponent',
   // maps from cupcake toppings to the appropriate sprite
   spritemapping : {
@@ -34,12 +41,14 @@ var CupcakeComponent = React.createClass({
   render : function () {
     var creamimagename = this.spritemapping[this.props.topping];
     var xposition = this.props.xposition;
-    return ReactPIXI.DisplayObjectContainer({x:xposition, y:100 },
-      ReactPIXI.Sprite({image:creamimagename, y:-35, anchor: new PIXI.Point(0.5,0.5), key:'topping'}, null),
-      ReactPIXI.Sprite({image:assetpath('cupCake.png'), y:35, anchor: new PIXI.Point(0.5,0.5), key:'cake'}, null)
+    return DisplayObjectContainer(
+      {x:xposition, y:100 },
+      Sprite({image:creamimagename, y:-35, anchor: new PIXI.Point(0.5,0.5), key:'topping'}, null),
+      Sprite({image:assetpath('cupCake.png'), y:35, anchor: new PIXI.Point(0.5,0.5), key:'cake'}, null)
     );
   }
 });
+var CupcakeFactory = React.createFactory(CupcakeComponent);
 
 //
 // The top level component
@@ -51,12 +60,12 @@ var CupcakeComponent = React.createClass({
 var ExampleStage = React.createClass({
   displayName: 'ExampleStage',
   render: function() {
-    return ReactPIXI.Stage(
+    return Stage(
       {width:this.props.width, height:this.props.height},
-      ReactPIXI.TilingSprite({image:assetpath('bg_castle.png'), width:this.props.width, height:this.props.height, key:1}, null),
-      CupcakeComponent({topping:this.props.topping, xposition:this.props.xposition, ref:'cupcake', key:2}),
-      ReactPIXI.Text({text:'Vector text', x:this.props.xposition, y:10, style:{font:'40px Times'}, anchor: new PIXI.Point(0.5,0), key:3}, null),
-      ReactPIXI.BitmapText({text:'Bitmap text', x:this.props.xposition, y:180, tint:0xff88ff88, style: {font:'40 Comic_Neue_Angular'}, key:4}, null)
+      TilingSprite({image:assetpath('bg_castle.png'), width:this.props.width, height:this.props.height, key:1}, null),
+      CupcakeFactory({topping:this.props.topping, xposition:this.props.xposition, ref:'cupcake', key:2}),
+      Text({text:'Vector text', x:this.props.xposition, y:10, style:{font:'40px Times'}, anchor: new PIXI.Point(0.5,0), key:3}, null),
+      BitmapText({text:'Bitmap text', x:this.props.xposition, y:180, tint:0xff88ff88, style: {font:'40 Comic_Neue_Angular'}, key:4}, null)
     );
   }
 });
@@ -70,11 +79,11 @@ function cupcakestart() {
 
     function PutReact()
     {
-          React.renderComponent(ExampleStage({width:w, height:h, xposition:200, topping:'vanilla'}), renderelement);
+      var stageElement = React.createElement(ExampleStage, {width:w, height:h, xposition:200, topping:'vanilla'});
+      React.render(stageElement, renderelement);
     }
 
     var fontloader = new PIXI.BitmapFontLoader(assetpath('comic_neue_angular_bold.fnt'));
     fontloader.on('loaded', PutReact);
     fontloader.load();
 }
-
