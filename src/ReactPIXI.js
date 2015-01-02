@@ -324,7 +324,7 @@ var PIXIStage = createPIXIComponent(
     this.renderStage();
 
     var that = this;
-    that._rAFID = window.requestAnimFrame( rapidrender );
+    that._rAFID = window.requestAnimationFrame( rapidrender );
 
     function rapidrender(timestamp) {
 
