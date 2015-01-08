@@ -212,7 +212,7 @@ gulp.task('dist-clojars', ['dist-clojars-src','dist-clojars-project','dist-cloja
 // generate the bitmap references used in testing
 //
 
-gulp.task('pixelrefs', ['bundle'], function() {
+gulp.task('pixelrefs', ['bundle'], function(done) {
   var command = path.normalize('./node_modules/.bin/phantomjs');
   var child = exec(command + ' test/pixels/generatetestrender.js',
                   function(error, stdout, stderr) {
@@ -223,6 +223,7 @@ gulp.task('pixelrefs', ['bundle'], function() {
                     if (error !== null) {
                       gutil.log('exec error: ' + error);
                     }
+                    done();
                   });
 });
 
