@@ -117,6 +117,12 @@ Testing is done via gulp and karma.
 gulp test
 ```
 
+to (re)generate the pixel reference images you will need to have phantomjs installed, then
+
+```
+gulp pixelrefs
+```
+
 ## Caveats
 
 - PIXI filters aren't currently supported.
