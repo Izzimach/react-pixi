@@ -132,7 +132,7 @@ gulp.task('watch', ['bundle', 'bundle-min'], function() {
   gulp.watch(['examples/jsxtransform/*.jsx'], ['jsxtransform']);
 });
 
-gulp.task('livereload', ['lint','bundle'], function() {
+gulp.task('livereload', ['lint','bundle','jsxtransform'], function() {
   var nodestatic = require('node-static');
   var fileserver = new nodestatic.Server('.');
   require('http').createServer(function(request, response) {
