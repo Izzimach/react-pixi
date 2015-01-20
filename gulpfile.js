@@ -107,7 +107,8 @@ gulp.task('bundle', ['browserify'], function() {
   return gulp.src(['build/react-pixi-commonjs.js','src/react-pixi-exposeglobals.js'])
     .pipe(concat('react-pixi.js'))
     .pipe(vtransform(envify({NODE_ENV:"development"})))
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('build'))
+    .pipe(livereload());
 });
 
 gulp.task('bundle-min', ['browserify'], function() {
@@ -115,7 +116,8 @@ gulp.task('bundle-min', ['browserify'], function() {
     .pipe(concat('react-pixi.min.js'))
     .pipe(vtransform(envify({NODE_ENV:"production"})))
     .pipe(uglify({preserveComments:'some'}))
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('build'))
+    .pipe(livereload());
 });
 
 //
@@ -124,11 +126,12 @@ gulp.task('bundle-min', ['browserify'], function() {
 gulp.task('jsxtransform', ['bundle'], function() {
   return gulp.src('examples/jsxtransform/jsxtransform.jsx', {base:'examples/jsxtransform'})
     .pipe(jsxtransform())
-    .pipe(gulp.dest('examples/jsxtransform'));
+    .pipe(gulp.dest('examples/jsxtransform'))
+    .pipe(livereload());
 });
 
 gulp.task('watch', ['bundle', 'bundle-min'], function() {
-  gulp.watch(SOURCEGLOB, ['browserify']);
+  gulp.watch(SOURCEGLOB, ['bundle','bundle-min']);
   gulp.watch(['examples/jsxtransform/*.jsx'], ['jsxtransform']);
 });
 
@@ -141,12 +144,10 @@ gulp.task('livereload', ['lint','bundle','jsxtransform'], function() {
     }).resume();
   }).listen(SERVERPORT);
 
-  var livereloadserver = livereload();
+  livereload.listen();
 
   gulp.watch([SOURCEGLOB], ['bundle','bundle-min']);
-  gulp.watch(['build/**/*.js', 'examples/**/*.js','examples/**/*.html'], function(file) {
-    livereloadserver.changed(file.path);
-  });
+  gulp.watch(['examples/jsxtransform/*.jsx'], ['jsxtransform']);
 });
 
 gulp.task('test', ['bundle'], function(done) {
