@@ -1,14 +1,14 @@
 
 
 describe("PIXI Stage Component", function() {
-  var stagecomponent = BasicTestFixture({width:300, height:300});
+  var stagecomponent = createTestFixture({width:300, height:300});
   var mountpoint = null;
 
   beforeEach(function() { mountpoint = createTestFixtureMountPoint(); });
   afterEach(function() { removeTestFixtureMountPoint(mountpoint); });
 
   it("creates a canvas used by PIXI", function() {
-    React.renderComponent(stagecomponent,mountpoint);
+    React.render(stagecomponent,mountpoint);
 
     expect(mountpoint.childNodes.length).toBe(1);
     expect(mountpoint.childNodes[0].nodeName).toBe('CANVAS');
@@ -16,7 +16,7 @@ describe("PIXI Stage Component", function() {
   });
 
   it("creates a PIXI Stage object", function() {
-    var reactinstance = React.renderComponent(stagecomponent,mountpoint);
+    var reactinstance = React.render(stagecomponent,mountpoint);
 
     // hm, probably need some equivalent of getDOMNode
     expect(reactinstance.refs['stage'].displayObject).toBeDefined();
@@ -29,10 +29,10 @@ describe("PIXI Stage Component", function() {
   });
 
   it("destroys the canvas when the stage is unmounted", function() {
-    reactinstance = React.renderComponent(stagecomponent,mountpoint);
+    reactinstance = React.render(stagecomponent,mountpoint);
 
     // this should unmount the stage and remove the canvas
-    var reactinstance = React.renderComponent(React.DOM.div(), mountpoint);
+    var reactinstance = React.render(React.DOM.div(), mountpoint);
 
     expect(mountpoint.childNodes.length).toBe(1);
     expect(mountpoint.childNodes[0].nodeName).not.toBe('CANVAS');

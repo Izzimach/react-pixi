@@ -30,14 +30,12 @@ var PixelRefs = React.createClass({
   displayName: 'PixelRefs',
   render: function() {
     var testimageelements = _.map(this.props.testimageURLs, function(imageURL) {
-      return React.DOM.img({src:imageURL});
+      return React.createElement("img", {src:imageURL, key:imageURL});
     });
-    return React.DOM.div(
-      {},
-      testimageelements
-    );
+    return React.createElement("div", {}, testimageelements);
   }
 });
+var PixelRefsFactory = React.createFactory(PixelRefs);
 
 /* jshint unused:false */
 function viewpixeltestsstart() {
@@ -49,6 +47,6 @@ function viewpixeltestsstart() {
   var pixelTestResults = {};
   pixelTests(testfixture, imagePath, function (results) {
     g_applicationstate = {testimageURLs:results};
-    React.renderComponent(PixelRefs(g_applicationstate), testfixture);
+    React.render(PixelRefsFactory(g_applicationstate), testfixture);
   });
 }

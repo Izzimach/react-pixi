@@ -10,16 +10,17 @@ function drawTestRenders(mountpoint, testimages) {
   var SpriteTestComponent = React.createClass({
     displayName:'SpriteTextComponent',
     render: function () {
-      return ReactPIXI.Stage(
+      return React.createElement(ReactPIXI.Stage,
         // props
         {width:200,height:200, backgroundcolor:0x66ff88, ref:'stage'},
         // children
-        ReactPIXI.Sprite(this.props.spriteprops)
+        React.createElement(ReactPIXI.Sprite, this.props.spriteprops)
         );
     }
   });
+  var SpriteTest = React.createFactory(SpriteTestComponent);
 
-  var reactinstance = React.renderComponent(SpriteTestComponent({spriteprops:{x:100,y:100, anchor:halfanchor, image:testimages[0], key:'urgh'}}), mountpoint);
+  //var reactinstance = React.render(SpriteTest({key:'spriteteststage', spriteprops:{x:100,y:100, anchor:halfanchor, image:testimages[0], key:'urgh'}}), mountpoint);
 
   // now make multiple renders with slightly different sprite props. For each set of sprite props
   // we record a snapshot. These snapshots are compared with the known 'good' versions.
@@ -29,15 +30,14 @@ function drawTestRenders(mountpoint, testimages) {
     { x:100, y:110, anchor:halfanchor, image:testimages[0]},
     { x:100, y:100, anchor: new PIXI.Point(0,0), image:testimages[0]},
     { x:100, y:100, anchor:halfanchor, rotation:90, image:testimages[0]},
-    { x:100, y:100, anchor:halfanchor, scale: 2, image:testimages[0]}
+    { x:100, y:100, anchor:halfanchor, scale: new PIXI.Point(2,2), image:testimages[0]}
   ];
 
   var renderresults = [];
 
   spritetestprops.forEach(function (curprops) {
     curprops.key = 'urgh'; // re-use the same sprite instance
-    //reactinstance.setProps({spriteprops:curprops});
-    React.renderComponent(SpriteTestComponent({spriteprops:curprops}), mountpoint);
+    var reactinstance = React.render(SpriteTest({spriteprops:curprops}), mountpoint);
 
     // convert the rendered image to a data blob we can use
     var renderer = reactinstance.refs['stage'].pixirenderer;

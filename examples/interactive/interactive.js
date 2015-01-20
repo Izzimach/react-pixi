@@ -12,6 +12,14 @@
 /* global ReactPIXI : false */
 /* jshint strict: false */
 
+var Stage = React.createFactory(ReactPIXI.Stage);
+var Sprite = React.createFactory(ReactPIXI.Sprite);
+var DisplayObjectContainer = React.createFactory(ReactPIXI.DisplayObjectContainer);
+var TilingSprite = React.createFactory(ReactPIXI.TilingSprite);
+var Text = React.createFactory(ReactPIXI.Text);
+var BitmapText = React.createFactory(ReactPIXI.BitmapText);
+
+
 var g_assetpath = function(filename) { return '../assets/' + filename; };
 
 // the mounted instance will go here, so that callbacks can modify/set it
@@ -50,6 +58,8 @@ function addRandomSprite() {
   var newsprite = {
     x: Math.random() * g_applicationstate.width,
     y: Math.random() * g_applicationstate.height,
+    alpha: 0.7,
+    blendMode: PIXI.blendModes.SCREEN,
     image: g_assetpath('lollipopGreen.png'),
     key: spriteid,
     interactive:true,
@@ -79,11 +89,11 @@ function removeSpriteById(spriteid) {
 var SpriteAppButtons = React.createClass({
   displayName:'SpriteAppButtons',
   render: function() {
-    return ReactPIXI.DisplayObjectContainer(
+    return DisplayObjectContainer(
       {},
-      ReactPIXI.Sprite({x:100,y:150,key:'cherry', image: g_assetpath('cherry.png'),interactive:true,click: addRandomSprite}),
-      ReactPIXI.Text({x:10,y:10, key:'label1', text:'Click the cherry to add a lollipop sprite', style:{font:'25px Times'}}),
-      ReactPIXI.Text({x:10,y:80, key:'label2', text:'Click on lollipop sprites to remove them', style:{font:'25px Times'}})
+      Sprite({x:100,y:150,key:'cherry', image: g_assetpath('cherry.png'),interactive:true,click: addRandomSprite}),
+      Text({x:10,y:10, key:'label1', text:'Click the cherry to add a lollipop sprite', style:{font:'25px Times'}}),
+      Text({x:10,y:80, key:'label2', text:'Click on lollipop sprites to remove them', style:{font:'25px Times'}})
     );
   }
 });
@@ -100,9 +110,9 @@ var DynamicSprites = React.createClass({
   render: function() {
     var args = [{}];
     this.props.sprites.forEach(function(spriteprops) {
-      args.push(ReactPIXI.Sprite(spriteprops));
+      args.push(Sprite(spriteprops));
     });
-    return ReactPIXI.DisplayObjectContainer.apply(
+    return DisplayObjectContainer.apply(
       null,
       args
     );
@@ -119,12 +129,12 @@ var DynamicSprites = React.createClass({
 var SpriteApp = React.createClass({
   displayName: 'BunchOfSprites',
   render: function() {
-    return ReactPIXI.Stage(
+    return Stage(
       // stage props
       {width: this.props.width, height: this.props.height, backgroundcolor: 0xa08080, interactive:true},
       // children components are the buttons and the dynamic sprites
-      DynamicSprites({key:'sprites', sprites:this.props.sprites}),
-      SpriteAppButtons({key:'gui'})
+      React.createElement(SpriteAppButtons, {key:'gui'}),
+      React.createElement(DynamicSprites, {key:'sprites', sprites:this.props.sprites})
     );
   }
 });
@@ -141,7 +151,7 @@ function interactiveexamplestart() {
 
   function PutReact()
   {
-    g_reactinstance = React.renderComponent(SpriteApp(g_applicationstate), renderelement);
+    g_reactinstance = React.render(React.createElement(SpriteApp,g_applicationstate), renderelement);
   }
 
   var assetloader = new PIXI.AssetLoader([
@@ -153,4 +163,3 @@ function interactiveexamplestart() {
   assetloader.on('onComplete', PutReact);
   assetloader.load();
 }
-

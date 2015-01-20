@@ -1,7 +1,8 @@
 //
 // code to generate test render images
-// run this in phantomjs from the root directory:
-// 'node_modules/.bin/phantomjs test/pixels/generatetestrender.js'
+// You need phantomjs, which isn't installed by default.
+// Run this in phantomjs from the root directory:
+// phantomjs test/pixels/generatetestrender.js
 //
 
 var webPage = require('webpage');
@@ -57,4 +58,3 @@ page.open('test/pixels/generatetestrender.html', function() {
     return renderresults;
   });
 });
-

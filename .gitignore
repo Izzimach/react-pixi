@@ -22,6 +22,7 @@ coverage
 build/Release
 
 build
+dist-clojars
 
 bower_components
 
