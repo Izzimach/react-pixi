@@ -146,7 +146,7 @@ describe("PIXI DisplayObject Component", function() {
     // will update in-place and then updateComponent in ReactCompositeComponentMixin will try to nuke and replace the child
     // component since the keys don't match.
     //
-    var injectedKeyComponent = ReactPIXI.createClass({
+    var injectedKeyComponent = React.createClass({
       displayName: 'injectedKeyComponent',
       render: function () {
         var propswithkey = _.clone(this.props);

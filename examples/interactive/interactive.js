@@ -86,7 +86,7 @@ function removeSpriteById(spriteid) {
 // Component to hold a clickable sprite 'button'. click on this 'button' to add a sprite
 //
 
-var SpriteAppButtons = ReactPIXI.createClass({
+var SpriteAppButtons = React.createClass({
   displayName:'SpriteAppButtons',
   render: function() {
     return DisplayObjectContainer(
@@ -102,7 +102,7 @@ var SpriteAppButtons = ReactPIXI.createClass({
 // Component to display all the dynamic sprites
 //
 
-var DynamicSprites = ReactPIXI.createClass({
+var DynamicSprites = React.createClass({
   displayName:'DynamicSprites',
   propTypes: {
     sprites: React.PropTypes.arrayOf(React.PropTypes.object)

@@ -23,7 +23,7 @@ var BitmapText = React.createFactory(ReactPIXI.BitmapText);
 // - cream : type of cupcake topping. any of the keys listed in spritemapping
 //
 
-var CupcakeComponent = ReactPIXI.createClass({
+var CupcakeComponent = React.createClass({
   displayName: 'CupcakeComponent',
   // maps from cupcake toppings to the appropriate sprite
   spritemapping : {

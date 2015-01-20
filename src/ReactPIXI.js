@@ -35,6 +35,7 @@ var ReactComponentMixin = ReactComponent.Mixin;
 
 var assign = require('react/lib/Object.assign');
 var emptyObject = require('react/lib/emptyObject');
+var warning = require('react/lib/warning');
 
 var shouldUpdateReactComponent = require('react/lib/shouldUpdateReactComponent');
 var instantiateReactComponent = require ('react/lib/instantiateReactComponent');
@@ -650,17 +651,16 @@ function findDisplayObjectAncestor(componentinstance) {
 
 function findDisplayObjectChild(componentinstance) {
   // walk downwards via _renderedComponent to find something with a displayObject
-  // walk up via _owner until we find something with a displayObject hasOwnProperty
   var componentwalker = componentinstance;
   while (typeof componentwalker !== 'undefined') {
-    // no owner? then fail
+    // no displayObject? then fail
     if (typeof componentwalker.displayObject !== 'undefined') {
       return componentwalker.displayObject;
     }
     componentwalker = componentwalker._renderedComponent;
   }
 
-  // we walked all the way up and found no displayObject
+  // we walked all the way down and found no displayObject
   return undefined;
 
 }
@@ -672,11 +672,25 @@ function findDisplayObjectChild(componentinstance) {
 // modifying HTML markup; since PIXI objects don't exist as markup the whole thing bombs.
 // we try to fix this by monkey-patching ReactCompositeComponent
 //
+var originalCreateClass = React.createClass;
 
 function createPIXIClass(spec) {
 
   var patchedspec = assign({}, spec, {
     updateComponent : function(transaction, prevParentDescriptor) {
+      // Find the first actual rendered (non-Composite) component.
+      // If that component is a PIXI nodes we use the special code here.
+      // If not, we call back to the original updateComponent which should
+      // handle all non-PIXI nodes.
+
+      var prevDisplayObject = findDisplayObjectChild(this._renderedComponent);
+      if (!prevDisplayObject) {
+        // not a PIXI node, use the original version of updateComponent
+        this.prototype.updateComponent(transaction, prevParentDescriptor);
+        return;
+      }
+
+      // This is a PIXI node, do a special PIXI version of updateComponent
       ReactComponent.Mixin.updateComponent.call(
         this,
         transaction,
@@ -694,7 +708,6 @@ function createPIXIClass(spec) {
         // the same place based on the new props.
         var rootID = this._rootNodeID;
 
-        var prevDisplayObject = findDisplayObjectChild(this._renderedComponent);
         var displayObjectParent = prevDisplayObject.parent;
 
         if ("production" !== process.env.NODE_ENV) { // jshint ignore:line
@@ -724,7 +737,7 @@ function createPIXIClass(spec) {
   });
 
   /* jshint validthis: true */
-  var newclass = React.createClass(patchedspec);
+  var newclass = originalCreateClass(patchedspec);
   return newclass;
 
 }
@@ -757,8 +770,17 @@ for (var prop in PIXIComponents) {
     }
 }
 
+// gaaah
+React.createClass = createPIXIClass;
+
+function dontUseReactPIXICreateClass(spec)
+{
+      warning(false, "ReactPIXI.createClass is no longer needed, use React.createClass instead");
+      return createPIXIClass(spec);
+}
+
 module.exports =  assign(PIXIComponents, {
   factories: PIXIFactories,
-  createClass: createPIXIClass,
+  createClass: dontUseReactPIXICreateClass,
   CustomPIXIComponent : CustomPIXIComponent
 });
