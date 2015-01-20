@@ -18350,6 +18350,7 @@ var ReactComponentMixin = ReactComponent.Mixin;
 
 var assign = require('react/lib/Object.assign');
 var emptyObject = require('react/lib/emptyObject');
+var warning = require('react/lib/warning');
 
 var shouldUpdateReactComponent = require('react/lib/shouldUpdateReactComponent');
 var instantiateReactComponent = require ('react/lib/instantiateReactComponent');
@@ -18639,7 +18640,7 @@ var PIXIStage = createPIXIComponent(
     this.renderStage();
 
     var that = this;
-    that._rAFID = window.requestAnimFrame( rapidrender );
+    that._rAFID = window.requestAnimationFrame( rapidrender );
 
     function rapidrender(timestamp) {
 
@@ -18965,17 +18966,16 @@ function findDisplayObjectAncestor(componentinstance) {
 
 function findDisplayObjectChild(componentinstance) {
   // walk downwards via _renderedComponent to find something with a displayObject
-  // walk up via _owner until we find something with a displayObject hasOwnProperty
   var componentwalker = componentinstance;
   while (typeof componentwalker !== 'undefined') {
-    // no owner? then fail
+    // no displayObject? then fail
     if (typeof componentwalker.displayObject !== 'undefined') {
       return componentwalker.displayObject;
     }
     componentwalker = componentwalker._renderedComponent;
   }
 
-  // we walked all the way up and found no displayObject
+  // we walked all the way down and found no displayObject
   return undefined;
 
 }
@@ -18987,11 +18987,25 @@ function findDisplayObjectChild(componentinstance) {
 // modifying HTML markup; since PIXI objects don't exist as markup the whole thing bombs.
 // we try to fix this by monkey-patching ReactCompositeComponent
 //
+var originalCreateClass = React.createClass;
 
 function createPIXIClass(spec) {
 
   var patchedspec = assign({}, spec, {
     updateComponent : function(transaction, prevParentDescriptor) {
+      // Find the first actual rendered (non-Composite) component.
+      // If that component is a PIXI nodes we use the special code here.
+      // If not, we call back to the original updateComponent which should
+      // handle all non-PIXI nodes.
+
+      var prevDisplayObject = findDisplayObjectChild(this._renderedComponent);
+      if (!prevDisplayObject) {
+        // not a PIXI node, use the original version of updateComponent
+        this.prototype.updateComponent(transaction, prevParentDescriptor);
+        return;
+      }
+
+      // This is a PIXI node, do a special PIXI version of updateComponent
       ReactComponent.Mixin.updateComponent.call(
         this,
         transaction,
@@ -19009,7 +19023,6 @@ function createPIXIClass(spec) {
         // the same place based on the new props.
         var rootID = this._rootNodeID;
 
-        var prevDisplayObject = findDisplayObjectChild(this._renderedComponent);
         var displayObjectParent = prevDisplayObject.parent;
 
         if ("production" !== "development") { // jshint ignore:line
@@ -19039,7 +19052,7 @@ function createPIXIClass(spec) {
   });
 
   /* jshint validthis: true */
-  var newclass = React.createClass(patchedspec);
+  var newclass = originalCreateClass(patchedspec);
   return newclass;
 
 }
@@ -19072,14 +19085,23 @@ for (var prop in PIXIComponents) {
     }
 }
 
+// gaaah
+React.createClass = createPIXIClass;
+
+function dontUseReactPIXICreateClass(spec)
+{
+      warning(false, "ReactPIXI.createClass is no longer needed, use React.createClass instead");
+      return createPIXIClass(spec);
+}
+
 module.exports =  assign(PIXIComponents, {
   factories: PIXIFactories,
-  createClass: createPIXIClass,
+  createClass: dontUseReactPIXICreateClass,
   CustomPIXIComponent : CustomPIXIComponent
 });
 
 }).call(this,require('_process'))
-},{"_process":1,"react":"react","react/lib/DOMPropertyOperations":12,"react/lib/Object.assign":27,"react/lib/ReactBrowserComponentMixin":30,"react/lib/ReactComponent":33,"react/lib/ReactDOMComponent":40,"react/lib/ReactElement":53,"react/lib/ReactLegacyElement":62,"react/lib/ReactMultiChild":65,"react/lib/ReactUpdates":80,"react/lib/emptyObject":109,"react/lib/instantiateReactComponent":126,"react/lib/invariant":127,"react/lib/shouldUpdateReactComponent":143}],"react":[function(require,module,exports){
+},{"_process":1,"react":"react","react/lib/DOMPropertyOperations":12,"react/lib/Object.assign":27,"react/lib/ReactBrowserComponentMixin":30,"react/lib/ReactComponent":33,"react/lib/ReactDOMComponent":40,"react/lib/ReactElement":53,"react/lib/ReactLegacyElement":62,"react/lib/ReactMultiChild":65,"react/lib/ReactUpdates":80,"react/lib/emptyObject":109,"react/lib/instantiateReactComponent":126,"react/lib/invariant":127,"react/lib/shouldUpdateReactComponent":143,"react/lib/warning":146}],"react":[function(require,module,exports){
 module.exports = require('./lib/React');
 
 },{"./lib/React":29}]},{},[]);
