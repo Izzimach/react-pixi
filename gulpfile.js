@@ -133,6 +133,7 @@ gulp.task('jsxtransform', ['bundle'], function() {
 gulp.task('watch', ['bundle', 'bundle-min'], function() {
   gulp.watch(SOURCEGLOB, ['bundle','bundle-min']);
   gulp.watch(['examples/jsxtransform/*.jsx'], ['jsxtransform']);
+  gulp.watch(EXAMPLESGLOB,['lint'])
 });
 
 gulp.task('livereload', ['lint','bundle','jsxtransform'], function() {
