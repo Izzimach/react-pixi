@@ -19,7 +19,7 @@
 // adding sub-objects to the BasicTestFixture component. This way we
 // avoid creating and destroying WebGL contexts, although you can
 // still it do 'by hand' by unmounting the component
-var BasicTestFixture = ReactPIXI.createClass({
+var BasicTestFixture = React.createClass({
   displayName: 'BasicTestFixture',
   render: function() {
     var stageprops = {width:this.props.width, height:this.props.height, ref:'stage'};
