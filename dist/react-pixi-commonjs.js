@@ -19046,6 +19046,9 @@ function createPIXIClass(spec) {
           this._mountDepth + 1
         );
         this.displayObject = nextDisplayObject;
+
+        // fixup _mountImage as well
+        this._mountImage = this.displayObject;
         displayObjectParent.addChildAt(nextDisplayObject, displayObjectIndex);
       }
     }
