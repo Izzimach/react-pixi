@@ -120,6 +120,58 @@ var DynamicSprites = React.createClass({
 });
 
 //
+// A Spin component
+// Dynamically spins a component/node around a certain coordinate
+// props:
+// - x,y are the point to spin around
+// - spinspeed is the rotation speed in radians/sec
+// - spinme is a ReactElement to spin
+var SpinElement = React.createClass({
+  displayName: 'SpinElement',
+  propTypes: {
+    x: React.PropTypes.number.isRequired,
+    y: React.PropTypes.number.isRequired,
+    spinspeed: React.PropTypes.number.isRequired,
+    spinme: React.PropTypes.object.isRequired
+  },
+
+  getInitialState: function() {
+    return {clusterrotation:0, spincallback:null};
+  },
+  componentDidMount: function() {
+    var componentinstance = this;
+    var animationcallback = function(/*t*/) {
+      var newrotation = componentinstance.state.clusterrotation + this.props.spinspeed * 0.016;// use timestamp passed in!!!
+
+      var newstate = {
+        clusterrotation: newrotation,
+        spincallback:requestAnimationFrame(animationcallback)
+      };
+      componentinstance.setState(newstate);
+    }.bind(this);
+
+    // add an interval timer function to rotate the camera
+    componentinstance.setState({spincallback:requestAnimationFrame(animationcallback)});
+  },
+  componentWillUnmount: function() {
+    if (this.state.spincallback !== null) {
+      cancelAnimationFrame(this.state.spincallback);
+    }
+  },
+  render: function () {
+    var spinatprops = {x:this.props.x, y:this.props.y, rotation:this.state.clusterrotation};
+
+    // the first DisplayObjectContainer offsets everything so we need to wrap another
+    // DoC to move everythiing back into place
+    var restoreoffsetprops = {x:-this.props.x, y:-this.props.y};
+
+    return DisplayObjectContainer(spinatprops,
+                                  DisplayObjectContainer(restoreoffsetprops,
+                                                         this.props.spinme));
+  }
+});
+
+//
 // The top level component
 // props:
 // - width,height : size of the overall render canvas in pixels
@@ -129,12 +181,16 @@ var DynamicSprites = React.createClass({
 var SpriteApp = React.createClass({
   displayName: 'BunchOfSprites',
   render: function() {
+    var halfwidth = this.props.width/2;
+    var halfheight = this.props.height/2;
+    var dynamicspriteselement = React.createElement(DynamicSprites, {key:'sprites', sprites:this.props.sprites});
+
     return Stage(
       // stage props
       {width: this.props.width, height: this.props.height, backgroundcolor: 0xa08080, interactive:true},
       // children components are the buttons and the dynamic sprites
       React.createElement(SpriteAppButtons, {key:'gui'}),
-      React.createElement(DynamicSprites, {key:'sprites', sprites:this.props.sprites})
+      React.createElement(SpinElement,{x:halfwidth, y:halfheight, spinspeed:1, spinme:dynamicspriteselement})
     );
   }
 });
