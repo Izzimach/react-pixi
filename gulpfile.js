@@ -54,7 +54,7 @@ var banner = ['/**',
 var browserlist = ['Firefox'];
 var karmaconfiguration = {
     browsers: browserlist,
-    files: ['bower_components/lodash/dist/lodash.min.js',
+    files: ['bower_components/lodash/lodash.min.js',
             'bower_components/pixi.js/bin/pixi.dev.js',
             'build/react-pixi.js',
             'vendor/phantomjs-shims.js', // need a shim to work with the ancient version of Webkit used in PhantomJS

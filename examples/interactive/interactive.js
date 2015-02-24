@@ -59,7 +59,7 @@ function addRandomSprite() {
     x: Math.random() * g_applicationstate.width,
     y: Math.random() * g_applicationstate.height,
     alpha: 0.7,
-    blendMode: PIXI.blendModes.SCREEN,
+    blendMode: PIXI.blendModes.NORMAL,
     image: g_assetpath('lollipopGreen.png'),
     key: spriteid,
     interactive:true,
