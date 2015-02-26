@@ -28,6 +28,7 @@ var jsxtransform = require('gulp-react');
 
 var karma = require('karma');
 var browserify = require('browserify');
+var browserifyShim = require('browserify-shim');
 var pkg = require('./package.json');
 
 //
@@ -54,8 +55,8 @@ var banner = ['/**',
 var browserlist = ['Firefox'];
 var karmaconfiguration = {
     browsers: browserlist,
-    files: ['bower_components/lodash/dist/lodash.min.js',
-            'bower_components/pixi.js/bin/pixi.dev.js',
+    files: [require.resolve('lodash'),
+            require.resolve('pixi.js'),
             'build/react-pixi.js',
             'vendor/phantomjs-shims.js', // need a shim to work with the ancient version of Webkit used in PhantomJS
             'node_modules/resemblejs/resemble.js',
@@ -95,6 +96,7 @@ gulp.task('browserify',['lint'], function() {
   var bundler = browserify();
   bundler.require('react');
   bundler.require('./src/ReactPIXI.js',{expose:'react-pixi'});
+  bundler.transform(browserifyShim);
 
   // If we're running a gulp.watch and browserify finds an error, it will
   // throw an exception and terminate gulp unless we catch the error event.
