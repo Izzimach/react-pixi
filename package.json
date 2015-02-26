@@ -40,6 +40,7 @@
     "karma-jasmine": "~0.3.2",
     "lodash": "^3.3.1",
     "node-static": "~0.7.3",
+    "pixi.js": "^2.2.7",
     "react": "^0.12.2",
     "react-tools": "^0.12.2",
     "resemblejs": "~1.2.0",
