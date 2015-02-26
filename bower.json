@@ -33,7 +33,6 @@
   ],
   "license": "AP2",
   "dependencies": {
-    "lodash": "~3.3.1",
     "pixi.js": "~2.2.5"
   }
 }

@@ -42,6 +42,8 @@ var shouldUpdateReactComponent = require('react/lib/shouldUpdateReactComponent')
 var instantiateReactComponent = require ('react/lib/instantiateReactComponent');
 var invariant = require('react/lib/invariant');
 
+var PIXI = require('pixi.js');
+
 //
 // Generates a React component by combining several mixin components
 //
