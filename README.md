@@ -31,11 +31,10 @@ so you should not include the standard React library. Doing so might give wierd 
 
 ## Building From Source
 
-You will need node, npm, and bower. You should probably install gulp globally as well.
+You will need node and  npm. You should probably install gulp globally as well.
 
 ```
 npm install -g gulp
-npm install -g bower
 npm install
 bower install
 ```
