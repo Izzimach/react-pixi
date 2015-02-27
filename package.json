@@ -1,6 +1,6 @@
 {
   "name": "react-pixi",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Construct PIXI.js scenes using React",
   "keywords": [
     "react",
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "react": "^0.12.2",
+    "react-tools": "^0.12.2",
     "browserify": "~9.0.0",
     "browserify-shim": "^3.8.3",
     "envify": "^3.2.0",
@@ -42,8 +43,6 @@
     "lodash": "^3.3.1",
     "node-static": "~0.7.3",
     "pixi.js": "^2.2.7",
-    "react": "^0.12.2",
-    "react-tools": "^0.12.2",
     "resemblejs": "~1.2.0",
     "rimraf": "~2.2.8",
     "vinyl-source-stream": "~1.0.0",
