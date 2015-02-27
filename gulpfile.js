@@ -28,6 +28,7 @@ var jsxtransform = require('gulp-react');
 
 var karma = require('karma');
 var browserify = require('browserify');
+var browserifyShim = require('browserify-shim');
 var pkg = require('./package.json');
 
 //
@@ -54,8 +55,8 @@ var banner = ['/**',
 var browserlist = ['Firefox'];
 var karmaconfiguration = {
     browsers: browserlist,
-    files: ['bower_components/lodash/dist/lodash.min.js',
-            'bower_components/pixi.js/bin/pixi.dev.js',
+    files: [require.resolve('lodash'),
+            require.resolve('pixi.js'),
             'build/react-pixi.js',
             'vendor/phantomjs-shims.js', // need a shim to work with the ancient version of Webkit used in PhantomJS
             'node_modules/resemblejs/resemble.js',
@@ -95,6 +96,7 @@ gulp.task('browserify',['lint'], function() {
   var bundler = browserify();
   bundler.require('react');
   bundler.require('./src/ReactPIXI.js',{expose:'react-pixi'});
+  bundler.transform(browserifyShim);
 
   // If we're running a gulp.watch and browserify finds an error, it will
   // throw an exception and terminate gulp unless we catch the error event.
@@ -169,11 +171,17 @@ gulp.task('dist', ['dist-clean','bundle', 'bundle-min', 'test'], function() {
 });
 
 //
+// PACKAGING FOR CLOJURESCRIPT
+//
+
+//
 // For easy use with ClojureScript (om-react-pixi) we need to
 // arrange the files properly so that they may be properly
 // packaged with leiningen. File are first arranged in dist-clojars
 // and then packaged/deployed to clojars.org (currently by hand)
 //
+// This setup uses the new "dep.cljs" setup which requires a
+// version of clojurescript after 0.0-2727
 
 gulp.task('dist-clojars-clean', function(done) {
   rimraf('dist-clojars',done);
@@ -189,22 +197,26 @@ gulp.task('dist-clojars-project', ['dist-clojars-clean'], function() {
     .pipe(gulp.dest('dist-clojars/'));
 });
 
-// put the react-pixi javascript files into resources/react_pixi so that
-// cljsbuild can refer to them via {:source-paths ["react_pixi"]}
+// put the react-pixi javascript files into src/react_pixi (referred to in
+// code as src/react-pixi)
 gulp.task('dist-clojars-src', ['dist', 'dist-clojars-clean'], function() {
   return gulp.src(['dist/**'], {base:'dist'})
-    .pipe(gulp.dest('dist-clojars/resources/react_pixi'));
+    .pipe(gulp.dest('dist-clojars/src/react_pixi'));
 });
 
-// Dump other files (like pixi itself) into the resources/react_pixi dir
-// so that ring or another web-server can serve it. Such a file can be accessed
-// at a '/react_pixi/<xxx>' URL.
-gulp.task('dist-clojars-resources', ['dist-clojars-clean'], function() {
+// Dump other files (like pixi itself) into the src/react_pixi dir
+gulp.task('dist-clojars-pixi', ['dist-clojars-clean'], function() {
   return gulp.src(['bower_components/pixi.js/bin/**'], {base:'bower_components/pixi.js/bin'})
-    .pipe(gulp.dest('dist-clojars/resources/react_pixi'));
+    .pipe(gulp.dest('dist-clojars/src/react_pixi'));
 });
 
-gulp.task('dist-clojars', ['dist-clojars-src','dist-clojars-project','dist-clojars-resources'], function() {
+// Copy over dep.cljs
+gulp.task('dist-clojars-deps', ['dist-clojars-clean'], function() {
+  return gulp.src(['src/deps.cljs'],{base:'src'})
+    .pipe(gulp.dest('dist-clojars/src'));
+})
+
+gulp.task('dist-clojars', ['dist-clojars-src','dist-clojars-project','dist-clojars-pixi','dist-clojars-deps'], function() {
   // user must run lein deploy in the subdir
   gutil.log('ready to deploy');
   gutil.log('chdir into the "dist-clojars" directory and run "lein deploy clojars"');

@@ -32,6 +32,7 @@ var ReactMultiChild = require('react/lib/ReactMultiChild');
 var ReactBrowserComponentMixin = require('react/lib/ReactBrowserComponentMixin');
 var ReactDOMComponent = require('react/lib/ReactDOMComponent');
 var ReactComponentMixin = ReactComponent.Mixin;
+var ReactCompositeComponent = require('react/lib/ReactCompositecomponent');
 
 var assign = require('react/lib/Object.assign');
 var emptyObject = require('react/lib/emptyObject');
@@ -40,6 +41,8 @@ var warning = require('react/lib/warning');
 var shouldUpdateReactComponent = require('react/lib/shouldUpdateReactComponent');
 var instantiateReactComponent = require ('react/lib/instantiateReactComponent');
 var invariant = require('react/lib/invariant');
+
+var PIXI = require('pixi.js');
 
 //
 // Generates a React component by combining several mixin components
@@ -673,6 +676,7 @@ function findDisplayObjectChild(componentinstance) {
 // we try to fix this by monkey-patching ReactCompositeComponent
 //
 var originalCreateClass = React.createClass;
+var originalUpdateComponent = ReactCompositeComponent.Base.prototype.updateComponent;
 
 function createPIXIClass(spec) {
 
@@ -686,7 +690,7 @@ function createPIXIClass(spec) {
       var prevDisplayObject = findDisplayObjectChild(this._renderedComponent);
       if (!prevDisplayObject) {
         // not a PIXI node, use the original version of updateComponent
-        this.prototype.updateComponent(transaction, prevParentDescriptor);
+        originalUpdateComponent.call(this,transaction, prevParentDescriptor);
         return;
       }
 
