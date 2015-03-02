@@ -206,7 +206,7 @@ gulp.task('dist-clojars-src', ['dist', 'dist-clojars-clean'], function() {
 
 // Dump other files (like pixi itself) into the src/react_pixi dir
 gulp.task('dist-clojars-pixi', ['dist-clojars-clean'], function() {
-  return gulp.src(['bower_components/pixi.js/bin/**'], {base:'bower_components/pixi.js/bin'})
+  return gulp.src(['node_modules/pixi.js/bin/**'], {base:'node_modules/pixi.js/bin'})
     .pipe(gulp.dest('dist-clojars/src/react_pixi'));
 });
 
