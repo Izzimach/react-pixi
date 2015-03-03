@@ -18767,6 +18767,32 @@ var Sprite = createPIXIComponent(
   SpriteComponentMixin );
 
 //
+// SpriteBatch
+//
+
+
+var SpriteBatch = createPIXIComponent(
+  'SpriteBatch',
+  ReactComponentMixin,
+  DisplayObjectContainerMixin,
+  CommonDisplayObjectContainerImplementation, {
+
+  createDisplayObject : function() {
+    return new PIXI.SpriteBatch();
+  },
+
+  applySpecificDisplayObjectProps: function (oldProps, newProps) {
+    // don't know if anyone actually sets the width/height manually on a DoC,
+    // but it's here if they need it
+    this.transferDisplayObjectPropsByName(oldProps, newProps,
+      {
+        'width':undefined,
+        'height':undefined
+      });
+  }
+});
+
+//
 // TilingSprite
 //
 
@@ -19051,6 +19077,7 @@ function createPIXIFactory(ReactPIXIComponent)
 var PIXIComponents = {
   Stage : PIXIStage,
   DisplayObjectContainer : DisplayObjectContainer,
+  SpriteBatch : SpriteBatch,
   Sprite : Sprite,
   Text : Text,
   BitmapText : BitmapText,
