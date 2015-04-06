@@ -32,7 +32,7 @@ var ReactMultiChild = require('react/lib/ReactMultiChild');
 var ReactBrowserComponentMixin = require('react/lib/ReactBrowserComponentMixin');
 var ReactDOMComponent = require('react/lib/ReactDOMComponent');
 var ReactComponentMixin = ReactComponent.Mixin;
-var ReactCompositeComponent = require('react/lib/ReactCompositecomponent');
+var ReactCompositeComponent = require('react/lib/ReactCompositeComponent');
 
 var assign = require('react/lib/Object.assign');
 var emptyObject = require('react/lib/emptyObject');
