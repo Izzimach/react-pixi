@@ -19,9 +19,9 @@ describe("PIXI Stage Component", function() {
     var reactinstance = React.render(stagecomponent,mountpoint);
 
     // hm, probably need some equivalent of getDOMNode
-    expect(reactinstance.refs['stage'].displayObject).toBeDefined();
+    expect(reactinstance.refs['stage']._displayObject).toBeDefined();
 
-    var stageobject = reactinstance.refs['stage'].displayObject;
+    var stageobject = reactinstance.refs['stage']._displayObject;
     expect(stageobject.stage).toBeDefined();
 
     // stages are their own stage

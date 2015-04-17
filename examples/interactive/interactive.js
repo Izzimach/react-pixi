@@ -10,6 +10,7 @@
 /* global _ : false */
 /* global React : false */
 /* global ReactPIXI : false */
+/* global PIXI : false */
 /* jshint strict: false */
 
 var Stage = React.createFactory(ReactPIXI.Stage);

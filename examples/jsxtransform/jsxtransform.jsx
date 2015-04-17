@@ -5,6 +5,7 @@
 /* jshint strict: false */
 /* global React : false */
 /* global ReactPIXI : false */
+/* global PIXI : false */
 
 var assetpath = function(filename) { return '../assets/' + filename; };
 

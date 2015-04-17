@@ -86,7 +86,17 @@ gulp.task('help', function() {
   console.log('"pixelrefs" - generate reference images for render-specific tests');
 });
 
-gulp.task('lint', function() {
+//
+// the JSX example needs to be run through the jsx transform
+//
+gulp.task('jsxtransform', function() {
+  return gulp.src('examples/jsxtransform/jsxtransform.jsx', {base:'examples/jsxtransform'})
+    .pipe(jsxtransform())
+    .pipe(gulp.dest('examples/jsxtransform'))
+    .pipe(livereload());
+});
+
+gulp.task('lint', ['jsxtransform'], function() {
   return gulp.src([SOURCEGLOB,EXAMPLESGLOB])
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
@@ -119,16 +129,6 @@ gulp.task('bundle-min', ['browserify'], function() {
     .pipe(vtransform(envify({NODE_ENV:"production"})))
     .pipe(uglify({preserveComments:'some'}))
     .pipe(gulp.dest('build'))
-    .pipe(livereload());
-});
-
-//
-// the JSX example needs to be run through the jsx transform
-//
-gulp.task('jsxtransform', ['bundle'], function() {
-  return gulp.src('examples/jsxtransform/jsxtransform.jsx', {base:'examples/jsxtransform'})
-    .pipe(jsxtransform())
-    .pipe(gulp.dest('examples/jsxtransform'))
     .pipe(livereload());
 });
 
