@@ -70,7 +70,7 @@ describe("PIXI Composite components", function() {
     expect(mountpoint.childNodes[0].childNodes.length).toBe(0);
 
     // examine the pixi objects
-    var stage = reactinstance.refs['stage'].displayObject;
+    var stage = reactinstance.refs['stage']._displayObject;
     expect(stage.children.length).toBe(1);
   });
 
@@ -101,7 +101,7 @@ describe("PIXI Composite components", function() {
 
     var reactinstance = React.render(changedChildStageFactory({thingindex:1,text:'newtext'}), mountpoint);
 
-    var stage = reactinstance.refs['stage'].displayObject;
+    var stage = reactinstance.refs['stage']._displayObject;
     expect(stage.children.length).toBe(1);
 
     // should switch from DoC to Text node... the old DoC shouldn't be
