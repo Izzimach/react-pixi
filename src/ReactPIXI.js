@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 2014 Gary Haussmann
+ * Copyright (c) 2014-2015 Gary Haussmann
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -600,7 +600,7 @@ var CustomDisplayObjectImplementation = {
     var props = this._currentElement.props;
     this._displayObject = this.customDisplayObject(arguments);
     this.applyDisplayObjectProps({}, props);
-    this.applyCustomProps({}, props);
+    this.customApplyProps({}, props);
 
     this.mountAndAddChildren(props.children, transaction, context);
     return this._displayObject;
@@ -611,16 +611,22 @@ var CustomDisplayObjectImplementation = {
     var oldProps = this._currentElement.props;
 
     this.applyDisplayObjectProps(oldProps, newProps);
-    this.applyCustomProps(oldProps, newProps);
+    this.customApplyProps(oldProps, newProps);
 
     this.updateChildren(newProps.children, transaction, context);
     this._currentElement = nextElement;
   },
 
   unmountComponent: function() {
+    this.customWillUnmount();
     this.unmountChildren();
   }
 };
+
+// functions required for a custom components:
+// -customDisplayObject to create a new display objects
+// -customApplyProps to apply custom props to your component
+// -customWillUnmount to cleanup anything before unmounting
 
 var CustomPIXIComponent = function (custommixin) {
   return createPIXIComponent(

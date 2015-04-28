@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2014-2015 Gary Haussmann
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 //
 // time to monkey-patch React!
 //
@@ -58,7 +74,7 @@ var ReactPIXI_updateRenderedComponent = function(transaction, context) {
     return;
   }
   
-  // This is a THREE node, do a special THREE version of updateComponent
+  // This is a PIXI node, do a special PIXI version of updateComponent
   var prevRenderedElement = prevComponentInstance._currentElement;
   var nextRenderedElement = this._renderValidatedComponent();
   
@@ -98,7 +114,7 @@ var ReactPIXI_updateRenderedComponent = function(transaction, context) {
     // fixup _mountImage as well
     this._mountImage = nextDisplayObject;
     
-    // overwrite the old child
+    // overwrite the reference to the old child
     displayObjectParent.addChildAt(nextDisplayObject, displayObjectIndex);
   }
 };
@@ -112,7 +128,7 @@ var buildPatchedReceiveComponent = function(oldReceiveComponent) {
   var newReceiveComponent = function(
         internalInstance, nextElement, transaction, context
   ) {
-    // if the instance is a ReactCompositeComponentWrapper, fixed it if needed
+    // if the instance is a ReactCompositeComponentWrapper, fix it if needed
     var ComponentPrototype = Object.getPrototypeOf(internalInstance);
 
     // if this is a composite component it wil have _updateRenderedComponent defined
@@ -132,7 +148,7 @@ var buildPatchedReceiveComponent = function(oldReceiveComponent) {
 
 var ReactPIXIMonkeyPatch = function() {
 
-  // in order version we patched ReactCompositeComponentMixin, but in 0.13 the
+  // in older versions we patched ReactCompositeComponentMixin, but in 0.13 the
   // prototype is wrapped in a ReactCompositeComponentWrapper so monkey-patching
   // ReactCompositeComponentMixin won't actually have any effect.
   //
