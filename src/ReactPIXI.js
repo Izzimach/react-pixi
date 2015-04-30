@@ -323,7 +323,7 @@ var PIXIStage = React.createClass({
   componentDidUpdate: function(oldProps) {
     var newProps = this.props;
      
-    if (newProps.width != oldProps.width || newProps.width != oldProps.height) {
+    if (newProps.width != oldProps.width || newProps.height != oldProps.height) {
       this._pixirenderer.resize(+newProps.width, +newProps.height);
     }
 
