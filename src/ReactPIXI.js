@@ -628,9 +628,11 @@ var CustomDisplayObjectImplementation = {
     var newProps = nextElement.props;
     var oldProps = this._currentElement.props;
 
-    this.applyDisplayObjectProps(oldProps, newProps);
     if (this.customApplyProps) {
       this.customApplyProps(this._displayObject, oldProps, newProps);
+    }
+    else {
+      this.applyDisplayObjectProps(oldProps, newProps);
     }
 
     this.updateChildren(newProps.children, transaction, context);
@@ -646,9 +648,15 @@ var CustomDisplayObjectImplementation = {
 };
 
 // functions required for a custom components:
+//
 // -customDisplayObject(props) to create a new display objects
+//
 // -customDidAttach(displayObject) to do stuff after attaching (attaching happens AFTER mounting)
-// -customApplyProps(displayObject, oldProps, newProps) to apply custom props to your component
+//
+// -customApplyProps(displayObject, oldProps, newProps) to apply custom props to your component;
+//           note this disables the normal transfer of props to the displayObject; call
+//           this.applyDisplayObjectProps(oldProps,newProps) in your custom method if you want that
+//
 // -customWillDetach(displayObject) to cleanup anything before detaching (detach happens BEFORE unmounting)
 
 var CustomPIXIComponent = function (custommixin) {
