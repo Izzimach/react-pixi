@@ -11,7 +11,7 @@ var assetpath = function(filename) { return '../assets/' + filename; };
 
 var Stage = ReactPIXI.Stage;
 var TilingSprite = ReactPIXI.TilingSprite;
-var Text = ReactPIXI.Text;
+var VectorText = ReactPIXI.Text;
 
 //
 // The top level component
@@ -26,7 +26,7 @@ var ExampleStage = React.createClass({
     var fontstyle = {font:'40px Times'};
     return <Stage width={this.props.width} height={this.props.height}>
       <TilingSprite image={assetpath('bg_castle.png')} width={this.props.width} height={this.props.height} key="1" />
-      <Text text="Vector text" x={this.props.xposition} y={10} style={fontstyle} anchor={new PIXI.Point(0.5,0)} key="2" />
+      <VectorText text="Vector text" x={this.props.xposition} y={10} style={fontstyle} anchor={new PIXI.Point(0.5,0)} key="2" />
     </Stage>;
   }
 });

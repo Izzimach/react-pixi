@@ -13,7 +13,7 @@ var Stage = React.createFactory(ReactPIXI.Stage);
 var Sprite = React.createFactory(ReactPIXI.Sprite);
 var DisplayObjectContainer = React.createFactory(ReactPIXI.DisplayObjectContainer);
 var TilingSprite = React.createFactory(ReactPIXI.TilingSprite);
-var Text = React.createFactory(ReactPIXI.Text);
+var VectorText = React.createFactory(ReactPIXI.Text);
 var BitmapText = React.createFactory(ReactPIXI.BitmapText);
 
 //
@@ -65,7 +65,7 @@ var ExampleStage = React.createClass({
       {width:this.props.width, height:this.props.height},
       TilingSprite({image:assetpath('bg_castle.png'), width:this.props.width, height:this.props.height, key:1}, null),
       CupcakeFactory({topping:this.props.topping, xposition:this.props.xposition, ref:'cupcake', key:2}),
-      Text({text:'Vector text', x:this.props.xposition, y:10, style:{font:'40px Times'}, anchor: new PIXI.Point(0.5,0), key:3}, null),
+      VectorText({text:'Vector text', x:this.props.xposition, y:10, style:{font:'40px Times'}, anchor: new PIXI.Point(0.5,0), key:3}, null),
       BitmapText({text:'Bitmap text', x:this.props.xposition, y:180, tint:0xff88ff88, style: {font:'40 Comic_Neue_Angular'}, key:4}, null)
     );
   }

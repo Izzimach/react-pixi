@@ -17,7 +17,7 @@ var Stage = React.createFactory(ReactPIXI.Stage);
 var Sprite = React.createFactory(ReactPIXI.Sprite);
 var DisplayObjectContainer = React.createFactory(ReactPIXI.DisplayObjectContainer);
 var TilingSprite = React.createFactory(ReactPIXI.TilingSprite);
-var Text = React.createFactory(ReactPIXI.Text);
+var VectorText = React.createFactory(ReactPIXI.Text);
 var BitmapText = React.createFactory(ReactPIXI.BitmapText);
 
 
@@ -93,8 +93,8 @@ var SpriteAppButtons = React.createClass({
     return DisplayObjectContainer(
       {},
       Sprite({x:100,y:150,key:'cherry', image: g_assetpath('cherry.png'),interactive:true,click: addRandomSprite}),
-      Text({x:10,y:10, key:'label1', text:'Click the cherry to add a lollipop sprite', style:{font:'25px Times'}}),
-      Text({x:10,y:80, key:'label2', text:'Click on lollipop sprites to remove them', style:{font:'25px Times'}})
+      VectorText({x:10,y:10, key:'label1', text:'Click the cherry to add a lollipop sprite', style:{font:'25px Times'}}),
+      VectorText({x:10,y:80, key:'label2', text:'Click on lollipop sprites to remove them', style:{font:'25px Times'}})
     );
   }
 });
