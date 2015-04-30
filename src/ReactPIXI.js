@@ -19,6 +19,8 @@
 // Lots of code here is based on react-art: https://github.com/facebook/react-art
 //
 
+
+
 "use strict";
 
 var React = require('react');
@@ -31,6 +33,7 @@ var ReactUpdates = require('react/lib/ReactUpdates');
 
 var assign = require('react/lib/Object.assign');
 var emptyObject = require('react/lib/emptyObject');
+var invariant = require('react/lib/invariant');
 
 var monkeypatch = require('./ReactPIXIMonkeyPatch');
 monkeypatch();
@@ -181,10 +184,16 @@ var DisplayObjectContainerMixin = assign({}, DisplayObjectMixin, ReactMultiChild
   createChild: function(child, childDisplayObject) {
     child._mountImage = childDisplayObject;
     this._displayObject.addChild(childDisplayObject);
+    if (child.customDidAttach) {
+      child.customDidAttach(childDisplayObject);
+    }
   },
 
   removeChild: function(child) {
     var childDisplayObject = child._mountImage;
+    if (child.customWillDetach) {
+      child.customWillDetach(childDisplayObject);
+    }
 
     this._displayObject.removeChild(childDisplayObject);
     child._mountImage = null;
@@ -215,8 +224,7 @@ var DisplayObjectContainerMixin = assign({}, DisplayObjectMixin, ReactMultiChild
     for (var key in this._renderedChildren) {
       if (this._renderedChildren.hasOwnProperty(key)) {
         var child = this._renderedChildren[key];
-        child._mountImage = mountedImages[i];
-        this._displayObject.addChild(child._mountImage);
+	DisplayObjectContainerMixin.createChild.call(this, child, mountedImages[i]);
         i++;
       }
     }
@@ -543,11 +551,16 @@ var TextComponentMixin = {
   }
 };
 
+// the linter (jshint) doesn't like the shadowing of 'Text' here but it's OK since
+// we're in a commonjs module
+
+// jshint -W079
 var Text = createPIXIComponent(
   'Text',
   DisplayObjectContainerMixin,
   CommonDisplayObjectContainerImplementation,
   TextComponentMixin );
+// jshint +W079
 
 //
 // BitmapText
@@ -598,11 +611,16 @@ var CustomDisplayObjectImplementation = {
   mountComponent: function(rootID, transaction, context) {
 
     var props = this._currentElement.props;
+    invariant(this.customDisplayObject, "No customDisplayObject method found for a CustomPIXIComponent");
     this._displayObject = this.customDisplayObject(arguments);
+
     this.applyDisplayObjectProps({}, props);
-    this.customApplyProps({}, props);
+    if (this.customApplyProps) {
+      this.customApplyProps(this._displayObject, {}, props);
+    }
 
     this.mountAndAddChildren(props.children, transaction, context);
+
     return this._displayObject;
   },
 
@@ -611,22 +629,27 @@ var CustomDisplayObjectImplementation = {
     var oldProps = this._currentElement.props;
 
     this.applyDisplayObjectProps(oldProps, newProps);
-    this.customApplyProps(oldProps, newProps);
+    if (this.customApplyProps) {
+      this.customApplyProps(this._displayObject, oldProps, newProps);
+    }
 
     this.updateChildren(newProps.children, transaction, context);
     this._currentElement = nextElement;
   },
 
+  // customDidAttach and customWillDetach are invoked by DisplayObjectContainerMixin,
+  // which is where the attach/detach actually occurs
+
   unmountComponent: function() {
-    this.customWillUnmount();
     this.unmountChildren();
   }
 };
 
 // functions required for a custom components:
 // -customDisplayObject to create a new display objects
-// -customApplyProps to apply custom props to your component
-// -customWillUnmount to cleanup anything before unmounting
+// -customDidAttach(displayObject) to do stuff after attaching (attaching happens AFTER mounting)
+// -customApplyProps(displayObject, oldProps, newProps) to apply custom props to your component
+// -customWillDetach(displayObject) to cleanup anything before detaching (detach happens BEFORE unmounting)
 
 var CustomPIXIComponent = function (custommixin) {
   return createPIXIComponent(
