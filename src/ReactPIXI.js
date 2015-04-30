@@ -612,7 +612,7 @@ var CustomDisplayObjectImplementation = {
 
     var props = this._currentElement.props;
     invariant(this.customDisplayObject, "No customDisplayObject method found for a CustomPIXIComponent");
-    this._displayObject = this.customDisplayObject(arguments);
+    this._displayObject = this.customDisplayObject(props);
 
     this.applyDisplayObjectProps({}, props);
     if (this.customApplyProps) {
@@ -646,7 +646,7 @@ var CustomDisplayObjectImplementation = {
 };
 
 // functions required for a custom components:
-// -customDisplayObject to create a new display objects
+// -customDisplayObject(props) to create a new display objects
 // -customDidAttach(displayObject) to do stuff after attaching (attaching happens AFTER mounting)
 // -customApplyProps(displayObject, oldProps, newProps) to apply custom props to your component
 // -customWillDetach(displayObject) to cleanup anything before detaching (detach happens BEFORE unmounting)
