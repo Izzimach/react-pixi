@@ -20,11 +20,11 @@
   "main": "src/ReactPIXI.js",
   "peerDependencies": {
     "pixi.js": "^2.2.7",
-    "react": "^0.13.1"
+    "react": "0.13.3"
   },
   "devDependencies": {
-    "react": "^0.13.1",
-    "react-tools": "^0.13.0",
+    "react": "0.13.3",
+    "react-tools": "0.13.3",
     "browserify": "~9.0.0",
     "browserify-shim": "^3.8.3",
     "envify": "^3.2.0",
