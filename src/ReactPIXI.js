@@ -292,7 +292,7 @@ var PIXIStage = React.createClass({
 
     var backgroundcolor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
     this._displayObject = new PIXI.Container();
-    this._pixirenderer = PIXI.autoDetectRenderer(props.width, props.height, {view:renderelement, backgroundColor: props.backgroundcolor});
+    this._pixirenderer = PIXI.autoDetectRenderer(props.width, props.height, {view:renderelement, backgroundColor: backgroundcolor});
 
     //this.setApprovedDOMProperties(props);
     DisplayObjectMixin.applyDisplayObjectProps.call(this,{},props);

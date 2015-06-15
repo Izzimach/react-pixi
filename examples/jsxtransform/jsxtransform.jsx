@@ -42,7 +42,7 @@ function jsxtransformstart() {
     }
 
     // we need to preload the vector font before creating any text
-    var fontloader = PIXI.loader
+    var fontloader = PIXI.loader;
     fontloader.add('comic_neue_angular_bold', assetpath('comic_neue_angular_bold.fnt'));
     fontloader.on('complete', PutReact);
     fontloader.load();
