@@ -291,8 +291,8 @@ var PIXIStage = React.createClass({
     var renderelement = this.getDOMNode();
 
     var backgroundcolor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
-    this._displayObject = new PIXI.Stage(backgroundcolor);
-    this._pixirenderer = PIXI.autoDetectRecommendedRenderer(props.width, props.height, {view:renderelement});
+    this._displayObject = new PIXI.Container();
+    this._pixirenderer = PIXI.autoDetectRenderer(props.width, props.height, {view:renderelement, backgroundColor: props.backgroundcolor});
 
     //this.setApprovedDOMProperties(props);
     DisplayObjectMixin.applyDisplayObjectProps.call(this,{},props);
@@ -328,7 +328,7 @@ var PIXIStage = React.createClass({
     }
 
     if (typeof newProps.backgroundcolor === "number") {
-      this._displayObject.setBackgroundColor(newProps.backgroundcolor);
+      this._pixirenderer.backgroundColor = newProps.backgroundcolor;
     }
 
     //this.setApprovedDOMProperties(newProps);
@@ -356,12 +356,12 @@ var PIXIStage = React.createClass({
   renderStage: function() {
     this._pixirenderer.render(this._displayObject);
   },
-  
+
   render: function() {
     // the PIXI renderer will get applied to this canvas element
     return React.createElement("canvas");
   }
-  
+
 });
 
 //
@@ -415,7 +415,7 @@ var DisplayObjectContainer = createPIXIComponent(
   CommonDisplayObjectContainerImplementation, {
 
   createDisplayObject : function() {
-    return new PIXI.DisplayObjectContainer();
+    return new PIXI.Container();
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
@@ -444,7 +444,7 @@ var SpriteComponentMixin = {
       {
         'anchor':new PIXI.Point(0,0),
         'tint':0xFFFFFF,
-        'blendMode':PIXI.blendModes.NORMAL,
+        'blendMode':PIXI.BLEND_MODES.NORMAL,
         'shader':null,
         'texture':null // may get overridden by 'image' prop
       });
@@ -453,7 +453,7 @@ var SpriteComponentMixin = {
 
     // support setting image by name instead of a raw texture ref
     if ((typeof newProps.image !== 'undefined') && newProps.image !== oldProps.image) {
-      displayObject.setTexture(PIXI.Texture.fromImage(newProps.image));
+      displayObject.texture = PIXI.Texture.fromImage(newProps.image);
     }
   }
 };
@@ -540,11 +540,11 @@ var TextComponentMixin = {
     var displayObject = this._displayObject;
 
     if (typeof newProps.text !== 'undefined' && newProps.text !== oldProps.text) {
-      displayObject.setText(newProps.text);
+      displayObject.text = newProps.text;
     }
     // should do a deep compare here
     if (typeof newProps.style !== 'undefined' && newProps.style !== oldProps.style) {
-      displayObject.setStyle(newProps.style);
+      displayObject.style = newProps.style;
     }
 
     SpriteComponentMixin.applySpecificDisplayObjectProps.apply(this,arguments);
@@ -579,11 +579,11 @@ var BitmapTextComponentMixin = {
     var displayObject = this._displayObject;
 
     if (typeof newProps.text !== 'undefined' && newProps.text !== oldProps.text) {
-      displayObject.setText(newProps.text);
+      displayObject.text = newProps.text;
     }
     // should do a deep compare here
     if (typeof newProps.style !== 'undefined' && newProps.style !== oldProps.style) {
-      displayObject.setStyle(newProps.style);
+      displayObject.style = newProps.style;
     }
 
     this.transferDisplayObjectPropsByName(oldProps, newProps,

@@ -60,7 +60,7 @@ function addRandomSprite() {
     x: Math.random() * g_applicationstate.width,
     y: Math.random() * g_applicationstate.height,
     alpha: 0.7,
-    blendMode: PIXI.blendModes.NORMAL,
+    blendMode: PIXI.BLEND_MODES.NORMAL,
     image: g_assetpath('lollipopGreen.png'),
     key: spriteid,
     interactive:true,
@@ -211,12 +211,11 @@ function interactiveexamplestart() {
     g_reactinstance = React.render(React.createElement(SpriteApp,g_applicationstate), renderelement);
   }
 
-  var assetloader = new PIXI.AssetLoader([
-    g_assetpath('cherry.png'),
-    g_assetpath('lollipopGreen.png'),
-    g_assetpath('lollipopRed.png')
-  ]);
+  var loader = PIXI.loader;
+  loader.add('cherry', g_assetpath('cherry.png'));
+  loader.add('lollipopGreen', g_assetpath('lollipopGreen.png'));
+  loader.add('lollipopRed', g_assetpath('lollipopRed.png'));
 
-  assetloader.on('onComplete', PutReact);
-  assetloader.load();
+  loader.once('complete', PutReact);
+  loader.load();
 }

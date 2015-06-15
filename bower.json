@@ -33,6 +33,6 @@
   ],
   "license": "AP2",
   "dependencies": {
-    "pixi.js": "~2.2.5"
+    "pixi.js": "3.0.6"
   }
 }

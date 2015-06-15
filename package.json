@@ -19,7 +19,7 @@
   "license": "Apache-2.0",
   "main": "src/ReactPIXI.js",
   "peerDependencies": {
-    "pixi.js": "^2.2.7",
+    "pixi.js": "3.0.6",
     "react": "0.13.3"
   },
   "devDependencies": {
@@ -28,7 +28,7 @@
     "browserify": "~9.0.0",
     "browserify-shim": "^3.8.3",
     "envify": "^3.2.0",
-    "gulp": "~3.8.10",
+    "gulp": "3.9.0",
     "gulp-concat": "~2.4.0",
     "gulp-jshint": "~1.9.0",
     "gulp-livereload": "~3.0.2",
@@ -42,7 +42,7 @@
     "karma-jasmine": "~0.3.2",
     "lodash": "^3.3.1",
     "node-static": "~0.7.3",
-    "pixi.js": "^2.2.7",
+    "pixi.js": "3.0.6",
     "resemblejs": "~1.2.0",
     "rimraf": "~2.2.8",
     "vinyl-source-stream": "~1.0.0",
