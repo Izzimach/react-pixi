@@ -497,7 +497,7 @@ var TilingSpriteComponentMixin = {
 
   createDisplayObject : function () {
     var props = this._currentElement.props;
-    return new PIXI.TilingSprite(PIXI.Texture.fromImage(props.image), props.width, props.height);
+    return new PIXI.extras.TilingSprite(PIXI.Texture.fromImage(props.image), props.width, props.height);
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
