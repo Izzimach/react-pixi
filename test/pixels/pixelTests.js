@@ -59,9 +59,11 @@ function pixelTests(fixture, testimagepath, resultscallback) {
 
   // preload the images. If we don't pixi will often render the
   // screen before the sprite image is loaded and then we'll see nothing
-  var loader = new PIXI.AssetLoader(testimages);
+  var loader = PIXI.loader;
 
-  loader.on('onComplete', function() {
+  loader.add('testimage', testimages[0]);
+
+  loader.on('complete', function() {
     var results = drawTestRenders(fixture, testimages);
     if (resultscallback) {
       resultscallback(results);

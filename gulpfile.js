@@ -56,7 +56,7 @@ var browserlist = ['Firefox'];
 var karmaconfiguration = {
     browsers: browserlist,
     files: [require.resolve('lodash'),
-            require.resolve('pixi.js'),
+            'node_modules/pixi.js/bin/pixi.js',
             'build/react-pixi.js',
             'vendor/phantomjs-shims.js', // need a shim to work with the ancient version of Webkit used in PhantomJS
             'node_modules/resemblejs/resemble.js',
