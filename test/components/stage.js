@@ -19,13 +19,9 @@ describe("PIXI Stage Component", function() {
     var reactinstance = React.render(stagecomponent,mountpoint);
 
     // hm, probably need some equivalent of getDOMNode
-    expect(reactinstance.refs['stage']._displayObject).toBeDefined();
-
-    var stageobject = reactinstance.refs['stage']._displayObject;
-    expect(stageobject.stage).toBeDefined();
-
-    // stages are their own stage
-    expect(stageobject.stage).toBe(stageobject);
+    expect(reactinstance.refs.stage._displayObject).toBeDefined();
+    //This should be a ReactPIXI stage.
+    expect(reactinstance.refs.stage.renderStage).toBeDefined();
   });
 
   it("destroys the canvas when the stage is unmounted", function() {
