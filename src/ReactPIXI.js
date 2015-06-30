@@ -572,7 +572,7 @@ var BitmapTextComponentMixin = {
 
     var text = props.text || '';
     var style = props.style || {};
-    return new PIXI.BitmapText(text,style);
+    return new PIXI.extras.BitmapText(text,style);
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
