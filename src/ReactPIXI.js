@@ -230,14 +230,6 @@ var DisplayObjectContainerMixin = assign({}, DisplayObjectMixin, ReactMultiChild
     }
   },
 
-  updateChildrenAtRoot: function(nextChildren, transaction) {
-    this.updateChildren(nextChildren, transaction, emptyObject);
-  },
-
-  mountAndAddChildrenAtRoot: function(children, transaction) {
-    this.mountAndAddChildren(children, transaction, emptyObject);
-  }
-
 });
 
 
@@ -288,6 +280,7 @@ var PIXIStage = React.createClass({
 
   componentDidMount: function() {
     var props = this.props;
+    var context = this._reactInternalInstance._currentElement._context;
     var renderelement = this.getDOMNode();
 
     var backgroundcolor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
@@ -299,10 +292,11 @@ var PIXIStage = React.createClass({
 
     var transaction = ReactUpdates.ReactReconcileTransaction.getPooled();
     transaction.perform(
-      this.mountAndAddChildrenAtRoot,
+      this.mountAndAddChildren,
       this,
       props.children,
-      transaction
+      transaction,
+      context
     );
     ReactUpdates.ReactReconcileTransaction.release(transaction);
     this.renderStage();
@@ -322,6 +316,7 @@ var PIXIStage = React.createClass({
 
   componentDidUpdate: function(oldProps) {
     var newProps = this.props;
+    var newContext = this._reactInternalInstance._currentElement._context;
      
     if (newProps.width != oldProps.width || newProps.height != oldProps.height) {
       this._pixirenderer.resize(+newProps.width, +newProps.height);
@@ -336,10 +331,11 @@ var PIXIStage = React.createClass({
 
     var transaction = ReactUpdates.ReactReconcileTransaction.getPooled();
     transaction.perform(
-      this.updateChildrenAtRoot,
+      this.updateChildren,
       this,
       this.props.children,
-      transaction
+      transaction,
+      newContext
     );
     ReactUpdates.ReactReconcileTransaction.release(transaction);
 
