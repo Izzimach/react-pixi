@@ -96,6 +96,7 @@ var gPIXIHandlers = [
   'mouseupoutside',
   'tap',
   'touchstart',
+  'touchmove',
   'touchend',
   'touchendoutside'
 ];
