@@ -90,6 +90,7 @@ var gStandardProps = {
 var gPIXIHandlers = [
   'click',
   'mousedown',
+  'mousemove',
   'mouseout',
   'mouseover',
   'mouseup',
