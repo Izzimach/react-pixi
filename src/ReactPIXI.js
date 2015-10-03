@@ -440,7 +440,7 @@ var SpriteComponentMixin = {
       return new PIXI.Sprite(PIXI.Texture.fromImage(spriteimage));
     } else if (this._currentElement.props.texture) {
       var texture = this._currentElement.props.texture;
-      warning(texture instanceof PIXI.Texture, "the Sprite 'texture' prop must be an instance of PIXI.Text");
+      warning(texture instanceof PIXI.Texture, "the Sprite 'texture' prop must be an instance of PIXI.Texture");
       return new PIXI.Sprite(texture);
     }
   },
