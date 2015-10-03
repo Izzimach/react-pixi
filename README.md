@@ -128,5 +128,4 @@ gulp pixelrefs
 
 ## Caveats
 
-- PIXI filters aren't currently supported.
 - Callbacks are just callbacks. They don't feed into React's event system.
