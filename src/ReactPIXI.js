@@ -319,7 +319,7 @@ var PIXIStage = React.createClass({
   componentDidUpdate: function(oldProps) {
     var newProps = this.props;
     var newContext = this._reactInternalInstance._currentElement._context;
-     
+
     if (newProps.width != oldProps.width || newProps.height != oldProps.height) {
       this._pixirenderer.resize(+newProps.width, +newProps.height);
     }
@@ -433,8 +433,13 @@ var DisplayObjectContainer = createPIXIComponent(
 
 var SpriteComponentMixin = {
   createDisplayObject : function () {
-    var spriteimage = this._currentElement.props.image;
-    return new PIXI.Sprite(PIXI.Texture.fromImage(spriteimage));
+    if (this._currentElement.props.image) {
+      var spriteimage = this._currentElement.props.image;
+      return new PIXI.Sprite(PIXI.Texture.fromImage(spriteimage));
+    } else if (this._currentElement.props.texture) {
+      var texture = this._currentElement.props.texture;
+      return new PIXI.Sprite(texture);
+    }
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
@@ -452,6 +457,8 @@ var SpriteComponentMixin = {
     // support setting image by name instead of a raw texture ref
     if ((typeof newProps.image !== 'undefined') && newProps.image !== oldProps.image) {
       displayObject.texture = PIXI.Texture.fromImage(newProps.image);
+    } else if ((typeof newProps.texture !== 'undefined') && newProps.texture !== oldProps.texture) {
+      displayObject.texture = newProps.texture;
     }
   }
 };
