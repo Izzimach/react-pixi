@@ -35,6 +35,8 @@ var assign = require('react/lib/Object.assign');
 var emptyObject = require('react/lib/emptyObject');
 var invariant = require('react/lib/invariant');
 
+var warning = require('react/lib/warning');
+
 var monkeypatch = require('./ReactPIXIMonkeyPatch');
 monkeypatch();
 
@@ -438,6 +440,7 @@ var SpriteComponentMixin = {
       return new PIXI.Sprite(PIXI.Texture.fromImage(spriteimage));
     } else if (this._currentElement.props.texture) {
       var texture = this._currentElement.props.texture;
+      warning(texture instanceof PIXI.Texture, "the Sprite 'texture' prop must be an instance of PIXI.Text");
       return new PIXI.Sprite(texture);
     }
   },
@@ -458,6 +461,7 @@ var SpriteComponentMixin = {
     if ((typeof newProps.image !== 'undefined') && newProps.image !== oldProps.image) {
       displayObject.texture = PIXI.Texture.fromImage(newProps.image);
     } else if ((typeof newProps.texture !== 'undefined') && newProps.texture !== oldProps.texture) {
+      warning(texture instanceof PIXI.Texture, "the Sprite 'texture' prop must be an instance of PIXI.Texture");
       displayObject.texture = newProps.texture;
     }
   }
