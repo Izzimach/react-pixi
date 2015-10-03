@@ -461,7 +461,7 @@ var SpriteComponentMixin = {
     if ((typeof newProps.image !== 'undefined') && newProps.image !== oldProps.image) {
       displayObject.texture = PIXI.Texture.fromImage(newProps.image);
     } else if ((typeof newProps.texture !== 'undefined') && newProps.texture !== oldProps.texture) {
-      warning(texture instanceof PIXI.Texture, "the Sprite 'texture' prop must be an instance of PIXI.Texture");
+      warning(newProps.texture instanceof PIXI.Texture, "the Sprite 'texture' prop must be an instance of PIXI.Texture");
       displayObject.texture = newProps.texture;
     }
   }
