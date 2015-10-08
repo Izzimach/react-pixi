@@ -91,7 +91,7 @@ describe("PIXI Stage Component", function() {
 	sprite_y: 52,
       });
 
-    var reactinstance = React.render(contextcomponent, mountpoint);
+    var reactinstance = ReactDOM.render(contextcomponent, mountpoint);
 
     // if the context was passed in the sprite x/y should have been
     // determined by the x/y values in the context
