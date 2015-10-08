@@ -23,6 +23,7 @@ build/Release
 
 build
 dist-clojars
+es5
 
 bower_components
 
