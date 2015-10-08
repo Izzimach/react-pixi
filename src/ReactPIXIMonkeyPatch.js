@@ -77,7 +77,6 @@ var ReactPIXI_updateRenderedComponent = function(transaction, context) {
   // This is a PIXI node, do a special PIXI version of updateComponent
   var prevRenderedElement = prevComponentInstance._currentElement;
   var nextRenderedElement = this._renderValidatedComponent();
-  var childContext = this._getValidatedChildContext();
   
   if (shouldUpdateReactComponent(prevRenderedElement, nextRenderedElement)) {
     ReactReconciler.receiveComponent(
