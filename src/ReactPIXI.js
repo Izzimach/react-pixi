@@ -32,8 +32,8 @@ var ReactElement  = require('react/lib/ReactElement');
 var ReactUpdates = require('react/lib/ReactUpdates');
 
 var assign = require('react/lib/Object.assign');
-var emptyObject = require('react/lib/emptyObject');
-var invariant = require('react/lib/invariant');
+var emptyObject = require('fbjs/lib/emptyObject');
+var invariant = require('fbjs/lib/invariant');
 
 var monkeypatch = require('./ReactPIXIMonkeyPatch');
 monkeypatch();
