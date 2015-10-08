@@ -7,7 +7,7 @@ var test_basic_files =[
   'test/createTestFixtureMountPoint.js',
   'test/pixels/pixelTests.js',
   'test/basics/*.js',
-            'test/components/*.js',
+  'test/components/*.js',
   {pattern:'test/pixels/*.png',included:false, served:true} // for render tests
 ];
 
