@@ -35,6 +35,8 @@ var assign = require('react/lib/Object.assign');
 var emptyObject = require('fbjs/lib/emptyObject');
 var invariant = require('fbjs/lib/invariant');
 
+var warning = require('react/lib/warning');
+
 var monkeypatch = require('./ReactPIXIMonkeyPatch');
 monkeypatch();
 
@@ -90,12 +92,14 @@ var gStandardProps = {
 var gPIXIHandlers = [
   'click',
   'mousedown',
+  'mousemove',
   'mouseout',
   'mouseover',
   'mouseup',
   'mouseupoutside',
   'tap',
   'touchstart',
+  'touchmove',
   'touchend',
   'touchendoutside'
 ];
@@ -317,7 +321,7 @@ var PIXIStage = React.createClass({
   componentDidUpdate: function(oldProps) {
     var newProps = this.props;
     var newContext = this._reactInternalInstance._currentElement._context;
-     
+
     if (newProps.width != oldProps.width || newProps.height != oldProps.height) {
       this._pixirenderer.resize(+newProps.width, +newProps.height);
     }
@@ -431,8 +435,14 @@ var DisplayObjectContainer = createPIXIComponent(
 
 var SpriteComponentMixin = {
   createDisplayObject : function () {
-    var spriteimage = this._currentElement.props.image;
-    return new PIXI.Sprite(PIXI.Texture.fromImage(spriteimage));
+    if (this._currentElement.props.image) {
+      var spriteimage = this._currentElement.props.image;
+      return new PIXI.Sprite(PIXI.Texture.fromImage(spriteimage));
+    } else if (this._currentElement.props.texture) {
+      var texture = this._currentElement.props.texture;
+      warning(texture instanceof PIXI.Texture, "the Sprite 'texture' prop must be an instance of PIXI.Texture");
+      return new PIXI.Sprite(texture);
+    }
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
@@ -450,6 +460,9 @@ var SpriteComponentMixin = {
     // support setting image by name instead of a raw texture ref
     if ((typeof newProps.image !== 'undefined') && newProps.image !== oldProps.image) {
       displayObject.texture = PIXI.Texture.fromImage(newProps.image);
+    } else if ((typeof newProps.texture !== 'undefined') && newProps.texture !== oldProps.texture) {
+      warning(texture instanceof PIXI.Texture, "the Sprite 'texture' prop must be an instance of PIXI.Texture");
+      displayObject.texture = newProps.texture;
     }
   }
 };
