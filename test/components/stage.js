@@ -8,7 +8,7 @@ describe("PIXI Stage Component", function() {
   afterEach(function() { removeTestFixtureMountPoint(mountpoint); });
 
   it("creates a canvas used by PIXI", function() {
-    React.render(stagecomponent,mountpoint);
+    ReactPIXI.render(stagecomponent,mountpoint);
 
     expect(mountpoint.childNodes.length).toBe(1);
     expect(mountpoint.childNodes[0].nodeName).toBe('CANVAS');
@@ -16,7 +16,7 @@ describe("PIXI Stage Component", function() {
   });
 
   it("creates a PIXI Stage object", function() {
-    var reactinstance = React.render(stagecomponent,mountpoint);
+    var reactinstance = ReactPIXI.render(stagecomponent,mountpoint);
 
     // hm, probably need some equivalent of getDOMNode
     expect(reactinstance.refs.stage._displayObject).toBeDefined();
@@ -25,16 +25,16 @@ describe("PIXI Stage Component", function() {
   });
 
   it("destroys the canvas when the stage is unmounted", function() {
-    reactinstance = React.render(stagecomponent,mountpoint);
+    reactinstance = ReactPIXI.render(stagecomponent,mountpoint);
 
     // this should unmount the stage and remove the canvas
-    var reactinstance = React.render(React.DOM.div(), mountpoint);
+    var reactinstance = ReactPIXI.render(React.DOM.div(), mountpoint);
 
     expect(mountpoint.childNodes.length).toBe(1);
     expect(mountpoint.childNodes[0].nodeName).not.toBe('CANVAS');
     expect(mountpoint.childNodes[0].childNodes.length).toBe(0);
 
-    React.unmountComponentAtNode(mountpoint);
+    ReactPIXI.unmountComponentAtNode(mountpoint);
 
     expect(mountpoint.childNodes.length).toBe(0);
   });
@@ -91,7 +91,7 @@ describe("PIXI Stage Component", function() {
 	sprite_y: 52,
       });
 
-    var reactinstance = ReactDOM.render(contextcomponent, mountpoint);
+    var reactinstance = ReactPIXI.render(contextcomponent, mountpoint);
 
     // if the context was passed in the sprite x/y should have been
     // determined by the x/y values in the context

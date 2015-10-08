@@ -91,6 +91,6 @@ function spinningspritestart() {
     var w = window.innerWidth-6;
     var h = window.innerHeight-6;
 
-    React.renderComponent(SpinStage({width:w, height:h, spinx:100, spiny:100, spinrotation:5.6}), renderelement);
+    ReactPIXI.render(SpinStage({width:w, height:h, spinx:100, spiny:100, spinrotation:5.6}), renderelement);
 }
 

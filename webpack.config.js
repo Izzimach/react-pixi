@@ -10,7 +10,7 @@ module.exports = {
     libraryTarget: "var",
     library:"ReactPIXI"
   },
-  
+
   module: {
     loaders: [
       {

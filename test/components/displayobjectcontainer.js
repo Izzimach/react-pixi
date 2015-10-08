@@ -42,7 +42,7 @@ describe("PIXI DisplayObject Component", function() {
   var maxtestchildren = 10;
 
   it("maintains proper references to the parent DisplayObject", function() {
-    var reactinstance = React.render(VariableChildrenTest(1),mountpoint);
+    var reactinstance = ReactPIXI.render(VariableChildrenTest(1),mountpoint);
 
     var stage = reactinstance.refs['stage']._displayObject;
     var testpoint = stage.children[0];
@@ -53,7 +53,7 @@ describe("PIXI DisplayObject Component", function() {
   it("can hold a variable number of children", function() {
 
     for (var numchildren = 0; numchildren < maxtestchildren; numchildren++) {
-      var reactinstance = React.render(
+      var reactinstance = ReactPIXI.render(
         VariableChildrenTest(numchildren),
         mountpoint);
 
@@ -79,14 +79,14 @@ describe("PIXI DisplayObject Component", function() {
   });
 
   it ("can add DisplayObjects to an already-mounted tree", function() {
-    var reactinstance = React.render(
+    var reactinstance = ReactPIXI.render(
       VariableChildrenTest(0),
       mountpoint);
 
     for (var numchildren = 1; numchildren < maxtestchildren; numchildren++) {
 
       // this should add another DisplayObject as a child
-      reactinstance = React.render(
+      reactinstance = ReactPIXI.render(
         VariableChildrenTest(numchildren),
         mountpoint);
 
@@ -109,14 +109,14 @@ describe("PIXI DisplayObject Component", function() {
   });
 
   it("can remove DisplayObjects from an already-mounted tree", function() {
-    var reactinstance = React.render(
+    var reactinstance = ReactPIXI.render(
       VariableChildrenTest(maxtestchildren),
       mountpoint);
 
     for (var numchildren = maxtestchildren-1; numchildren > 0; numchildren--) {
 
       // this should remove an already existing child
-      var reactinstance = React.render(
+      var reactinstance = ReactPIXI.render(
         VariableChildrenTest(numchildren),
         mountpoint);
 

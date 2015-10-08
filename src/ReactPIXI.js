@@ -24,6 +24,7 @@
 "use strict";
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 var PIXI = require('pixi.js');
 
 var ReactUpdates = require('react/lib/ReactUpdates');
@@ -284,7 +285,7 @@ var PIXIStage = React.createClass({
 
   componentDidMount: function() {
     var props = this.props;
-    var renderelement = this.getDOMNode();
+    var renderelement = ReactDOM.findDOMNode(this);
     var context = this._reactInternalInstance._context;
 
     var backgroundcolor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
@@ -697,5 +698,7 @@ for (var prop in PIXIComponents) {
 
 module.exports =  assign(PIXIComponents, {
   factories: PIXIFactories,
-  CustomPIXIComponent : CustomPIXIComponent
+  CustomPIXIComponent : CustomPIXIComponent,
+  render: ReactDOM.render,
+  unmountComponentAtNode: ReactDOM.unmountComponentAtNode
 });
