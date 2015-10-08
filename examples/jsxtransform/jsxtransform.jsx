@@ -38,7 +38,7 @@ function jsxtransformstart() {
     function PutReact()
     {
       var stageElement = <ExampleStage width={600} height={400} xposition={200} topping="vanilla" />;
-      React.render(stageElement, renderelement);
+      ReactPIXI.render(stageElement, renderelement);
     }
 
     // we need to preload the vector font before creating any text

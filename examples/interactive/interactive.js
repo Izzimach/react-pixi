@@ -23,8 +23,8 @@ var BitmapText = React.createFactory(ReactPIXI.BitmapText);
 
 var g_assetpath = function(filename) { return '../assets/' + filename; };
 
-// the mounted instance will go here, so that callbacks can modify/set it
-var g_reactinstance;
+// DOM element on which we mount the PIXI canvas
+var g_renderelement;
 
 // This basically the 'application state':
 // a list of all the current sprites
@@ -34,8 +34,9 @@ var g_nextspriteid = 1;
 
 // if the application state is modified call this to update the GUI
 
-function updateProps() {
-  g_reactinstance.setProps(g_applicationstate);
+function updateProps()
+{
+  ReactPIXI.render(React.createElement(SpriteApp,g_applicationstate), g_renderelement);
 }
 
 //
@@ -199,23 +200,18 @@ var SpriteApp = React.createClass({
 /* jshint unused:false */
 function interactiveexamplestart() {
 
-  var renderelement = document.getElementById("pixi-box");
+  g_renderelement = document.getElementById("pixi-box");
 
   var w = window.innerWidth-6;
   var h = window.innerHeight-6;
 
   g_applicationstate = {width:w, height:h, sprites:[]};
 
-  function PutReact()
-  {
-    g_reactinstance = React.render(React.createElement(SpriteApp,g_applicationstate), renderelement);
-  }
-
   var loader = PIXI.loader;
   loader.add('cherry', g_assetpath('cherry.png'));
   loader.add('lollipopGreen', g_assetpath('lollipopGreen.png'));
   loader.add('lollipopRed', g_assetpath('lollipopRed.png'));
 
-  loader.once('complete', PutReact);
+  loader.once('complete', updateProps);
   loader.load();
 }

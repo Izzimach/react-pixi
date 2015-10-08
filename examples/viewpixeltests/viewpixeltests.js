@@ -47,6 +47,6 @@ function viewpixeltestsstart() {
   var pixelTestResults = {};
   pixelTests(testfixture, imagePath, function (results) {
     g_applicationstate = {testimageURLs:results};
-    React.render(PixelRefsFactory(g_applicationstate), testfixture);
+    ReactPIXI.render(PixelRefsFactory(g_applicationstate), testfixture);
   });
 }

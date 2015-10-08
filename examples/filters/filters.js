@@ -119,7 +119,7 @@ function filterstart() {
     function PutReact()
     {
       var stageElement = React.createElement(ExampleStage, {width:w, height:h, xposition:200, topping:'vanilla'});
-      React.render(stageElement, renderelement);
+      ReactPIXI.render(stageElement, renderelement);
     }
 
     var fontloader = PIXI.loader;

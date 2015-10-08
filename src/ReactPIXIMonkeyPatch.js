@@ -29,7 +29,7 @@ var ReactCompositeComponentMixin = ReactCompositeComponent.Mixin;
 var ReactReconciler = require('react/lib/ReactReconciler');
 
 var shouldUpdateReactComponent = require('react/lib/shouldUpdateReactComponent');
-var warning = require('react/lib/warning');
+var warning = require('fbjs/lib/warning');
 
 //
 // Composite components don't have a displayObject. So we have to do some work to find
@@ -77,14 +77,13 @@ var ReactPIXI_updateRenderedComponent = function(transaction, context) {
   // This is a PIXI node, do a special PIXI version of updateComponent
   var prevRenderedElement = prevComponentInstance._currentElement;
   var nextRenderedElement = this._renderValidatedComponent();
-  var childContext = this._getValidatedChildContext();
   
   if (shouldUpdateReactComponent(prevRenderedElement, nextRenderedElement)) {
     ReactReconciler.receiveComponent(
       prevComponentInstance,
       nextRenderedElement,
       transaction,
-      this._mergeChildContext(context, childContext)
+      this._processChildContext(context)
     );
   } else {
     // We can't just update the current component.
@@ -108,7 +107,7 @@ var ReactPIXI_updateRenderedComponent = function(transaction, context) {
       this._renderedComponent,
       thisID,
       transaction,
-      this._mergeChildContext(context, childContext)
+      this._processChildContext(context)
     );
     this._renderedComponent._displayObject = nextDisplayObject;
     

@@ -37,16 +37,16 @@ function drawTestRenders(mountpoint, testimages) {
 
   spritetestprops.forEach(function (curprops) {
     curprops.key = 'urgh'; // re-use the same sprite instance
-    var reactinstance = React.render(SpriteTest({spriteprops:curprops}), mountpoint);
+    var reactinstance = ReactPIXI.render(SpriteTest({spriteprops:curprops}), mountpoint);
 
     // convert the rendered image to a data blob we can use
     var renderer = reactinstance.refs['stage'].pixirenderer;
-    var renderURL = reactinstance.refs['stage'].getDOMNode().toDataURL('image/png');
+    var renderURL = ReactDOM.findDOMNode(reactinstance.refs['stage']).toDataURL('image/png');
 
     renderresults.push(renderURL);
   });
 
-  React.unmountComponentAtNode(mountpoint);
+  ReactPIXI.unmountComponentAtNode(mountpoint);
 
   return renderresults;
 }

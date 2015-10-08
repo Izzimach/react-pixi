@@ -58,10 +58,11 @@ describe("PIXI Composite components", function() {
     // don't switch to a different key then React will just update the current instance
     // of DisplayObjectContainer instead of try to replace it.
     //
-    var reactinstance = React.render(injectedKeyStageFactory(props1),mountpoint);
+    var reactinstance = ReactPIXI.render(injectedKeyStageFactory(props1),mountpoint);
 
     // this should destroy and replace the child instance instead of updating it
-    reactinstance.setProps(props2);
+    reactinstance = ReactPIXI.render(injectedKeyStageFactory(props2),mountpoint);
+
 
     expect(mountpoint.childNodes.length).toBe(1);
     expect(mountpoint.childNodes[0].nodeName).toBe('CANVAS');
@@ -99,19 +100,19 @@ describe("PIXI Composite components", function() {
         }
     }));
 
-    var reactinstance = React.render(changedChildStageFactory({thingindex:1,text:'newtext'}), mountpoint);
+    var reactinstance = ReactPIXI.render(changedChildStageFactory({thingindex:1,text:'newtext'}), mountpoint);
 
     var stage = reactinstance.refs['stage']._displayObject;
     expect(stage.children.length).toBe(1);
 
     // should switch from DoC to Text node... the old DoC shouldn't be
     // stash somewhere (in _mountImage perhaps)
-    reactinstance.setProps({thingindex:2});
+    reactinstance = ReactPIXI.render(changedChildStageFactory({thingindex:2,text:'newtext'}), mountpoint);
     expect(stage.children.length).toBe(1);
 
     // If buggy, this will pull the old node (DoC) and add it in, resulting
     // in two children
-    reactinstance.setProps({text:'ack'});
+    reactinstance = ReactPIXI.render(changedChildStageFactory({thingindex:1,text:'ack'}), mountpoint);
     expect(stage.children.length).toBe(1); // might be 0 or 2 if buggy
   });
 
@@ -145,10 +146,10 @@ describe("PIXI Composite components", function() {
     var props1 = addinjectedkey(baseprops, 'one');
     var props2 = addinjectedkey(baseprops, 'two');
 
-    var reactinstance = React.render(injectedKeyStageFactory(props1),mountpoint);
+    var reactinstance = ReactPIXI.render(injectedKeyStageFactory(props1),mountpoint);
 
     // this should destroy and replace the child instance instead of updating it
-    reactinstance.setProps(props2);
+    reactinstance = ReactPIXI.render(injectedKeyStageFactory(props2),mountpoint);
 
     expect(mountpoint.childNodes.length).toBe(1);
     expect(mountpoint.childNodes[0].nodeName).toBe('DIV');

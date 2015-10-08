@@ -24,6 +24,7 @@
 "use strict";
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 var PIXI = require('pixi.js');
 
 var ReactUpdates = require('react/lib/ReactUpdates');
@@ -32,10 +33,10 @@ var ReactElement  = require('react/lib/ReactElement');
 var ReactUpdates = require('react/lib/ReactUpdates');
 
 var assign = require('react/lib/Object.assign');
-var emptyObject = require('react/lib/emptyObject');
-var invariant = require('react/lib/invariant');
+var emptyObject = require('fbjs/lib/emptyObject');
+var invariant = require('fbjs/lib/invariant');
 
-var warning = require('react/lib/warning');
+var warning = require('fbjs/lib/warning');
 
 var monkeypatch = require('./ReactPIXIMonkeyPatch');
 monkeypatch();
@@ -284,8 +285,8 @@ var PIXIStage = React.createClass({
 
   componentDidMount: function() {
     var props = this.props;
-    var context = this._reactInternalInstance._currentElement._context;
-    var renderelement = this.getDOMNode();
+    var renderelement = ReactDOM.findDOMNode(this);
+    var context = this._reactInternalInstance._context;
 
     var backgroundcolor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
     this._displayObject = new PIXI.Container();
@@ -320,7 +321,7 @@ var PIXIStage = React.createClass({
 
   componentDidUpdate: function(oldProps) {
     var newProps = this.props;
-    var newContext = this._reactInternalInstance._currentElement._context;
+    var context = this._reactInternalInstance._context;
 
     if (newProps.width != oldProps.width || newProps.height != oldProps.height) {
       this._pixirenderer.resize(+newProps.width, +newProps.height);
@@ -339,7 +340,7 @@ var PIXIStage = React.createClass({
       this,
       this.props.children,
       transaction,
-      newContext
+      context
     );
     ReactUpdates.ReactReconcileTransaction.release(transaction);
 
@@ -697,5 +698,7 @@ for (var prop in PIXIComponents) {
 
 module.exports =  assign(PIXIComponents, {
   factories: PIXIFactories,
-  CustomPIXIComponent : CustomPIXIComponent
+  CustomPIXIComponent : CustomPIXIComponent,
+  render: ReactDOM.render,
+  unmountComponentAtNode: ReactDOM.unmountComponentAtNode
 });
