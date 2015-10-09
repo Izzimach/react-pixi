@@ -10,7 +10,7 @@ var commonjsconfig = _.cloneDeep(defaultconfig);
 _.assign(commonjsconfig, {
   entry: path.join(__dirname, "src", "ReactPIXI.js"),
   externals: [
-    "pixi",
+    "pixi.js",
     "react",
     /^react\/lib\/.+/  // any require that refers to internal react modules
   ]
