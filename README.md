@@ -33,6 +33,8 @@ It turns out that [PIXI dumps itself into the global namespace](https://github.c
 You will need node and npm.
 
 ```
+git clone https://github.com/Izzimach/react-pixi.git
+cd react-pixi
 npm install
 npm run build
 ```
