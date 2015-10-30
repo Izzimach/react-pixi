@@ -9,47 +9,56 @@ To control a 3D scene with React, see [react-three](https://github.com/Izzimach/
 
 ![Applying blur with a PIXI filter](docs/blurexample.png)
 
-## Install Via Bower
+## Install Via NPM
 
 If you just want to use react-pixi and not build it, you can
-install it using bower.
+install it using npm.
 
 ```
-bower install react-pixi
+npm install react-pixi --save
 ```
 
-Then include one of the javascript files in dist, such as dist/react-pixi.js.  You will also need to include Pixi:
+At this point you can reference it using the commonjs forms.
 
 ```
-<script src="bower_components/pixi.js/bin/pixi.dev.js"></script>
-<script src="bower_components/react-pixi/dist/react-pixi.js"></script>
+var React = require('react');
+var ReactPIXI = require('react-pixi');
+var PIXI = require('pixi.js');
 ```
 
-React willappear in the global namespace as `React` and the new React-PIXI components are available under the `ReactPIXI` namespace.
-
-Note that react-pixi includes its own internal copy of React (currently 0.12.1)
-so you should not include the standard React library. Doing so might give wierd results!
-
+It turns out that [PIXI dumps itself into the global namespace](https://github.com/pixijs/pixi.js/blob/master/src/index.js#L27) so you don't have to require it if you don't want to.
 
 ## Building From Source
 
-You will need node and  npm. You should probably install gulp globally as well.
+You will need node and npm.
 
 ```
-npm install -g gulp
 npm install
-bower install
+npm run build
 ```
 
-Simply running
+will build and package the code into `build/react-pixi.js`. You can include
+this in your web page and reference `React`, `ReactPIXI` as globals. Note that you
+still need to include pixi.js yourself (taken from the cupcake example):
 
 ```
-gulp
+<script src="../../node_modules/pixi.js/bin/pixi.js"></script>
+<script src="../../build/react-pixi.js"></script>
 ```
 
-Will package up react-pixi along with React and put the result in build/react-pixi.js, which you can include in your web page.
+NOTE that react-pixi includes its own internal copy of React (currently 0.14)
+so you should not include the standard React library if you're doing it this way.
+Doing so might give wierd results!
 
+## Running The Examples
 
+The examples are in `examples/` and you can view them by running a webpack dev server.
+
+```
+npm run dev
+```
+
+Then browse to `http://localhost:8080`
 
 ## Rendering Pixi.js elements
 
@@ -105,8 +114,8 @@ var ExampleStage = React.createClass({
   render: function() {
     var fontstyle = {font:'40px Times'};
     return <Stage width={this.props.width} height={this.props.height}>
-    <TilingSprite image={assetpath('bg_castle.png')} width={this.props.width} height={this.props.height} key="1" />
-    <Text text="Vector text" x={this.props.xposition} y={10} style={fontstyle} anchor={new PIXI.Point(0.5,0)} key="2" />
+      <TilingSprite image={assetpath('bg_castle.png')} width={this.props.width} height={this.props.height} key="1" />
+      <Text text="Vector text" x={this.props.xposition} y={10} style={fontstyle} anchor={new PIXI.Point(0.5,0)} key="2" />
     </Stage>;
   }
 });
@@ -114,16 +123,16 @@ var ExampleStage = React.createClass({
 
 ## Testing
 
-Testing is done via gulp and karma.
+Testing is done with karma
 
 ```
-gulp test
+npm run test
 ```
 
-to (re)generate the pixel reference images you will need to have phantomjs installed, then
+to (re)generate the pixel reference images you will need to have slimerjs installed, then
 
 ```
-gulp pixelrefs
+npm run pixelrefs
 ```
 
 ## Caveats
