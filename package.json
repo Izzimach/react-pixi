@@ -23,7 +23,7 @@
     "es5",
     "src"
   ],
-  "main": "es5/ReactPIXI.js",
+  "main": "es5/react-pixi-commonjs.js",
   "dependencies": {
     "fbjs": "^0.2.1"
   },
