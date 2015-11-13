@@ -47,3 +47,7 @@ function jsxtransformstart() {
     fontloader.on('complete', PutReact);
     fontloader.load();
 }
+
+// let's start!
+jsxtransformstart();
+

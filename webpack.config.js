@@ -12,6 +12,12 @@ module.exports = {
   },
 
   module: {
+    postLoaders:[
+      {
+        test: /\.js$/,
+        loader: "transform/cacheable?brfs"
+      }
+    ],
     loaders: [
       {
 	test: /\.js$/,

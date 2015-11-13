@@ -25,6 +25,7 @@
   ],
   "main": "es5/react-pixi-commonjs.js",
   "dependencies": {
+    "brfs": "^1.4.1",
     "fbjs": "^0.2.1"
   },
   "peerDependencies": {
@@ -50,6 +51,7 @@
     "react-dom": "0.14.2",
     "resemblejs": "~1.2.0",
     "rimraf": "~2.4.0",
+    "transform-loader": "^0.2.3",
     "webpack": "^1.12.1",
     "webpack-dev-server": "^1.10.1"
   },
