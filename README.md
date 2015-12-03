@@ -28,6 +28,10 @@ var PIXI = require('pixi.js');
 
 It turns out that [PIXI dumps itself into the global namespace](https://github.com/pixijs/pixi.js/blob/master/src/index.js#L27) so you don't have to require it if you don't want to.
 
+To use react-pixi with webpack, babel, and hot reloading, you can use [this boilerplate][rpb].
+
+[rpb]: https://github.com/brigand/react-pixi-boilerplate
+
 ## Building From Source
 
 You will need node and npm.
