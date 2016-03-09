@@ -75,6 +75,10 @@ basic ReactPIXI components. For example, to construct
  a CupcakeComponent that consists of two Sprites:
 
 ```javascript
+
+// set assetspath to point to your image files
+var assetpath = function(filename) { return '../assets/' + filename; };
+
 var Sprite = React.createFactory(ReactPIXI.Sprite);
 var DisplayObjectContainer = React.createFactory(ReactPIXI.DisplayObjectContainer);
 
@@ -111,6 +115,8 @@ You can produce display elements using JSX as well. Note that you don't need
 factories in this case.
 
 ```javascript
+var assetpath = function(filename) { return '../assets/' + filename; };
+
 var Stage = ReactPIXI.Stage;
 var TilingSprite = ReactPIXI.TilingSprite;
 var Text = ReactPIXI.Text;
