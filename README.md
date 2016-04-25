@@ -20,7 +20,7 @@ npm install react-pixi --save
 
 At this point you can reference it using the commonjs forms.
 
-```
+```js
 var React = require('react');
 var ReactPIXI = require('react-pixi');
 var PIXI = require('pixi.js');
@@ -74,7 +74,7 @@ this means you have to use `React.createElement` or create factories from the
 basic ReactPIXI components. For example, to construct
  a CupcakeComponent that consists of two Sprites:
 
-```javascript
+```js
 
 // set assetspath to point to your image files
 var assetpath = function(filename) { return '../assets/' + filename; };
@@ -114,7 +114,7 @@ Look in the examples directory for more in-depth examples.
 You can produce display elements using JSX as well. Note that you don't need
 factories in this case.
 
-```javascript
+```js
 var assetpath = function(filename) { return '../assets/' + filename; };
 
 var Stage = ReactPIXI.Stage;
