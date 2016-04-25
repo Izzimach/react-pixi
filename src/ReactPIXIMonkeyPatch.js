@@ -24,12 +24,11 @@
 
 "use strict";
 
-var ReactCompositeComponent = require('react/lib/ReactCompositeComponent');
-var ReactCompositeComponentMixin = ReactCompositeComponent.Mixin;
-var ReactReconciler = require('react/lib/ReactReconciler');
+import ReactCompositecomponent, {Mixin as ReactCompositeComponentMixin} from 'react/lib/ReactCompositeComponent';
+import ReactReconciler from 'react/lib/ReactReconciler';
 
-var shouldUpdateReactComponent = require('react/lib/shouldUpdateReactComponent');
-var warning = require('fbjs/lib/warning');
+import shouldUpdateReactComponent from 'react/lib/shouldUpdateReactComponent';
+import warning from 'fbjs/lib/warning';
 
 //
 // Composite components don't have a displayObject. So we have to do some work to find
@@ -57,9 +56,9 @@ function findDisplayObjectChild(componentinstance) {
 // This modified version of updateRenderedComponent will
 // manage displayObject nodes instead of HTML markup
 //
-var old_updateRenderedComponent = ReactCompositeComponentMixin._updateRenderedComponent;
+let old_updateRenderedComponent = ReactCompositeComponentMixin._updateRenderedComponent;
 
-var ReactPIXI_updateRenderedComponent = function(transaction, context) {
+let ReactPIXI_updateRenderedComponent = function(transaction, context) {
   var prevComponentInstance = this._renderedComponent;
   
   // Find the first actual rendered (non-Composite) component.
@@ -67,7 +66,7 @@ var ReactPIXI_updateRenderedComponent = function(transaction, context) {
   // If not, we call back to the original version of updateComponent
   // which should handle all non-PIXI nodes.
   
-  var prevDisplayObject = findDisplayObjectChild(prevComponentInstance);
+  let prevDisplayObject = findDisplayObjectChild(prevComponentInstance);
   if (!prevDisplayObject) {
     // not a PIXI node, use the original DOM-style version
     old_updateRenderedComponent.call(this,transaction, context);
@@ -75,8 +74,8 @@ var ReactPIXI_updateRenderedComponent = function(transaction, context) {
   }
   
   // This is a PIXI node, do a special PIXI version of updateComponent
-  var prevRenderedElement = prevComponentInstance._currentElement;
-  var nextRenderedElement = this._renderValidatedComponent();
+  let prevRenderedElement = prevComponentInstance._currentElement;
+  let nextRenderedElement = this._renderValidatedComponent();
   
   if (shouldUpdateReactComponent(prevRenderedElement, nextRenderedElement)) {
     ReactReconciler.receiveComponent(
@@ -89,13 +88,13 @@ var ReactPIXI_updateRenderedComponent = function(transaction, context) {
     // We can't just update the current component.
     // So we nuke the current instantiated component and put a new component in
     // the same place based on the new props.
-    var thisID = this._rootNodeID;
+    let thisID = this._rootNodeID;
     
-    var displayObjectParent = prevDisplayObject.parent;
+    let displayObjectParent = prevDisplayObject.parent;
     
     // unmounting doesn't disconnect the child from the parent node,
     // but later on we'll simply overwrite the proper element in the 'children' data member
-    var displayObjectIndex = displayObjectParent.children.indexOf(prevDisplayObject);
+    let displayObjectIndex = displayObjectParent.children.indexOf(prevDisplayObject);
     ReactReconciler.unmountComponent(prevComponentInstance);
     displayObjectParent.removeChild(prevDisplayObject);
     
@@ -103,7 +102,7 @@ var ReactPIXI_updateRenderedComponent = function(transaction, context) {
     this._renderedComponent = this._instantiateReactComponent(
       nextRenderedElement,
       this._currentElement.type);
-    var nextDisplayObject = ReactReconciler.mountComponent(
+    let nextDisplayObject = ReactReconciler.mountComponent(
       this._renderedComponent,
       thisID,
       transaction,
@@ -124,12 +123,12 @@ var ReactPIXI_updateRenderedComponent = function(transaction, context) {
 // component and patch it if it's an unpatched version of ReactCompositeComponentWrapper
 //
 
-var buildPatchedReceiveComponent = function(oldReceiveComponent) {
-  var newReceiveComponent = function(
+let buildPatchedReceiveComponent = function(oldReceiveComponent) {
+  let newReceiveComponent = function(
         internalInstance, nextElement, transaction, context
   ) {
     // if the instance is a ReactCompositeComponentWrapper, fix it if needed
-    var ComponentPrototype = Object.getPrototypeOf(internalInstance);
+    let ComponentPrototype = Object.getPrototypeOf(internalInstance);
 
     // if this is a composite component it wil have _updateRenderedComponent defined
     if (typeof ComponentPrototype._updateRenderedComponent !== 'undefined') {
@@ -146,7 +145,7 @@ var buildPatchedReceiveComponent = function(oldReceiveComponent) {
 };
 
 
-var ReactPIXIMonkeyPatch = function() {
+let ReactPIXIMonkeyPatch = function() {
 
   // in older versions we patched ReactCompositeComponentMixin, but in 0.13 the
   // prototype is wrapped in a ReactCompositeComponentWrapper so monkey-patching
@@ -160,7 +159,7 @@ var ReactPIXIMonkeyPatch = function() {
   //
   // urk.
 
-  var old_ReactReconciler_receiveComponent = ReactReconciler.receiveComponent;
+  let old_ReactReconciler_receiveComponent = ReactReconciler.receiveComponent;
 
   // check to see if we already patched it, so we don't patch again
   if (typeof old_ReactReconciler_receiveComponent._ReactPIXIPatched === 'undefined') {
@@ -171,4 +170,4 @@ var ReactPIXIMonkeyPatch = function() {
   }
 };
 
-module.exports = ReactPIXIMonkeyPatch;
+export default ReactPIXIMonkeyPatch;

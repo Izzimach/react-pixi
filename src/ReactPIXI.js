@@ -23,40 +23,38 @@
 
 "use strict";
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var PIXI = require('pixi.js');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PIXI from 'pixi.js';
 
-var ReactUpdates = require('react/lib/ReactUpdates');
-var ReactMultiChild = require('react/lib/ReactMultiChild');
-var ReactElement  = require('react/lib/ReactElement');
-var ReactUpdates = require('react/lib/ReactUpdates');
+import ReactMultiChild from 'react/lib/ReactMultiChild';
+import ReactElement from 'react/lib/ReactElement';
+import ReactUpdates from 'react/lib/ReactUpdates';
 
-var assign = require('react/lib/Object.assign');
-var emptyObject = require('fbjs/lib/emptyObject');
-var invariant = require('fbjs/lib/invariant');
+import assign from 'object-assign';
+import emptyObject from 'fbjs/lib/emptyObject';
+import warning from 'fbjs/lib/warning';
 
-var warning = require('fbjs/lib/warning');
-
-var monkeypatch = require('./ReactPIXIMonkeyPatch');
+import monkeypatch from './ReactPIXIMonkeyPatch';
 monkeypatch();
 
 //
 // Generates a React component by combining several mixin components
 //
 
-function createPIXIComponent(name) {
+function createPIXIComponent(name, ...mixins) {
 
-  var ReactPIXIComponent = function(props) {
+  let ReactPIXIComponent = function(element) {
     /* jshint unused: vars */
     this.node = null;
     this._mountImage = null;
     this._renderedChildren = null;
     this._displayObject = null;
+    this._currentElement = element;
   };
   ReactPIXIComponent.displayName = name;
-  for (var i = 1; i < arguments.length; i++) {
-    assign(ReactPIXIComponent.prototype, arguments[i]);
+  for (var m of mixins) {
+    assign(ReactPIXIComponent.prototype, m);
   }
 
   return ReactPIXIComponent;
@@ -107,18 +105,20 @@ var gPIXIHandlers = [
 
 var DisplayObjectMixin = {
 
-  construct: function(element) {
+  construct(element) {
     this._currentElement = element;
     this._displayObject = null;
+    this._nativeParent = null;
+    this._nativeContainerInfo = null;
   },
 
-  getPublicInstance: function() {
+  getPublicInstance() {
     return this._displayObject;
   },
 
   // Any props listed in propnames are applied to the display object
-  transferDisplayObjectPropsByName: function(oldProps, newProps, propsToCheck) {
-    var displayObject = this._displayObject;
+  transferDisplayObjectPropsByName(oldProps, newProps, propsToCheck) {
+    let displayObject = this._displayObject;
     for (var propname in propsToCheck) {
       if (typeof newProps[propname] !== 'undefined') {
         displayObject[propname] = newProps[propname];
@@ -131,10 +131,10 @@ var DisplayObjectMixin = {
     }
   },
 
-  applyDisplayObjectProps: function(oldProps, newProps) {
+  applyDisplayObjectProps(oldProps, newProps) {
     this.transferDisplayObjectPropsByName(oldProps, newProps, gStandardProps);
 
-    var displayObject = this._displayObject;
+    let displayObject = this._displayObject;
 
     // Position can be specified using either 'position' or separate
     // x/y fields. If neither of these is specified we set them to 0
@@ -163,11 +163,15 @@ var DisplayObjectMixin = {
     });
   },
 
-  mountComponentIntoNode: function() {
+  mountComponentIntoNode() {
     throw new Error(
       'You cannot render a pixi.js component standalone. ' +
       'You need to wrap it in a PIXIStage component.'
     );
+  },
+
+  getNativeNode() {
+    return this._displayObject;
   }
 
 };
@@ -179,28 +183,29 @@ var DisplayObjectMixin = {
 
 var DisplayObjectContainerMixin = assign({}, DisplayObjectMixin, ReactMultiChild.Mixin, {
 
-  moveChild: function(child, toIndex) {
-    var childDisplayObject = child._mountImage; // should be a pixi display object
+  moveChild: function(prevChild, lastPlacedNode, nextIndex, lastIndex) {
+    let childDisplayObject = prevChild.getNativeNode();
+    let thisObject = this.getNativeNode();
 
     // addChildAt automatically removes the child from it's previous location
-    this._displayObject.addChildAt(childDisplayObject, toIndex);
+      thisObject.addChildAt(childDisplayObject, nextIndex);
   },
 
-  createChild: function(child, childDisplayObject) {
+  createChild: function(child, afterNode, childDisplayObject) {
     child._mountImage = childDisplayObject;
-    this._displayObject.addChild(childDisplayObject);
+    this.getNativeNode().addChild(childDisplayObject);
     if (child.customDidAttach) {
       child.customDidAttach(childDisplayObject);
     }
   },
 
-  removeChild: function(child) {
-    var childDisplayObject = child._mountImage;
+  removeChild: function(child, node) {
+    let childDisplayObject = child._mountImage;
     if (child.customWillDetach) {
       child.customWillDetach(childDisplayObject);
     }
 
-    this._displayObject.removeChild(childDisplayObject);
+    this.getNativeNode().removeChild(childDisplayObject);
     child._mountImage = null;
   },
 
@@ -225,11 +230,15 @@ var DisplayObjectContainerMixin = assign({}, DisplayObjectMixin, ReactMultiChild
       context
     );
     // Each mount image corresponds to one of the flattened children
-    var i = 0;
+    let i = 0;
+    let rootObject = this.getNativeNode();
+    let prevNode = null;
     for (var key in this._renderedChildren) {
       if (this._renderedChildren.hasOwnProperty(key)) {
         var child = this._renderedChildren[key];
-	DisplayObjectContainerMixin.createChild.call(this, child, mountedImages[i]);
+        child._mountImage = mountedImages[i];
+	DisplayObjectContainerMixin.createChild.call(this, child, prevNode, mountedImages[i]);
+        prevNode = child._mountImage;
         i++;
       }
     }
@@ -374,7 +383,7 @@ var PIXIStage = React.createClass({
 var CommonDisplayObjectContainerImplementation = {
   mountComponent: function(rootID, transaction, context) {
     /* jshint unused: vars */
-    var props = this._currentElement.props;
+    let props = this._currentElement.props;
     this._displayObject = this.createDisplayObject(arguments);
     this.applyDisplayObjectProps({}, props);
     this.applySpecificDisplayObjectProps({}, props);
@@ -384,8 +393,8 @@ var CommonDisplayObjectContainerImplementation = {
   },
 
   receiveComponent: function(nextElement, transaction, context) {
-    var newProps = nextElement.props;
-    var oldProps = this._currentElement.props;
+    let newProps = nextElement.props;
+    let oldProps = this._currentElement.props;
 
     this.applyDisplayObjectProps(oldProps, newProps);
     this.applySpecificDisplayObjectProps(oldProps, newProps);
@@ -437,10 +446,10 @@ var DisplayObjectContainer = createPIXIComponent(
 var SpriteComponentMixin = {
   createDisplayObject : function () {
     if (this._currentElement.props.image) {
-      var spriteimage = this._currentElement.props.image;
+      let spriteimage = this._currentElement.props.image;
       return new PIXI.Sprite(PIXI.Texture.fromImage(spriteimage));
     } else if (this._currentElement.props.texture) {
-      var texture = this._currentElement.props.texture;
+      let texture = this._currentElement.props.texture;
       warning(texture instanceof PIXI.Texture, "the Sprite 'texture' prop must be an instance of PIXI.Texture");
       return new PIXI.Sprite(texture);
     }
@@ -456,7 +465,7 @@ var SpriteComponentMixin = {
         'texture':null // may get overridden by 'image' prop
       });
 
-    var displayObject = this._displayObject;
+    let displayObject = this._displayObject;
 
     // support setting image by name instead of a raw texture ref
     if ((typeof newProps.image !== 'undefined') && newProps.image !== oldProps.image) {
@@ -506,7 +515,7 @@ var SpriteBatch = createPIXIComponent(
 var TilingSpriteComponentMixin = {
 
   createDisplayObject : function () {
-    var props = this._currentElement.props;
+    let props = this._currentElement.props;
     return new PIXI.extras.TilingSprite(PIXI.Texture.fromImage(props.image), props.width, props.height);
   },
 
@@ -537,17 +546,17 @@ var TilingSprite = createPIXIComponent(
 var TextComponentMixin = {
 
   createDisplayObject: function() {
-    var props = this._currentElement.props;
+    let props = this._currentElement.props;
 
-    var text = props.text || '';
-    var style = props.style || {};
+    let text = props.text || '';
+    let style = props.style || {};
     return new PIXI.Text(text, style);
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
     // can't just copy over text props, we have to set the values via methods
 
-    var displayObject = this._displayObject;
+    let displayObject = this._displayObject;
 
     if (typeof newProps.text !== 'undefined' && newProps.text !== oldProps.text) {
       displayObject.text = newProps.text;
@@ -578,15 +587,15 @@ var Text = createPIXIComponent(
 
 var BitmapTextComponentMixin = {
   createDisplayObject: function () {
-    var props = this._currentElement.props;
+    let props = this._currentElement.props;
 
-    var text = props.text || '';
-    var style = props.style || {};
+    let text = props.text || '';
+    let style = props.style || {};
     return new PIXI.extras.BitmapText(text,style);
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
-    var displayObject = this._displayObject;
+    let displayObject = this._displayObject;
 
     if (typeof newProps.text !== 'undefined' && newProps.text !== oldProps.text) {
       displayObject.text = newProps.text;
@@ -620,8 +629,8 @@ var BitmapText = createPIXIComponent(
 var CustomDisplayObjectImplementation = {
   mountComponent: function(rootID, transaction, context) {
 
-    var props = this._currentElement.props;
-    invariant(this.customDisplayObject, "No customDisplayObject method found for a CustomPIXIComponent");
+    let props = this._currentElement.props;
+    warning(this.customDisplayObject, "No customDisplayObject method found for a CustomPIXIComponent");
     this._displayObject = this.customDisplayObject(props);
 
     this.applyDisplayObjectProps({}, props);
@@ -635,8 +644,8 @@ var CustomDisplayObjectImplementation = {
   },
 
   receiveComponent: function(nextElement, transaction, context) {
-    var newProps = nextElement.props;
-    var oldProps = this._currentElement.props;
+    let newProps = nextElement.props;
+    let oldProps = this._currentElement.props;
 
     if (this.customApplyProps) {
       this.customApplyProps(this._displayObject, oldProps, newProps);
@@ -691,7 +700,7 @@ var PIXIComponents = {
 var PIXIFactories = {};
 for (var prop in PIXIComponents) {
     if (PIXIComponents.hasOwnProperty(prop)) {
-      var component = PIXIComponents[prop];
+      let component = PIXIComponents[prop];
       PIXIFactories[prop] = ReactElement.createFactory(component);
     }
 }

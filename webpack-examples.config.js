@@ -19,7 +19,12 @@ examplesconfig.module.loaders.push(
   {
     test: /\.jsx$/,
     loader: 'babel',
-    include: path.join(__dirname, 'examples', 'jsxtransform')
+    include: path.join(__dirname, 'examples', 'jsxtransform'),
+    query: {
+      cacheDirectory: true,
+      presets: ['es2015', 'stage-2', 'react'],
+      plugins: ['transform-runtime']
+    }
   }
 );
 
