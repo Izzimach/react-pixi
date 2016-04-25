@@ -44,7 +44,7 @@ describe("PIXI DisplayObject Component", function() {
   it("maintains proper references to the parent DisplayObject", function() {
     var reactinstance = ReactPIXI.render(VariableChildrenTest(1),mountpoint);
 
-    var stage = reactinstance.refs['stage']._displayObject;
+    var stage = reactinstance.refs['stage'].getNativeNode();
     var testpoint = stage.children[0];
 
     expect(testpoint.parent).toBe(stage);
@@ -64,7 +64,7 @@ describe("PIXI DisplayObject Component", function() {
       expect(mountpoint.childNodes[0].childNodes.length).toBe(0);
 
       // examine the pixi objects
-      var stage = reactinstance.refs['stage']._displayObject;
+      var stage = reactinstance.refs['stage'].getNativeNode();
       var testpoint = stage.children[0];
 
       expect(stage.children.length).toBe(1);
@@ -97,7 +97,7 @@ describe("PIXI DisplayObject Component", function() {
       expect(mountpoint.childNodes[0].childNodes.length).toBe(0);
 
       // examine the pixi objects
-      var stage = reactinstance.refs['stage']._displayObject;
+      var stage = reactinstance.refs['stage'].getNativeNode();
       var testpoint = stage.children[0];
 
       expect(stage.children.length).toBe(1);
@@ -127,7 +127,7 @@ describe("PIXI DisplayObject Component", function() {
       expect(mountpoint.childNodes[0].childNodes.length).toBe(0);
 
       // examine the pixi objects
-      var stage = reactinstance.refs['stage']._displayObject;
+      var stage = reactinstance.refs['stage'].getNativeNode();
       var testpoint = stage.children[0];
 
       expect(stage.children.length).toBe(1);
