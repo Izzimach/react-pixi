@@ -51,6 +51,8 @@ function createPIXIComponent(name, ...mixins) {
     this._renderedChildren = null;
     this._displayObject = null;
     this._currentElement = element;
+    this._nativeParent = null;
+    this._nativeContainerInfo = null;
   };
   ReactPIXIComponent.displayName = name;
   for (var m of mixins) {
@@ -381,9 +383,11 @@ var PIXIStage = React.createClass({
 //
 
 var CommonDisplayObjectContainerImplementation = {
-  mountComponent: function(rootID, transaction, context) {
+  mountComponent: function(transaction, nativeParent, nativeContainerInfo, context) {
     /* jshint unused: vars */
     let props = this._currentElement.props;
+    this._nativeParent = nativeParent;
+    this._nativeContainerInfo = nativeContainerInfo;
     this._displayObject = this.createDisplayObject(arguments);
     this.applyDisplayObjectProps({}, props);
     this.applySpecificDisplayObjectProps({}, props);
