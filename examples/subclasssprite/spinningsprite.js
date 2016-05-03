@@ -36,14 +36,14 @@ SpinningSprite.prototype = Object.create( PIXI.Sprite.prototype, {
   }
 });
 
-var SpinningSpriteComponent = ReactPIXI.CreateCustomPIXIComponent({
-  customDisplayObject: function() {
-    var rotationspeed = this.props.rotation || 0;
-    var spriteimage = this.props.image;
+var SpinningSpriteComponent = ReactPIXI.CustomPIXIComponent({
+  customDisplayObject: function(props) {
+    var rotationspeed = props.rotation || 0;
+    var spriteimage = props.image;
     return new SpinningSprite(spriteimage, rotationspeed);
   },
 
-  applyCustomProps : function(oldProps, newProps) {
+  customApplyProps : function(oldProps, newProps) {
     var displayObject = this.displayObject;
 
     if ((typeof newProps.image !== 'undefined') && newProps.image !== oldProps.image) {
@@ -79,18 +79,27 @@ var SpinningSpriteComponent = ReactPIXI.CreateCustomPIXIComponent({
 var SpinStage = React.createClass({
   displayName: 'ExampleStage',
   render: function() {
-    var child = SpinningSpriteComponent({x:this.props.spinx, y:this.props.spiny, rotation:this.props.spinrotation, image:'../assets/cherry.png'}, null);
-    return ReactPIXI.Stage({width:this.props.width, height:this.props.height}, child);
+    var child = React.createElement(SpinningSpriteComponent,
+                                    {x : this.props.spinx,
+                                     y : this.props.spiny,
+                                     rotation : this.props.spinrotation,
+                                     image : '../assets/cherry.png'}, null);
+    return React.createElement(ReactPIXI.Stage,
+                               {width : this.props.width,
+                                height : this.props.height},
+                               child);
   }
 });
 
 /* jshint unused:false */
 function spinningspritestart() {
-    var renderelement = document.getElementById("pixi-box");
-
-    var w = window.innerWidth-6;
-    var h = window.innerHeight-6;
-
-    ReactPIXI.render(SpinStage({width:w, height:h, spinx:100, spiny:100, spinrotation:5.6}), renderelement);
+  var renderelement = document.getElementById("pixi-box");
+  
+  var w = window.innerWidth-6;
+  var h = window.innerHeight-6;
+  
+  ReactPIXI.render(React.createElement(SpinStage,
+                                       {width:w, height:h, spinx:100, spiny:100, spinrotation:5.6}),
+                   renderelement);
 }
 
