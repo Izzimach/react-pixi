@@ -54,7 +54,7 @@ still need to include pixi.js yourself (taken from the cupcake example):
 <script src="../../build/react-pixi.js"></script>
 ```
 
-NOTE that react-pixi includes its own internal copy of React (currently 0.14)
+NOTE that react-pixi includes its own internal copy of React (currently 15)
 so you should not include the standard React library if you're doing it this way.
 Doing so might give wierd results!
 
