@@ -305,6 +305,7 @@ var PIXIStage = React.createClass({
 
     //this.setApprovedDOMProperties(props);
     DisplayObjectMixin.applyDisplayObjectProps.call(this,{},props);
+    this._debugID = this._reactInternalInstance._debugID;
 
     var transaction = ReactUpdates.ReactReconcileTransaction.getPooled();
     transaction.perform(
