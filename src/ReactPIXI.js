@@ -299,7 +299,7 @@ var PIXIStage = React.createClass({
     var renderelement = ReactDOM.findDOMNode(this);
 
     var backgroundcolor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
-    this._pixirenderer = PIXI.autoDetectRenderer(props.width, props.height, {view:renderelement, backgroundColor: backgroundcolor});
+    this._pixirenderer = PIXI.autoDetectRenderer(props.width, props.height, {view:renderelement, backgroundColor: backgroundcolor, preserveDrawingBuffer:true});
   },
 
   componentDidMount: function() {
