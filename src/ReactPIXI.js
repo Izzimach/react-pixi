@@ -294,15 +294,25 @@ var PIXIStage = React.createClass({
     this.props = prevProps;
   },
 
-  componentDidMount: function() {
-    var props = this.props;
+  generateDefaultRenderer: function(props) {
+    // standard canvas/webGL renderer
     var renderelement = ReactDOM.findDOMNode(this);
-    var context = this._reactInternalInstance._context;
 
     var backgroundcolor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
-    this._displayObject = new PIXI.Container();
     this._pixirenderer = PIXI.autoDetectRenderer(props.width, props.height, {view:renderelement, backgroundColor: backgroundcolor});
+  },
 
+  componentDidMount: function() {
+    var props = this.props;
+    if (typeof props.renderer === 'undefined') {
+      this.generateDefaultRenderer(props);
+    } else {
+      // custom renderer
+      this._pixirenderer = props.renderer;
+    }
+
+    var context = this._reactInternalInstance._context;
+    this._displayObject = new PIXI.Container();
     //this.setApprovedDOMProperties(props);
     DisplayObjectMixin.applyDisplayObjectProps.call(this,{},props);
     this._debugID = this._reactInternalInstance._debugID;
@@ -334,6 +344,17 @@ var PIXIStage = React.createClass({
   componentDidUpdate: function(oldProps) {
     var newProps = this.props;
     var context = this._reactInternalInstance._context;
+
+    // maybe update renderer
+    // have to handle 'undefined' renderer prop
+    if (newProps.renderer !== oldProps.renderer ||
+        typeof newProps.renderer !== typeof oldProps.renderer) {
+      if (typeof newProps.renderer === 'undefined') {
+        this.generateDefaultRenderer(newProps);
+      } else {
+        this._pixirenderer = newProps.renderer;
+      }
+    }
 
     if (newProps.width != oldProps.width || newProps.height != oldProps.height) {
       this._pixirenderer.resize(+newProps.width, +newProps.height);
@@ -371,8 +392,12 @@ var PIXIStage = React.createClass({
   },
 
   render: function() {
-    // the PIXI renderer will get applied to this canvas element
-    return React.createElement("canvas");
+    // the PIXI renderer will get applied to this canvas element unless there is a custom renderer
+    if (typeof this.props.renderer == 'undefined') {
+      return React.createElement("canvas");
+    } else {
+      return null;
+    }
   }
 
 });
