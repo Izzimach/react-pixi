@@ -39,7 +39,7 @@ describe("PIXI Sprite Component", function() {
               console.log("test image URI is " + testimageURI);
               console.log("mismatch image data URI is " + data.getImageDataUrl());
             }
-            console.log("image compare result is " + data.toString());
+            console.log("image compare result is " + JSON.stringify(data));
             expect(data.misMatchPercentage).toBeLessThan(0.2);
 
             comparesperformed++;
