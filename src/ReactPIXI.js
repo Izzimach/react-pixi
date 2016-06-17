@@ -467,6 +467,8 @@ var SpriteComponentMixin = {
         'tint':0xFFFFFF,
         'blendMode':PIXI.BLEND_MODES.NORMAL,
         'shader':null,
+        'width':undefined,
+        'height':undefined,
         'texture':null // may get overridden by 'image' prop
       });
 
