@@ -186,8 +186,8 @@ var DisplayObjectMixin = {
 var DisplayObjectContainerMixin = assign({}, DisplayObjectMixin, ReactMultiChild.Mixin, {
 
   moveChild: function(prevChild, lastPlacedNode, nextIndex, lastIndex) {
-    let childDisplayObject = prevChild.getNativeNode();
-    let thisObject = this.getNativeNode();
+    let childDisplayObject = prevChild._mountImage;
+    let thisObject = this._mountImage || this._displayObject;
 
     // addChildAt automatically removes the child from it's previous location
       thisObject.addChildAt(childDisplayObject, nextIndex);
