@@ -296,13 +296,19 @@ var PIXIStage = React.createClass({
 
   generateDefaultRenderer: function(props) {
     // standard canvas/webGL renderer
-    var renderelement = ReactDOM.findDOMNode(this);
+    const renderelement = ReactDOM.findDOMNode(this);
 
-    var backgroundColor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
-    var resolution = (typeof props.resolution === "number") ? props.resolution : 1;
-    var antialias = props.antialias ? props.antialias : false;
-    var transparent = props.transparent ? props.transparent : false;
-    var preserveDrawingBuffer = props.preserveDrawingBuffer ? props.preserveDrawingBuffer : false;
+    let backgroundColor = (typeof props.backgroundColor === "number") ? props.backgroundColor : 0x66ff99;
+    // check for old-style capitalization (or lack of for backgroundColor)
+    if (typeof props.backgroundcolor !== 'undefined')
+    {
+      warning(false, "Using lowercase on Stage prop backgroundcolor is deprecated - use backgroundColor instead");
+      backgroundColor = props.backgroundcolor;
+    }
+    const resolution = (typeof props.resolution === "number") ? props.resolution : 1;
+    const antialias = props.antialias ? props.antialias : false;
+    const transparent = props.transparent ? props.transparent : false;
+    const preserveDrawingBuffer = props.preserveDrawingBuffer ? props.preserveDrawingBuffer : false;
     
     this._pixirenderer = PIXI.autoDetectRenderer(props.width, props.height, 
       {view:renderelement,
