@@ -298,7 +298,7 @@ var PIXIStage = React.createClass({
     // standard canvas/webGL renderer
     var renderelement = ReactDOM.findDOMNode(this);
 
-    var backgroundcolor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
+    var backgroundColor = (typeof props.backgroundcolor === "number") ? props.backgroundcolor : 0x66ff99;
     var resolution = (typeof props.resolution === "number") ? props.resolution : 1;
     var antialias = props.antialias ? props.antialias : false;
     var transparent = props.transparent ? props.transparent : false;
@@ -306,10 +306,11 @@ var PIXIStage = React.createClass({
     
     this._pixirenderer = PIXI.autoDetectRenderer(props.width, props.height, 
       {view:renderelement,
-       backgroundColor: backgroundcolor, 
+       backgroundColor: backgroundColor, 
        antialias: props.antialias,
        transparent: transparent,
-       resolution: props.resolution	
+       resolution: props.resolution,
+       preserveDrawingBuffer: preserveDrawingBuffer
       });
   },
 
