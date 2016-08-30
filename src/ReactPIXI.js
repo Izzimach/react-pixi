@@ -403,8 +403,15 @@ var PIXIStage = React.createClass({
 
   render: function() {
     // the PIXI renderer will get applied to this canvas element unless there is a custom renderer
-    if (typeof this.props.renderer == 'undefined') {
-      return React.createElement("canvas");
+    if (typeof this.props.renderer === 'undefined') {
+      if (typeof this.props.style === 'undefined') {
+        // no style props, use a default canvas
+        return React.createElement("canvas");
+      }
+      else
+      {
+        return React.createElement("canvas", {style: this.props.style});
+      }
     } else {
       return null;
     }
