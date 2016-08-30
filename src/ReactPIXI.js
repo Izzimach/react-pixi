@@ -308,6 +308,7 @@ var PIXIStage = React.createClass({
       {view:renderelement,
        backgroundColor: backgroundcolor, 
        antialias: props.antialias,
+       transparent: transparent,
        resolution: props.resolution	
       });
   },
