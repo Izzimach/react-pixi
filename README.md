@@ -1,8 +1,6 @@
 react-pixi
 ==========
 
-[![Build Status](https://travis-ci.org/Izzimach/react-pixi.svg?branch=master)](https://travis-ci.org/Izzimach/react-pixi)
-
 Create/control a [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) canvas using [React](https://github.com/facebook/react).
 
 To control a 3D scene with React, see [react-three](https://github.com/Izzimach/react-three/)
