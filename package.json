@@ -63,14 +63,14 @@
   },
   "scripts": {
     "build": "webpack",
-    "build-examples": "webpack --config webpack-examples.config.js",
     "build-commonjs": "webpack --config webpack-commonjs.config.js",
     "dev": "webpack-dev-server --progress --colors",
+    "examples": "webpack-dev-server --config webpack-examples.config.js",
     "lint": "eslint src examples",
     "test": "karma start",
     "pixelrefs": "slimerjs test/pixels/generatetestrender.js",
     "pretest": "npm run build",
-    "predev": "npm run build-examples",
+    "preexamples": "npm run build",
     "prerendertest": "npm run build",
     "prepublish": "npm run build-commonjs"
   },

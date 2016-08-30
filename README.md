@@ -11,7 +11,7 @@ To control a 3D scene with React, see [react-three](https://github.com/Izzimach/
 
 ## Install Via NPM
 
-The current version of react-pixi is `0.8.0` and uses React `15.0.0`.
+The current version of react-pixi is `0.8.x` and uses React 15.
 
 If you just want to use react-pixi and not build it, you can
 install it using npm.
@@ -63,7 +63,7 @@ Doing so might give wierd results!
 The examples are in `examples/` and you can view them by running a webpack dev server.
 
 ```
-npm run dev
+npm run examples
 ```
 
 Then browse to `http://localhost:8080`
