@@ -27,6 +27,7 @@
   "dependencies": {
     "brfs": "^1.4.1",
     "fbjs": "^0.7.0",
+    "ify-loader": "^1.0.3",
     "object-assign": "^4.0.1"
   },
   "peerDependencies": {
@@ -52,7 +53,7 @@
     "karma-jasmine": "~0.3.2",
     "lodash": "^4.6.1",
     "node-static": "~0.7.3",
-    "pixi.js": "~3.0.7",
+    "pixi.js": "~4.0.0",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
     "resemblejs": "~2.2.0",
