@@ -41,10 +41,11 @@ var CupcakeComponent = React.createClass({
   render : function () {
     var creamimagename = this.spritemapping[this.props.topping];
     var xposition = this.props.xposition;
+    var imageanchor = new PIXI.Point(0.5,0.5);
     return DisplayObjectContainer(
       {x:xposition, y:100},
-      Sprite({image:creamimagename, y:-35, anchor: new PIXI.Point(0.5,0.5), key:'topping'}, null),
-      Sprite({image:assetpath('cupCake.png'), y:35, anchor: new PIXI.Point(0.5,0.5), key:'cake'}, null)
+      Sprite({image:creamimagename, y:-35, anchor: imageanchor, key:'topping'}, null),
+      Sprite({image:assetpath('cupCake.png'), y:35, anchor: imageanchor, key:'cake'}, null)
     );
   }
 });
@@ -74,6 +75,7 @@ var BlurredCupcakeComponent = React.createClass({
   render : function() {
     var blurfilter = this.state.cupcakefilter;
     blurfilter.blur = this.props.bluramount;
+    blurfilter.padding = 1; // too high and the right starts to crop...
     var blurmessage = 'Blur=' + this.props.bluramount.toString();
     return DisplayObjectContainer(
       {},
@@ -104,7 +106,7 @@ var ExampleStage = React.createClass({
       {width:this.props.width, height:this.props.height},
       TilingSprite({image:assetpath('bg_castle.png'), width:this.props.width, height:this.props.height, key:1}, null),
       BlurredCupcakeFactory({topping:this.props.topping, xposition:xpos1, bluramount: 1, ref:'cupcake1', key:2}),
-      BlurredCupcakeFactory({topping:this.props.topping, xposition:xpos2, bluramount: 15, ref:'cupcake2', key:3})
+      BlurredCupcakeFactory({topping:this.props.topping, xposition:xpos2, bluramount: 3, ref:'cupcake2', key:3})
     );
   }
 });
