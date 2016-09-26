@@ -498,7 +498,7 @@ var SpriteComponentMixin = {
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
     this.transferDisplayObjectPropsByName(oldProps, newProps,
       {
-        'anchor':new PIXI.Point(0,0),
+//        'anchor':new PIXI.ObservablePoint(0,0),
         'tint':0xFFFFFF,
         'blendMode':PIXI.BLEND_MODES.NORMAL,
         'shader':null,
@@ -508,6 +508,12 @@ var SpriteComponentMixin = {
       });
 
     let displayObject = this._displayObject;
+
+    // the new anchor style uses set/copy and doesn't work with new instances
+    if (newProps.anchor instanceof PIXI.Point) {
+      displayObject.anchor.x = newProps.anchor.x;
+      displayObject.anchor.y = newProps.anchor.y;
+    }
 
     // support setting image by name instead of a raw texture ref
     if ((typeof newProps.image !== 'undefined') && newProps.image !== oldProps.image) {
