@@ -32,6 +32,11 @@ module.exports = {
       {
         test: /\.json$/,
         loader: 'json-loader'
+      },
+      // this is here to apply browserify transforms (specifically glslify) to pixi 4
+      {
+        test: /node_modules/,
+        loader: 'ify'
       }
     ]
   },

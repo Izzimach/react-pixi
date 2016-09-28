@@ -9,7 +9,7 @@ To control a 3D scene with React, see [react-three](https://github.com/Izzimach/
 
 ## Install Via NPM
 
-The current version of react-pixi is `0.8.x` and uses React 15.
+The current version of react-pixi is `0.9.0` and uses React `15.0.0` and PIXI `4.0.0`
 
 If you just want to use react-pixi and not build it, you can
 install it using npm.
@@ -44,11 +44,9 @@ npm run build
 ```
 
 will build and package the code into `build/react-pixi.js`. You can include
-this in your web page and reference `React`, `ReactPIXI` as globals. Note that you
-still need to include pixi.js yourself (taken from the cupcake example):
+this in your web page and reference `React`, `ReactPIXI` as globals.
 
 ```
-<script src="../../node_modules/pixi.js/bin/pixi.js"></script>
 <script src="../../build/react-pixi.js"></script>
 ```
 

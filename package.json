@@ -1,6 +1,6 @@
 {
   "name": "react-pixi",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "Construct PIXI.js scenes using React",
   "keywords": [
     "react",
@@ -27,12 +27,13 @@
   "dependencies": {
     "brfs": "^1.4.1",
     "fbjs": "^0.7.0",
+    "ify-loader": "^1.0.3",
     "object-assign": "^4.0.1"
   },
   "peerDependencies": {
-    "pixi.js": "~3.0.7",
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0"
+    "pixi.js": "~4.0.0",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
@@ -52,7 +53,7 @@
     "karma-jasmine": "~0.3.2",
     "lodash": "^4.6.1",
     "node-static": "~0.7.3",
-    "pixi.js": "~3.0.7",
+    "pixi.js": "~4.0.0",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
     "resemblejs": "~2.2.0",
