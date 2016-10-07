@@ -381,6 +381,9 @@ var PIXIStage = React.createClass({
     if (typeof newProps.backgroundcolor === "number") {
       this._pixirenderer.backgroundColor = newProps.backgroundcolor;
     }
+    else if (typeof newProps.backgroundColor === "number") {
+      this._pixirenderer.backgroundColor = newProps.backgroundColor;
+    }
 
     //this.setApprovedDOMProperties(newProps);
     DisplayObjectMixin.applyDisplayObjectProps.call(this, oldProps, newProps);
