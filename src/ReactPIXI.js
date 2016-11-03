@@ -63,11 +63,70 @@ function createPIXIComponent(name, ...mixins) {
 }
 
 //
+// Parse a value as a PIXI.Point.
+//
+
+function parsePoint(val) {
+  var arr;
+  if (typeof val === 'string') {
+    arr = val.split(',').map(Number) ;
+  }
+  else if (typeof val === 'number') {
+    arr = [val];
+  }
+  else if (Array.isArray(val)) {
+    // shallow copy the array
+    arr = val.slice();
+  }
+
+  return arr;
+}
+
+function isPointType(v) {
+  return ((v instanceof PIXI.Point) || (v instanceof PIXI.ObservablePoint));
+}
+
+//
+// Set props on a DisplayObject by checking the type. If a PIXI.Point or
+// a PIXI.ObservablePoint is having its value set, then either a comma-separated
+// string with in the form of "x,y" or a size 2 array with index 0 being the x
+// coordinate and index 1 being the y coordinate.
+//
+
+function setPixiValue(container, key, value) {
+  // Just copy the data if a Point type is being assigned to a Point type
+  if (isPointType(container[key]) && isPointType(value)) {
+    container[key].copy(value);
+  }
+  else if (isPointType(container[key])) {
+    var coordinateData = parsePoint(value);
+
+    if ((typeof coordinateData === 'undefined') ||
+        (coordinateData.length < 1) ||
+        (coordinateData.length > 2))
+    {
+      throw new Error(
+          `The property '${key}' is a PIXI.Point or PIXI.ObservablePoint and ` +
+          'must be set to a comma-separated string of either 1 or 2 ' +
+          'coordinates, a 1 or 2 element array containing coordinates, or a ' +
+          'PIXI Point/ObservablePoint. If only one coordinate is ' +
+          'given then X and Y will be set to the provided value.');
+    }
+
+    container[key].set(coordinateData.shift(), coordinateData.shift());
+  }
+  else {
+    container[key] = value;
+  }
+}
+
+
+//
 // A DisplayObject has some standard properties and default values
 //
 
 var gStandardProps = {
-  alpha: 1,
+  alpha:1,
   buttonMode:false,
   cacheAsBitmap:null,
   defaultCursor:'pointer',
@@ -77,11 +136,11 @@ var gStandardProps = {
   interactive:false,
   mask:null,
   // can't set parent!
-  pivot: new PIXI.Point(0,0),
+  pivot:0,
   // position has special behavior
   renderable:false,
   rotation:0,
-  scale: new PIXI.Point(1,1),
+  scale:1,
   // can't set stage
   visible:true
   // can't set worldAlpha
@@ -123,12 +182,12 @@ var DisplayObjectMixin = {
     let displayObject = this._displayObject;
     for (var propname in propsToCheck) {
       if (typeof newProps[propname] !== 'undefined') {
-        displayObject[propname] = newProps[propname];
+        setPixiValue(displayObject, propname, newProps[propname]);
       } else if (typeof oldProps[propname] !== 'undefined' &&
                 typeof propsToCheck[propname] !== 'undefined') {
         // the field we use previously but not any more. reset it to
         // some default value (unless the default is undefined)
-        displayObject[propname] = propsToCheck[propname];
+        setPixiValue(displayObject, propname, propsToCheck[propname]);
       }
     }
   },
@@ -516,7 +575,7 @@ var SpriteComponentMixin = {
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
     this.transferDisplayObjectPropsByName(oldProps, newProps,
       {
-//        'anchor':new PIXI.ObservablePoint(0,0),
+        'anchor':0,
         'tint':0xFFFFFF,
         'blendMode':PIXI.BLEND_MODES.NORMAL,
         'shader':null,
@@ -526,12 +585,6 @@ var SpriteComponentMixin = {
       });
 
     let displayObject = this._displayObject;
-
-    // the new anchor style uses set/copy and doesn't work with new instances
-    if (newProps.anchor instanceof PIXI.Point) {
-      displayObject.anchor.x = newProps.anchor.x;
-      displayObject.anchor.y = newProps.anchor.y;
-    }
 
     // support setting image by name instead of a raw texture ref
     if ((typeof newProps.image !== 'undefined') && newProps.image !== oldProps.image) {
@@ -588,9 +641,9 @@ var TilingSpriteComponentMixin = {
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
     this.transferDisplayObjectPropsByName(oldProps, newProps,
       {
-        'tileScale': new PIXI.Point(1,1),
-        'tilePosition' : new PIXI.Point(0,0),
-        'tileScaleOffset' : new PIXI.Point(1,1)
+        'tileScale' : 1,
+        'tilePosition' : 0,
+        'tileScaleOffset' : 1
       });
 
     // also modify values that apply to Sprite
