@@ -78,7 +78,7 @@ var ExampleStage = React.createClass({
     componentinstance.setState({scrollcallback: requestAnimationFrame(animationcallback)});
   },
   componentWillUnmount: function() {
-    if (this.state.scrollCallback !== null) {
+    if (this.state.scrollcallback !== null) {
       cancelAnimationFrame(this.state.scrollcallback);
     }
   },
