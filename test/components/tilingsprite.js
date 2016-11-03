@@ -10,7 +10,7 @@ describe("PIXI TilingSprite Component", () => {
 
   var TilingSpriteTestComponent = React.createClass({
     displayName: 'ExampleTilingSpriteComponent',
-    render: () => {
+    render: function () {
       return Stage({width: width, height: height, ref: 'stage'},
         TilingSprite(this.props.tilingSpriteProps));
      }
