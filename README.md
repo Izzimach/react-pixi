@@ -130,6 +130,19 @@ var ExampleStage = React.createClass({
   }
 });
 ```
+## Setting values for Point and ObservablePoint types
+
+For setting properties on Pixi.js types that are either `PIXI.Point`'s or
+`PIXI.ObserveablePoint`'s you can use either and array of integers or a
+comma-separated string of integers in the following forms: `[x,y]`, `'x,y'`,
+`[i]`, `'i'`. In the case where two integers are provided, the first will be
+applied to the _X_ coordinate and the second will be applied to the _Y_
+coordinate. In the case where a single integer if provided, it will be applied
+to both coordinates.
+
+You can still create your own PIXI `Point` or `ObserveablePoint` objects and
+assign them directly to the property. These won't actually replace the property
+but they will be applied using the original object's `.copy()` method.
 
 ## Testing
 

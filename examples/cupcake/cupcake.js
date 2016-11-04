@@ -60,10 +60,32 @@ var CupcakeFactory = React.createFactory(CupcakeComponent);
 
 var ExampleStage = React.createClass({
   displayName: 'ExampleStage',
+  getInitialState: function() {
+    return {backgroundX: 0, backgroundY: 0, scrollcallback:null};
+  },
+  componentDidMount: function() {
+    var componentinstance = this;
+    var animationcallback = function() {
+      var newstate = {
+        backgroundX: componentinstance.state.backgroundX - 1,
+        backgroundY: componentinstance.state.backgroundY - 2,
+        scrollcallback: requestAnimationFrame(animationcallback)
+      };
+
+      componentinstance.setState(newstate);
+    }.bind(this);
+
+    componentinstance.setState({scrollcallback: requestAnimationFrame(animationcallback)});
+  },
+  componentWillUnmount: function() {
+    if (this.state.scrollcallback !== null) {
+      cancelAnimationFrame(this.state.scrollcallback);
+    }
+  },
   render: function() {
     return Stage(
       {width:this.props.width, height:this.props.height},
-      TilingSprite({image:assetpath('bg_castle.png'), width:this.props.width, height:this.props.height, key:1}, null),
+      TilingSprite({image:assetpath('bg_castle.png'), width:this.props.width, height:this.props.height, tilePosition: [this.state.backgroundX, this.state.backgroundY], key:1}, null),
       CupcakeFactory({topping:this.props.topping, xposition:this.props.xposition, ref:'cupcake', key:2}),
       VectorText({text:'Vector text', x:this.props.xposition, y:10, style:{font:'40px Times'}, anchor: new PIXI.Point(0.5,0), key:3}, null),
       BitmapText({text:'Bitmap text', x:this.props.xposition, y:180, tint:0xff88ff88, style: {font:'40 Comic_Neue_Angular'}, key:4}, null)
