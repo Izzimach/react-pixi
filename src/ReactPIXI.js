@@ -480,6 +480,27 @@ var DisplayObjectContainer = createPIXIComponent(
 });
 
 //
+// Graphics
+//
+
+var Graphics = createPIXIComponent(
+  'Graphics',
+  DisplayObjectContainerMixin,
+  CommonDisplayObjectContainerImplementation, {
+
+  createDisplayObject : function() {
+  	return new PIXI.Graphics();
+  },
+
+  applySpecificDisplayObjectProps: function (oldProps, newProps) {
+    this.transferDisplayObjectPropsByName(oldProps, newProps, {
+      'width': undefined,
+      'height': undefined
+    });
+  }
+});
+
+//
 // Sprite
 //
 
@@ -742,7 +763,8 @@ var PIXIComponents = {
   Sprite : Sprite,
   Text : Text,
   BitmapText : BitmapText,
-  TilingSprite : TilingSprite
+  TilingSprite : TilingSprite,
+  Graphics : Graphics
 };
 
 var PIXIFactories = {};
