@@ -24,10 +24,10 @@
 
 "use strict";
 
-import ReactCompositecomponent, {Mixin as ReactCompositeComponentMixin} from 'react/lib/ReactCompositeComponent';
-import ReactReconciler from 'react/lib/ReactReconciler';
+import ReactCompositeComponent from 'react-dom/lib/ReactCompositeComponent';
+import ReactReconciler from 'react-dom/lib/ReactReconciler';
 
-import shouldUpdateReactComponent from 'react/lib/shouldUpdateReactComponent';
+import shouldUpdateReactComponent from 'react-dom/lib/shouldUpdateReactComponent';
 import warning from 'fbjs/lib/warning';
 
 //
@@ -56,7 +56,7 @@ function findDisplayObjectChild(componentinstance) {
 // This modified version of updateRenderedComponent will
 // manage displayObject nodes instead of HTML markup
 //
-let old_updateRenderedComponent = ReactCompositeComponentMixin._updateRenderedComponent;
+let old_updateRenderedComponent = ReactCompositeComponent._updateRenderedComponent;
 
 let ReactPIXI_updateRenderedComponent = function(transaction, context) {
   var prevComponentInstance = this._renderedComponent;

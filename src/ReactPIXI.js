@@ -27,9 +27,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PIXI from 'pixi.js';
 
-import ReactMultiChild from 'react/lib/ReactMultiChild';
+import ReactMultiChild from 'react-dom/lib/ReactMultiChild';
 import ReactElement from 'react/lib/ReactElement';
-import ReactUpdates from 'react/lib/ReactUpdates';
+import ReactUpdates from 'react-dom/lib/ReactUpdates';
 
 import assign from 'object-assign';
 import emptyObject from 'fbjs/lib/emptyObject';
