@@ -25,7 +25,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * from PIXI from 'pixi.js';
+import * as PIXI from 'pixi.js';
 
 import ReactMultiChild from 'react-dom/lib/ReactMultiChild';
 import ReactElement from 'react/lib/ReactElement';
