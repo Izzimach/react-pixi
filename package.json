@@ -23,6 +23,7 @@
     "es5",
     "src"
   ],
+  "types": "react-pixi.d.ts",
   "main": "es5/react-pixi-commonjs.js",
   "dependencies": {
     "brfs": "^1.4.1",
