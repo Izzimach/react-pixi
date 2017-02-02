@@ -624,17 +624,17 @@ var Sprite = createPIXIComponent(
   SpriteComponentMixin );
 
 //
-// SpriteBatch
+// ParticleContainer
 //
 
 
-var SpriteBatch = createPIXIComponent(
-  'SpriteBatch',
+var ParticleContainer = createPIXIComponent(
+  'ParticleContainer',
   DisplayObjectContainerMixin,
   CommonDisplayObjectContainerImplementation, {
 
   createDisplayObject : function() {
-    return new PIXI.SpriteBatch();
+    return new PIXI.particles.ParticleContainer();
   },
 
   applySpecificDisplayObjectProps: function (oldProps, newProps) {
@@ -830,7 +830,7 @@ var CustomPIXIComponent = function (custommixin) {
 var PIXIComponents = {
   Stage : PIXIStage,
   DisplayObjectContainer : DisplayObjectContainer,
-  SpriteBatch : SpriteBatch,
+  ParticleContainer : ParticleContainer,
   Sprite : Sprite,
   Text : Text,
   BitmapText : BitmapText,
