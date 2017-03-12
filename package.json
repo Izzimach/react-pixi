@@ -21,6 +21,7 @@
   "license": "Apache-2.0",
   "files": [
     "es5",
+    "react-pixi.d.ts",
     "src"
   ],
   "types": "react-pixi.d.ts",
