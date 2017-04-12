@@ -8,10 +8,11 @@ declare module 'react-pixi' {
     ClassType,
   } from 'react';
   import * as React from 'react';
-  import { render, unmountComponentAtNode } from 'react-dom';
   import {
     Point,
   } from 'pixi.js';
+
+  export { render, unmountComponentAtNode } from 'react-dom';
 
   export type StagePropsType = {
     width: number, height: number,
