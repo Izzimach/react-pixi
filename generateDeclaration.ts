@@ -40,6 +40,12 @@ const extrasTypes = [
     "TextureTransform",
 ];
 
+function coercePointType(typeText: string) {
+    return typeText === "PIXI.Point" || typeText === "PIXI.ObservablePoint" ?
+        `${typeText} | number[] | number | string` :
+        typeText;
+}
+
 function typeNameText(typeName: ts.EntityName): string {
     if (typeName.kind === ts.SyntaxKind.QualifiedName) {
         return `${typeNameText((<ts.QualifiedName> typeName).left)}.${(<ts.QualifiedName> typeName).right.text}`;
@@ -53,11 +59,11 @@ function getTypeText(type: ts.TypeNode): string {
         case ts.SyntaxKind.TypeReference:
             const text = typeNameText((<ts.TypeReferenceNode> type).typeName);
             if (/^PIXI\./.test(text) || nativeTypes.indexOf(text) !== -1) {
-                return text;
+                return coercePointType(text);
             } else if (extrasTypes.indexOf(text) !== -1) {
-                return `PIXI.extras.${text}`;
+                return coercePointType(`PIXI.extras.${text}`);
             } else {
-                return `PIXI.${text}`;
+                return coercePointType(`PIXI.${text}`);
             }
         case ts.SyntaxKind.ObjectKeyword: return "object";
         case ts.SyntaxKind.StringKeyword: return "string";

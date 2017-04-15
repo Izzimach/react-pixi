@@ -41,10 +41,10 @@ declare module 'react-pixi' {
     y?: number;
     worldTransform?: PIXI.Matrix;
     localTransform?: PIXI.Matrix;
-    position?: PIXI.Point;
-    scale?: PIXI.Point;
-    pivot?: PIXI.Point;
-    skew?: PIXI.Point;
+    position?: PIXI.Point | number[] | number | string;
+    scale?: PIXI.Point | number[] | number | string;
+    pivot?: PIXI.Point | number[] | number | string;
+    skew?: PIXI.Point | number[] | number | string;
     rotation?: number;
     worldVisible?: boolean;
     mask?: PIXI.Graphics | PIXI.Sprite;
@@ -68,7 +68,7 @@ declare module 'react-pixi' {
   }
   interface SpritePropsType extends ContainerPropsType {
     image?: string;
-    anchor?: PIXI.ObservablePoint;
+    anchor?: PIXI.ObservablePoint | number[] | number | string;
     tint?: number;
     blendMode?: number;
     pluginName?: string;
@@ -101,7 +101,7 @@ declare module 'react-pixi' {
     dirty?: boolean;
     tint?: number;
     align?: string;
-    anchor?: PIXI.Point | number;
+    anchor?: PIXI.Point | number[] | number | string | number;
     fonts?: any;
   }
   interface TilingSpritePropsType extends SpritePropsType {
@@ -109,8 +109,8 @@ declare module 'react-pixi' {
     uvTransform?: PIXI.extras.TextureTransform;
     uvRespectAnchor?: boolean;
     clampMargin?: number;
-    tileScale?: PIXI.Point | PIXI.ObservablePoint;
-    tilePosition?: PIXI.Point | PIXI.ObservablePoint;
+    tileScale?: PIXI.Point | number[] | number | string | PIXI.ObservablePoint | number[] | number | string;
+    tilePosition?: PIXI.Point | number[] | number | string | PIXI.ObservablePoint | number[] | number | string;
     width?: number;
     height?: number;
   }
