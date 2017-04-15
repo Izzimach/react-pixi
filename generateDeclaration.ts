@@ -112,7 +112,7 @@ function classToPropsType(node: ts.Node) {
         extendsText = (<ts.Identifier> heritageClauses[0].types[0].expression).text;
     }
     const properties = getProperties(node);
-    let str = `  interface ${classText}PropsType ${extendsText ? `extends ${extendsText}PropsType ` : ""}{\n`;
+    let str = `  export interface ${classText}PropsType ${extendsText ? `extends ${extendsText}PropsType ` : ""}{\n`;
     const reservedProperties = targetClasses[classText];
     for (const name of Object.keys(reservedProperties)) {
         str += `    ${name}: ${reservedProperties[name]};\n`;

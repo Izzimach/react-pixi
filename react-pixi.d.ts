@@ -12,12 +12,12 @@ declare module 'react-pixi' {
 
   export { render, unmountComponentAtNode } from 'react-dom';
 
-  interface ContainerPropsType extends DisplayObjectPropsType {
+  export interface ContainerPropsType extends DisplayObjectPropsType {
     children?: PIXI.DisplayObject[];
     width?: number;
     height?: number;
   }
-  interface DisplayObjectPropsType {
+  export interface DisplayObjectPropsType {
     cacheAsBitmap?: boolean;
     name?: string | null;
     accessible?: boolean;
@@ -50,7 +50,7 @@ declare module 'react-pixi' {
     mask?: PIXI.Graphics | PIXI.Sprite;
     filters?: PIXI.Filter[] | null;
   }
-  interface GraphicsPropsType extends ContainerPropsType {
+  export interface GraphicsPropsType extends ContainerPropsType {
     fillAlpha?: number;
     lineWidth?: number;
     nativeLines?: boolean;
@@ -66,7 +66,7 @@ declare module 'react-pixi' {
     boundsDirty?: number;
     _SPRITE_TEXTURE?: PIXI.Texture;
   }
-  interface SpritePropsType extends ContainerPropsType {
+  export interface SpritePropsType extends ContainerPropsType {
     image?: string;
     anchor?: PIXI.ObservablePoint | number[] | number | string;
     tint?: number;
@@ -77,7 +77,7 @@ declare module 'react-pixi' {
     width?: number;
     height?: number;
   }
-  interface TextPropsType extends SpritePropsType {
+  export interface TextPropsType extends SpritePropsType {
     text: string;
     style?: PIXI.TextStyleOptions | PIXI.TextStyle;
     canvas?: HTMLCanvasElement;
@@ -90,7 +90,7 @@ declare module 'react-pixi' {
     height?: number;
     dirty?: boolean;
   }
-  interface BitmapTextPropsType extends ContainerPropsType {
+  export interface BitmapTextPropsType extends ContainerPropsType {
     text: string;
     style?: PIXI.extras.IBitmapTextStyle;
     textWidth?: number;
@@ -104,7 +104,7 @@ declare module 'react-pixi' {
     anchor?: PIXI.Point | number[] | number | string | number;
     fonts?: any;
   }
-  interface TilingSpritePropsType extends SpritePropsType {
+  export interface TilingSpritePropsType extends SpritePropsType {
     tileTransform?: PIXI.TransformStatic;
     uvTransform?: PIXI.extras.TextureTransform;
     uvRespectAnchor?: boolean;
@@ -114,7 +114,7 @@ declare module 'react-pixi' {
     width?: number;
     height?: number;
   }
-  interface ParticleContainerPropsType extends ContainerPropsType {
+  export interface ParticleContainerPropsType extends ContainerPropsType {
     interactiveChildren?: boolean;
     blendMode?: number;
     roundPixels?: boolean;
