@@ -27,6 +27,9 @@
   "types": "react-pixi.d.ts",
   "main": "es5/react-pixi-commonjs.js",
   "dependencies": {
+    "@types/pixi.js": "^4.4.2",
+    "@types/react": "^15.0.21",
+    "@types/react-dom": "^0.14.23",
     "brfs": "^1.4.1",
     "fbjs": "^0.7.0",
     "ify-loader": "^1.0.3",
@@ -38,6 +41,7 @@
     "react-dom": "^15.4.1"
   },
   "devDependencies": {
+    "@types/node": "^7.0.12",
     "babel-core": "^6.0.0",
     "babel-eslint": "^6.0.0",
     "babel-loader": "^6.0.0",
@@ -61,12 +65,14 @@
     "resemblejs": "~2.2.0",
     "rimraf": "~2.5.0",
     "transform-loader": "^0.2.3",
+    "typescript": "^2.2.2",
     "webpack": "^1.12.1",
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
     "build": "webpack",
     "build-commonjs": "webpack --config webpack-commonjs.config.js",
+    "generate-declaration": "tsc --lib es6,dom generateDeclaration.ts && node generateDeclaration.js && rm generateDeclaration.js",
     "dev": "webpack-dev-server --progress --colors",
     "examples": "webpack-dev-server --config webpack-examples.config.js",
     "lint": "eslint src examples",

@@ -1,0 +1,42 @@
+declare module 'react-pixi' {
+  import {
+    Component,
+    ComponentClass,
+    CSSProperties,
+    SFC,
+    ComponentFactory,
+    ClassType,
+  } from 'react';
+  import * as React from 'react';
+  import * as PIXI from 'pixi.js';
+
+  export { render, unmountComponentAtNode } from 'react-dom';
+
+  /* GENERATE */
+
+  export type StagePropsType = ContainerPropsType;
+  export type DisplayObjectContainerPropsType = ContainerPropsType;
+
+  export class Stage extends Component<StagePropsType, void> {}
+  export const DisplayObjectContainer: SFC<DisplayObjectContainerPropsType>;
+  export class ParticleContainer extends Component<ParticleContainerPropsType, void> {}
+  export class Sprite extends Component<SpritePropsType, void> {}
+  export class Text extends Component<TextPropsType, void> {}
+  export class BitmapText extends Component<BitmapTextPropsType, void> {}
+  export class TilingSprite extends Component<TilingSpritePropsType, void> {}
+  export class Graphics extends Component<GraphicsPropsType, void> {}
+  export class CustomPixiComponentClass<CustomProps, PixiComponent>
+      extends React.Component<CustomProps, void> {
+    displayObject: PixiComponent;
+  }
+
+  export interface CustomPixiComponentClassFactory<CustomProps, PixiComponent>
+    extends ComponentFactory<CustomProps, CustomPixiComponentClass<CustomProps, PixiComponent>> {
+  }
+  export function CustomPIXIComponent<CustomProps, PixiComponent>(args: {
+    customDisplayObject(props: CustomProps): PixiComponent,
+    customDidAttach?(displayObject: PixiComponent): void,
+    customApplyProps(displayObject: PixiComponent, oldProps: CustomProps, newProps: CustomProps): void,
+    customWillDetach?(displayObject: PixiComponent): void,
+  }): CustomPixiComponentClassFactory<CustomProps, PixiComponent>
+}
