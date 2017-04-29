@@ -122,7 +122,13 @@ declare module 'react-pixi' {
   }
 
 
-  export type StagePropsType = ContainerPropsType;
+  export interface StagePropsType extends ContainerPropsType {
+    antialias?: boolean;
+    backgroundColor?: number;
+    preserveDrawingBuffer?: boolean;
+    resolution?: number;
+    transparent?: boolean;
+  }
   export type DisplayObjectContainerPropsType = ContainerPropsType;
 
   export class Stage extends Component<StagePropsType, any> {}
