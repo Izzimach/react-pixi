@@ -135,4 +135,21 @@ describe("PIXI DisplayObject Component", function() {
     }
   });
 
+
+  it("renders null as an empty DisplayObject", function() {
+    var NullComponent = () => { return null; };
+    var NullTestComponent = createTestFixture({
+        width : 300,
+        height : 300,
+        subcomponentfactory : React.createFactory(NullComponent),
+        subcomponentprops : {}
+      });
+
+    var reactinstance = ReactPIXI.render(NullTestComponent,mountpoint);
+
+    // hm, probably need some equivalent of getDOMNode
+    expect(reactinstance.refs.stage._displayObject).toBeDefined();
+    //This should be a ReactPIXI stage.
+    expect(reactinstance.refs.stage.renderStage).toBeDefined();
+  });
 });

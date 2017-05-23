@@ -30,6 +30,7 @@ import * as PIXI from 'pixi.js';
 import ReactMultiChild from 'react-dom/lib/ReactMultiChild';
 import ReactElement from 'react/lib/ReactElement';
 import ReactUpdates from 'react-dom/lib/ReactUpdates';
+import ReactInjection from 'react-dom/lib/ReactInjection';
 
 import assign from 'object-assign';
 import emptyObject from 'fbjs/lib/emptyObject';
@@ -53,6 +54,7 @@ function createPIXIComponent(name, ...mixins) {
     this._currentElement = element;
     this._nativeParent = null;
     this._nativeContainerInfo = null;
+    this.getHostNode = function() { return this._displayobject; }
   };
   ReactPIXIComponent.displayName = name;
   for (var m of mixins) {
@@ -167,6 +169,7 @@ var gPIXIHandlers = [
   'touchendoutside'
 ];
 
+
 var DisplayObjectMixin = {
 
   construct(element) {
@@ -236,7 +239,7 @@ var DisplayObjectMixin = {
 
   getNativeNode() {
     return this._displayObject;
-  }
+  },
 
 };
 
@@ -252,7 +255,7 @@ var DisplayObjectContainerMixin = assign({}, DisplayObjectMixin, ReactMultiChild
     let thisObject = this._mountImage || this._displayObject;
 
     // addChildAt automatically removes the child from it's previous location
-      thisObject.addChildAt(childDisplayObject, nextIndex);
+    thisObject.addChildAt(childDisplayObject, nextIndex);
   },
 
   createChild: function(child, afterNode, childDisplayObject) {
@@ -395,7 +398,14 @@ var PIXIStage = React.createClass({
     this._displayObject = new PIXI.Container();
     //this.setApprovedDOMProperties(props);
     DisplayObjectMixin.applyDisplayObjectProps.call(this,{},props);
+
+
+    // HACK - this behaves as both a composite component and a DisplayObjectContainer,
+    // so it has to have the internal secret React variables of both types of nodes.
+    // Thus some internals have to be copied from the internal instance to 'this'
     this._debugID = this._reactInternalInstance._debugID;
+    this._hostContainerInfo = this._reactInternalInstance._hostContainerInfo;
+    this._hostNode = this._reactInternalInstance._renderedComponent._hostNode
 
     var transaction = ReactUpdates.ReactReconcileTransaction.getPooled();
     transaction.perform(
@@ -558,6 +568,54 @@ var DisplayObjectContainer = createPIXIComponent(
       });
   }
 });
+
+//
+// Null object (used when render returns null)
+//
+var NullDisplayObject = createPIXIComponent(
+  'EmptyDisplayObject',
+  DisplayObjectContainer,
+  CommonDisplayObjectContainerImplementation, {
+
+    construct(element) {
+      this._currentElement = element;
+      this._displayObject = null;
+      this._nativeParent = null;
+      this._nativeContainerInfo = null;
+    },
+
+    getPublicInstance() {
+      return this._displayObject;
+    },
+
+    mountComponent: function(transaction, nativeParent, nativeContainerInfo, context) {
+      /* jshint unused: vars */
+      this._nativeParent = nativeParent;
+      this._nativeContainerInfo = nativeContainerInfo;
+      this._displayObject = new PIXI.DisplayObject();
+      this._displayObject.interactiveChildren = false;
+
+      return this._displayObject;
+    },
+
+    receiveComponent: function(nextElement, transaction, context) {
+      this._currentElement = nextElement;
+    },
+
+    unmountComponent: function() {
+    },
+
+    mountComponentIntoNode: function(rootID, container) {
+      /* jshint unused: vars */
+      throw new Error(
+        'You cannot render a PIXI object standalone, ' +
+  	' You need to wrap it in a PIXIStage.'
+      );
+    }
+});
+
+
+
 
 //
 // Graphics
@@ -815,6 +873,7 @@ var CustomDisplayObjectImplementation = {
   }
 };
 
+
 // functions required for a custom components:
 //
 // -customDisplayObject(props) to create a new display objects
@@ -854,6 +913,11 @@ for (var prop in PIXIComponents) {
       PIXIFactories[prop] = ReactElement.createFactory(component);
     }
 }
+
+ReactInjection.EmptyComponent.injectEmptyComponentFactory(function (instanitate) {
+  return new NullDisplayObject();
+});
+
 
 module.exports =  assign(PIXIComponents, {
   factories: PIXIFactories,
