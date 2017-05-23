@@ -220,12 +220,15 @@ var DisplayObjectMixin = {
       }
     }
 
+
     // hook up event callbacks
     gPIXIHandlers.forEach(function (pixieventtype) {
-      if (typeof newProps[pixieventtype] !== 'undefined') {
-        displayObject[pixieventtype] = newProps[pixieventtype];
-      } else {
-        delete displayObject[pixieventtype];
+      if (typeof oldProps[pixieventtype] === 'function') {
+        displayObject.removeListener(pixieventtype, oldProps[pixieventtype]);
+      }
+
+      if (typeof newProps[pixieventtype] === 'function') {
+        displayObject.on(pixieventtype, newProps[pixieventtype]);
       }
     });
   },
