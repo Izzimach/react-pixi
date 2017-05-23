@@ -764,7 +764,7 @@ var TextComponentMixin = {
     }
     // should do a deep compare here
     if (typeof newProps.style !== 'undefined' && newProps.style !== oldProps.style) {
-      displayObject.style = newProps.style;
+      displayObject.fontStyle = newProps.style;
     }
 
     SpriteComponentMixin.applySpecificDisplayObjectProps.apply(this,arguments);
