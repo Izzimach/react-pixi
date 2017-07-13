@@ -382,8 +382,6 @@ var PIXIStage = React.createClass({
     const forceFXAA = props.forceFXAA ? props.forceFXAA : false;
     const legacy = props.legacy ? props.legacy : false;
 
-    debugger
-
     this._pixirenderer = PIXI.autoDetectRenderer({
        width: props.width,
        height: props.height,
