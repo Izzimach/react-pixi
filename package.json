@@ -1,6 +1,6 @@
 {
   "name": "react-pixi",
-  "version": "0.9.11",
+  "version": "0.9.12",
   "description": "Construct PIXI.js scenes using React",
   "keywords": [
     "react",
