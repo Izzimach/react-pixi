@@ -92,7 +92,7 @@ declare module 'react-pixi' {
   }
   export interface BitmapTextPropsType extends ContainerPropsType {
     text: string;
-    style?: PIXI.extras.IBitmapTextStyle;
+    style?: PIXI.extras.BitmapTextStyle;
     textWidth?: number;
     textHeight?: number;
     font?: string | {name?: string; size?: number;};
@@ -134,7 +134,7 @@ declare module 'react-pixi' {
   export class TilingSprite extends Component<TilingSpritePropsType, void> {}
   export class Graphics extends Component<GraphicsPropsType, void> {}
   export class CustomPixiComponentClass<CustomProps, PixiComponent>
-      extends React.Component<CustomProps, void> {
+      extends React.Component<CustomProps, any> {
     displayObject: PixiComponent;
   }
 
