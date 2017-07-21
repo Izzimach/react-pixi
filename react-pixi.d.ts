@@ -125,14 +125,14 @@ declare module 'react-pixi' {
   export type StagePropsType = ContainerPropsType;
   export type DisplayObjectContainerPropsType = ContainerPropsType;
 
-  export class Stage extends Component<StagePropsType, void> {}
+  export class Stage extends Component<StagePropsType, any> {}
   export const DisplayObjectContainer: SFC<DisplayObjectContainerPropsType>;
-  export class ParticleContainer extends Component<ParticleContainerPropsType, void> {}
-  export class Sprite extends Component<SpritePropsType, void> {}
-  export class Text extends Component<TextPropsType, void> {}
-  export class BitmapText extends Component<BitmapTextPropsType, void> {}
-  export class TilingSprite extends Component<TilingSpritePropsType, void> {}
-  export class Graphics extends Component<GraphicsPropsType, void> {}
+  export class ParticleContainer extends Component<ParticleContainerPropsType, any> {}
+  export class Sprite extends Component<SpritePropsType, any> {}
+  export class Text extends Component<TextPropsType, any> {}
+  export class BitmapText extends Component<BitmapTextPropsType, any> {}
+  export class TilingSprite extends Component<TilingSpritePropsType, any> {}
+  export class Graphics extends Component<GraphicsPropsType, any> {}
   export class CustomPixiComponentClass<CustomProps, PixiComponent>
       extends React.Component<CustomProps, any> {
     displayObject: PixiComponent;
