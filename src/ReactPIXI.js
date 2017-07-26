@@ -548,6 +548,8 @@ var CommonDisplayObjectContainerImplementation = {
 
   unmountComponent: function() {
     this.unmountChildren();
+    this._displayObject.destroy({ children: true });
+    delete this._displayObject;
   },
 
   mountComponentIntoNode: function(rootID, container) {
@@ -616,6 +618,8 @@ var NullDisplayObject = createPIXIComponent(
     },
 
     unmountComponent: function() {
+      this._displayObject.destroy({ children: true });
+      delete this._displayObject;
     },
 
     mountComponentIntoNode: function(rootID, container) {
@@ -883,6 +887,8 @@ var CustomDisplayObjectImplementation = {
 
   unmountComponent: function() {
     this.unmountChildren();
+    this._displayObject.destroy({ children: true });
+    delete this._displayObject;
   }
 };
 
