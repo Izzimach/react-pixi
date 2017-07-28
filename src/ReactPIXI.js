@@ -509,7 +509,7 @@ var PIXIStage = React.createClass({
         return React.createElement("canvas", {style: this.props.style});
       }
     } else {
-      return null;
+      return React.createElement("div");
     }
   }
 
@@ -783,7 +783,6 @@ var TextComponentMixin = {
     if (typeof newProps.style !== 'undefined' && newProps.style !== oldProps.style) {
       displayObject.fontStyle = newProps.style;
     }
-
     SpriteComponentMixin.applySpecificDisplayObjectProps.apply(this,arguments);
   }
 };
