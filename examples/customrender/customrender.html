@@ -1,0 +1,33 @@
+<!DOCTYPE html><html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+
+    <title>React-pixi Custom Render Example</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+        #pixi-box canvas {
+            display: block;
+            margin: auto;
+            padding: 0;
+            border : 0;
+        }
+    </style>
+    <script src="../../build/react-pixi.js"></script>
+    <script src="customrender.js"></script>
+</head>
+<body>
+    <!-- dummy element for React to "mount" elements on. Since we're
+         providing our own canvas this just contains an empty div -->
+    <div id="pixi-box"></div>
+    <!-- the canvas for our custom renderer is attached here -->
+    <div id="customcanvas"></div>
+    <script>
+    window.onload = customrenderstart;
+    </script>
+ </body>
+</html>
