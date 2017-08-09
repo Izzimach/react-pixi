@@ -55,9 +55,11 @@ var CupcakeComponent = React.createClass({
     ]),
   },
 
-  defaultProps: {
-    scale: new PIXI.Point(1, 1),
-    skew: new PIXI.Point(0, 0)
+  getDefaultProps: function() {
+    return {
+      scale: new PIXI.Point(1, 1),
+      skew: new PIXI.Point(0, 0)
+    }
   },
 
   render : function () {
