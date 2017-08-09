@@ -152,4 +152,132 @@ describe("PIXI DisplayObject Component", function() {
     //This should be a ReactPIXI stage.
     expect(reactinstance.refs.stage.renderStage).toBeDefined();
   });
+
+  var Stage = React.createFactory(ReactPIXI.Stage);
+  var DisplayObjectContainer = React.createFactory(ReactPIXI.DisplayObjectContainer);
+
+  var DisplayObjectContainerTestComponent = React.createClass({
+    displayName: 'ExampleTilingSpriteComponent',
+    render: function () {
+      return Stage({width: 800, height: 600, ref: 'stage'},
+        DisplayObjectContainer(this.props));
+     }
+  });
+
+  var DisplayObjectContainerTest = React.createFactory(DisplayObjectContainerTestComponent);
+
+  it('The position property can be updated by x and y props', (done) => {
+    var setAndExpect = [
+      {x: -420, y: -420, expect: new PIXI.Point(-420, -420)}
+    ];
+
+    setAndExpect.forEach( (data) => {
+      var reactInstance = ReactPIXI.render(
+        DisplayObjectContainerTest({
+          // TODO: also set the other tiling transforms (for testing observable points)
+          x: data.x,
+          y: data.y
+        }),
+        mountpoint
+      );
+
+      var stage = reactInstance.refs['stage']._displayObject;
+      var displayObject = stage.children[0];
+      expect(displayObject.x).toBe(data.expect.x);
+      expect(displayObject.y).toBe(data.expect.y);
+      expect(displayObject.position.x).toBe(data.expect.x);
+      expect(displayObject.position.y).toBe(data.expect.y);
+    });
+
+    done();
+  });
+
+  it('The position property can be updated by position prop in all the various forms', (done) => {
+    var setAndExpect = [
+      {set: [-420], expect: new PIXI.Point(-420, -420)},
+      {set: [169, 532], expect: new PIXI.Point(169, 532)},
+      {set: "4", expect: new PIXI.Point(4, 4)},
+      {set: "42,68", expect: new PIXI.Point(42, 68)},
+      {set: new PIXI.Point(123, 456), expect: new PIXI.Point(123, 456)},
+      {set: new PIXI.Point(123), expect: new PIXI.Point(123, 0)},
+      {set: new PIXI.ObservablePoint(() => {}, {}, 654, 321), expect: new PIXI.Point(654, 321)}
+    ];
+
+    setAndExpect.forEach( (data) => {
+      var reactInstance = ReactPIXI.render(
+        DisplayObjectContainerTest({
+          // TODO: also set the other tiling transforms (for testing observable points)
+          position: data.set
+        }),
+        mountpoint
+      );
+
+      var stage = reactInstance.refs['stage']._displayObject;
+      var displayObject = stage.children[0];
+      expect(displayObject.x).toBe(data.expect.x);
+      expect(displayObject.y).toBe(data.expect.y);
+      expect(displayObject.position.x).toBe(data.expect.x);
+      expect(displayObject.position.y).toBe(data.expect.y);
+    });
+
+    done();
+  });
+
+  it('The pivot property can be updated by position prop in all the various forms', (done) => {
+    var setAndExpect = [
+      {set: [-420], expect: new PIXI.Point(-420, -420)},
+      {set: [169, 532], expect: new PIXI.Point(169, 532)},
+      {set: "4", expect: new PIXI.Point(4, 4)},
+      {set: "42,68", expect: new PIXI.Point(42, 68)},
+      {set: new PIXI.Point(123, 456), expect: new PIXI.Point(123, 456)},
+      {set: new PIXI.Point(123), expect: new PIXI.Point(123, 0)},
+      {set: new PIXI.ObservablePoint(() => {}, {}, 654, 321), expect: new PIXI.Point(654, 321)}
+    ];
+
+    setAndExpect.forEach( (data) => {
+      var reactInstance = ReactPIXI.render(
+        DisplayObjectContainerTest({
+          // TODO: also set the other tiling transforms (for testing observable points)
+          pivot: data.set
+        }),
+        mountpoint
+      );
+
+      var stage = reactInstance.refs['stage']._displayObject;
+      var displayObject = stage.children[0];
+      expect(displayObject.pivot.x).toBe(data.expect.x);
+      expect(displayObject.pivot.y).toBe(data.expect.y);
+    });
+
+    done();
+  });
+
+  it('The scale property can be updated by position prop in all the various forms', (done) => {
+    var setAndExpect = [
+      {set: [-1], expect: new PIXI.Point(-1, -1)},
+      {set: [0.5, 1], expect: new PIXI.Point(0.5, 1)},
+      {set: "0.25", expect: new PIXI.Point(0.25, 0.25)},
+      {set: "1,1", expect: new PIXI.Point(1, 1)},
+      {set: new PIXI.Point(1, 0.5), expect: new PIXI.Point(1, 0.5)},
+      {set: new PIXI.Point(-0.5), expect: new PIXI.Point(-0.5, 0)},
+      {set: new PIXI.ObservablePoint(() => {}, {}, 0.5, -1), expect: new PIXI.Point(0.5, -1)}
+    ];
+
+    setAndExpect.forEach( (data) => {
+      var reactInstance = ReactPIXI.render(
+        DisplayObjectContainerTest({
+          // TODO: also set the other tiling transforms (for testing observable points)
+          scale: data.set
+        }),
+        mountpoint
+      );
+
+      var stage = reactInstance.refs['stage']._displayObject;
+      var displayObject = stage.children[0];
+      expect(displayObject.scale.x).toBe(data.expect.x);
+      expect(displayObject.scale.y).toBe(data.expect.y);
+    });
+
+    done();
+  });
 });

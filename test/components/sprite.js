@@ -51,4 +51,77 @@ describe("PIXI Sprite Component", function() {
 
     });
   });
+
+  var Stage = React.createFactory(ReactPIXI.Stage);
+  var Sprite = React.createFactory(ReactPIXI.Sprite);
+
+  var SpriteTestComponent = React.createClass({
+    displayName: 'ExampleSpriteComponent',
+    render: function () {
+      return Stage({width: 800, height: 600, ref: 'stage'},
+        Sprite(this.props));
+     }
+  });
+
+  var SpriteTest = React.createFactory(SpriteTestComponent);
+
+  it('The anchor property can be updated by position prop in all the various forms', (done) => {
+    var setAndExpect = [
+      {set: [-1], expect: new PIXI.Point(-1, -1)},
+      {set: [0.5, 1], expect: new PIXI.Point(0.5, 1)},
+      {set: "0.25", expect: new PIXI.Point(0.25, 0.25)},
+      {set: "1,1", expect: new PIXI.Point(1, 1)},
+      {set: new PIXI.Point(1, 0.5), expect: new PIXI.Point(1, 0.5)},
+      {set: new PIXI.Point(-0.5), expect: new PIXI.Point(-0.5, 0)},
+      {set: new PIXI.ObservablePoint(() => {}, {}, 0.5, -1), expect: new PIXI.Point(0.5, -1)}
+    ];
+
+    setAndExpect.forEach( (data) => {
+      var reactInstance = ReactPIXI.render(
+        SpriteTest({
+          // TODO: also set the other tiling transforms (for testing observable points)
+          anchor: data.set,
+          texture: PIXI.Texture.EMPTY
+        }),
+        mountpoint
+      );
+
+      var stage = reactInstance.refs['stage']._displayObject;
+      var sprite = stage.children[0];
+      expect(sprite.anchor.x).toBe(data.expect.x);
+      expect(sprite.anchor.y).toBe(data.expect.y);
+    });
+
+    done();
+  });
+
+  it('The anhor property can be updated by position prop in all the various forms', (done) => {
+    var setAndExpect = [
+      {set: [-1], expect: new PIXI.Point(-1, -1)},
+      {set: [0.5, 1], expect: new PIXI.Point(0.5, 1)},
+      {set: "0.25", expect: new PIXI.Point(0.25, 0.25)},
+      {set: "1,1", expect: new PIXI.Point(1, 1)},
+      {set: new PIXI.Point(1, 0.5), expect: new PIXI.Point(1, 0.5)},
+      {set: new PIXI.Point(-0.5), expect: new PIXI.Point(-0.5, 0)},
+      {set: new PIXI.ObservablePoint(() => {}, {}, 0.5, -1), expect: new PIXI.Point(0.5, -1)}
+    ];
+
+    setAndExpect.forEach( (data) => {
+      var reactInstance = ReactPIXI.render(
+        SpriteTest({
+          // TODO: also set the other tiling transforms (for testing observable points)
+          skew: data.set,
+          texture: PIXI.Texture.EMPTY
+        }),
+        mountpoint
+      );
+
+      var stage = reactInstance.refs['stage']._displayObject;
+      var sprite = stage.children[0];
+      expect(sprite.skew.x).toBe(data.expect.x);
+      expect(sprite.skew.y).toBe(data.expect.y);
+    });
+
+    done();
+  });
 });

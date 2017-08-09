@@ -141,7 +141,6 @@ function setPixiValue(container, key, value) {
 //
 // A DisplayObject has some standard properties and default values
 //
-
 var gStandardProps = {
   alpha:1,
   buttonMode:false,
@@ -165,6 +164,19 @@ var gStandardProps = {
   // x has special behavior
   // y has special behavior
 };
+
+//
+// A DisplayObject Point-like props
+//
+var gPointLikeProps = [
+  'anchor',
+  'pivot',
+  'position',
+  'scale',
+  'skew',
+  'tilePosition',
+  'tileScale'
+]
 
 var gPIXIHandlers = [
   'click',
@@ -208,6 +220,13 @@ var DisplayObjectMixin = {
         setPixiValue(displayObject, propname, propsToCheck[propname]);
       }
     }
+
+    // parse Point-like prop values
+    gPointLikeProps.forEach(function(propname) {
+      if (typeof newProps[propname] !== 'undefined') {
+        setPixiValue(displayObject, propname, newProps[propname]);
+      }
+    })
   },
 
   applyDisplayObjectProps(oldProps, newProps) {
@@ -217,9 +236,7 @@ var DisplayObjectMixin = {
 
     // Position can be specified using either 'position' or separate
     // x/y fields. If neither of these is specified we set them to 0
-    if (typeof newProps.position !== 'undefined') {
-      displayObject.position = newProps.position;
-    } else {
+    if (typeof newProps.position === 'undefined') {
       if (typeof newProps.x !== 'undefined') {
         displayObject.x = newProps.x;
       } else {
