@@ -31,6 +31,9 @@ import ReactMultiChild from 'react-dom/lib/ReactMultiChild';
 import ReactElement from 'react/lib/ReactElement';
 import ReactUpdates from 'react-dom/lib/ReactUpdates';
 import ReactInjection from 'react-dom/lib/ReactInjection';
+import ReactDOMComponent from 'react-dom/lib/ReactDOMComponent'
+import ReactDOMComponentTree from 'react-dom/lib/ReactDOMComponentTree'
+import DOMLazyTree from 'react-dom/lib/DOMLazyTree'
 
 import assign from 'object-assign';
 import emptyObject from 'fbjs/lib/emptyObject';
@@ -52,9 +55,18 @@ function createPIXIComponent(name, ...mixins) {
     this._renderedChildren = null;
     this._displayObject = null;
     this._currentElement = element;
+    this._debugID = null;
+    this._hostNode = null;
+    this._hostContainerInfo = null;
     this._nativeParent = null;
     this._nativeContainerInfo = null;
-    this.getHostNode = function() { return this._displayobject; }
+    this.getHostNode = function() {
+      // taken from ReactDOMEmptyComponent.getHostNode
+      if (this._nativeParent instanceof ReactDOMComponent) {
+        return ReactDOMComponentTree.getNodeFromInstance(this);
+      }
+      return this._displayObject;
+    }
   };
   ReactPIXIComponent.displayName = name;
   for (var m of mixins) {
@@ -607,6 +619,16 @@ var NullDisplayObject = createPIXIComponent(
       /* jshint unused: vars */
       this._nativeParent = nativeParent;
       this._nativeContainerInfo = nativeContainerInfo;
+
+      // taken from ReactDOMEmptyComponent.mountComponent
+      if (this._nativeParent instanceof ReactDOMComponent) {
+        var nodeValue = ' react-empty: ' + this._nativeContainerInfo._idCounter++ + ' ';
+        var ownerDocument = nativeContainerInfo._ownerDocument;
+        var node = ownerDocument.createComment(nodeValue);
+        ReactDOMComponentTree.precacheNode(this, node);
+        return DOMLazyTree(node);
+      }
+
       this._displayObject = new PIXI.DisplayObject();
       this._displayObject.interactiveChildren = false;
 
@@ -614,10 +636,21 @@ var NullDisplayObject = createPIXIComponent(
     },
 
     receiveComponent: function(nextElement, transaction, context) {
+      // taken from ReactDOMEmptyComponent.receiveComponent
+      if (this._nativeParent instanceof ReactDOMComponent) {
+        return
+      }
+
       this._currentElement = nextElement;
     },
 
     unmountComponent: function() {
+      // taken from ReactDOMEmptyComponent.umountComponent
+      if (this._nativeParent instanceof ReactDOMComponent) {
+        ReactDOMComponentTree.uncacheNode(this);
+        return
+      }
+
       this._displayObject.destroy({ children: true });
       delete this._displayObject;
     },
