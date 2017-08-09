@@ -4,6 +4,7 @@
 
 /* jshint strict: false */
 /* global React : false */
+/* global PropTypes : false */
 /* global ReactPIXI : false */
 /* global PIXI : false */
 
@@ -35,8 +36,8 @@ var CupcakeComponent = React.createClass({
   },
 
   propTypes: {
-    xposition: React.PropTypes.number.isRequired,
-    topping: React.PropTypes.string.isRequired,
+    xposition: PropTypes.number.isRequired,
+    topping: PropTypes.string.isRequired,
   },
 
   render : function () {

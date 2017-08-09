@@ -9,6 +9,7 @@
 // tell jshint that we use lodash
 /* global _ : false */
 /* global React : false */
+/* global PropTypes : false */
 /* global ReactPIXI : false */
 /* global PIXI : false */
 /* jshint strict: false */
@@ -107,7 +108,7 @@ var SpriteAppButtons = React.createClass({
 var DynamicSprites = React.createClass({
   displayName:'DynamicSprites',
   propTypes: {
-    sprites: React.PropTypes.arrayOf(React.PropTypes.object)
+    sprites: PropTypes.arrayOf(PropTypes.object)
   },
   render: function() {
     var args = [{}];
@@ -131,10 +132,10 @@ var DynamicSprites = React.createClass({
 var SpinElement = React.createClass({
   displayName: 'SpinElement',
   propTypes: {
-    x: React.PropTypes.number.isRequired,
-    y: React.PropTypes.number.isRequired,
-    spinspeed: React.PropTypes.number.isRequired,
-    spinme: React.PropTypes.object.isRequired
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    spinspeed: PropTypes.number.isRequired,
+    spinme: PropTypes.object.isRequired
   },
 
   getInitialState: function() {
