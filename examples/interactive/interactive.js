@@ -11,6 +11,7 @@
 /* global React : false */
 /* global ReactPIXI : false */
 /* global PIXI : false */
+/* global createReactClass : false */
 /* jshint strict: false */
 
 var Stage = React.createFactory(ReactPIXI.Stage);
@@ -88,7 +89,7 @@ function removeSpriteById(spriteid) {
 // Component to hold a clickable sprite 'button'. click on this 'button' to add a sprite
 //
 
-var SpriteAppButtons = React.createClass({
+var SpriteAppButtons = createReactClass({
   displayName:'SpriteAppButtons',
   render: function() {
     return DisplayObjectContainer(
@@ -104,7 +105,7 @@ var SpriteAppButtons = React.createClass({
 // Component to display all the dynamic sprites
 //
 
-var DynamicSprites = React.createClass({
+var DynamicSprites = createReactClass({
   displayName:'DynamicSprites',
   propTypes: {
     sprites: React.PropTypes.arrayOf(React.PropTypes.object)
@@ -128,7 +129,7 @@ var DynamicSprites = React.createClass({
 // - x,y are the point to spin around
 // - spinspeed is the rotation speed in radians/sec
 // - spinme is a ReactElement to spin
-var SpinElement = React.createClass({
+var SpinElement = createReactClass({
   displayName: 'SpinElement',
   propTypes: {
     x: React.PropTypes.number.isRequired,
@@ -180,7 +181,7 @@ var SpinElement = React.createClass({
 // - sprites: a list of objects describing all the current sprites containing x,y and image fields
 //
 
-var SpriteApp = React.createClass({
+var SpriteApp = createReactClass({
   displayName: 'BunchOfSprites',
   render: function() {
     var halfwidth = this.props.width/2;

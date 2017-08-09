@@ -4,6 +4,7 @@
 
 require('expose?React!react');
 require('expose?ReactDOM!react-dom');
+require('expose?createReactClass!create-react-class');
 //require('expose?PIXI!pixi.js');
 
 module.exports = require('./ReactPIXI.js');

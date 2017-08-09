@@ -6,6 +6,7 @@
 /* global React : false */
 /* global ReactPIXI : false */
 /* global PIXI : false */
+/* global createReactClass : false */
 
 var assetpath = function(filename) { return '../assets/' + filename; };
 
@@ -20,7 +21,7 @@ var VectorText = ReactPIXI.Text;
 // - xposition: x position in pixels that governs where the elements are placed
 //
 
-var ExampleStage = React.createClass({
+var ExampleStage = createReactClass({
   displayName: 'ExampleStage',
   render: function() {
     var fontstyle = {font:'40px Times'};

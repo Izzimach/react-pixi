@@ -8,7 +8,7 @@ describe("PIXI TilingSprite Component", () => {
   var Stage = React.createFactory(ReactPIXI.Stage);
   var TilingSprite = React.createFactory(ReactPIXI.TilingSprite);
 
-  var TilingSpriteTestComponent = React.createClass({
+  var TilingSpriteTestComponent = createReactClass({
     displayName: 'ExampleTilingSpriteComponent',
     render: function () {
       return Stage({width: width, height: height, ref: 'stage'},

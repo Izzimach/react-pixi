@@ -6,6 +6,7 @@
 /* global React : false */
 /* global ReactPIXI : false */
 /* global PIXI : false */
+/* global createReactClass : false */
 
 var assetpath = function(filename) { return '../assets/' + filename; };
 
@@ -24,7 +25,7 @@ var BitmapText = React.createFactory(ReactPIXI.BitmapText);
 // - cream : type of cupcake topping. any of the keys listed in spritemapping
 //
 
-var CupcakeComponent = React.createClass({
+var CupcakeComponent = createReactClass({
   displayName: 'CupcakeComponent',
   // maps from cupcake toppings to the appropriate sprite
   spritemapping : {
@@ -60,7 +61,7 @@ var CupcakeFactory = React.createFactory(CupcakeComponent);
 // - bluramount: 0=no blur, 2=a bit fuzzy, 10+ is mostly obscured
 //
 
-var BlurredCupcakeComponent = React.createClass({
+var BlurredCupcakeComponent = createReactClass({
   displayName: "BlurredCupcakeComponent",
   getInitialState : function() {
     return { cupcakefilter : new PIXI.filters.BlurFilter() };
@@ -96,7 +97,7 @@ var BlurredCupcakeFactory = React.createFactory(BlurredCupcakeComponent);
 // - xposition: x position in pixels that governs where the elements are placed
 //
 
-var ExampleStage = React.createClass({
+var ExampleStage = createReactClass({
   displayName: 'ExampleStage',
   render: function() {
     // draw two cupcakes each at different positions

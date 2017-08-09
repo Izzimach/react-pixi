@@ -69,7 +69,7 @@ Then browse to `http://localhost:8080`
 To render Pixi.js elements like a Stage or Sprite you reference them like other
 components that were created with `React.createClass`.  For React 0.12 and later,
 this means you have to use `React.createElement` or create factories from the
-basic ReactPIXI components. For example, to construct
+basic ReactPIXI components. From React 15.5, instead of using `React.createClass` you should use `createReactClass` from a separate `create-react-class` package. For example, to construct
  a CupcakeComponent that consists of two Sprites:
 
 ```js

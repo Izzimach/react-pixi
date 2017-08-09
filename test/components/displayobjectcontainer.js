@@ -11,7 +11,7 @@ describe("PIXI DisplayObject Component", function() {
   // has some specific number of DisplayObjectContainer objects as children.
   // you specify the number of children as props.childCount
   //
-  var VariableChildrenComponent = React.createClass({
+  var VariableChildrenComponent = createReactClass({
     displayName: 'variableChildrenComponent',
     render: function () {
       var docargs = [{key:'argh'}];
