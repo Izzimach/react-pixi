@@ -42,7 +42,7 @@ describe("PIXI Stage Component", function() {
   it("passes the context down into pixi elements", function() {
 
     // this component is a sprite that uses the x/y from the context to position the sprite
-    var displayobjectfromcontext = React.createClass({
+    var displayobjectfromcontext = createReactClass({
       displayName:'DisplayObject_PositionFromContext',
       contextTypes: {
 	x_context: PropTypes.any,
@@ -58,7 +58,7 @@ describe("PIXI Stage Component", function() {
     });
     
     // this component creates a context that contains the desired sprite x/y position
-    var TestFixtureWithContext = React.createClass({
+    var TestFixtureWithContext = createReactClass({
       displayName:'TestFixtureWithContext',
       childContextTypes: {
 	x_context: PropTypes.any,
