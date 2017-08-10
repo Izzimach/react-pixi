@@ -45,8 +45,8 @@ describe("PIXI Stage Component", function() {
     var displayobjectfromcontext = createReactClass({
       displayName:'DisplayObject_PositionFromContext',
       contextTypes: {
-	x_context: React.PropTypes.any,
-	y_context: React.PropTypes.any
+	x_context: PropTypes.any,
+	y_context: PropTypes.any
       },
       render: function() {
 	console.log(this.context);
@@ -61,8 +61,8 @@ describe("PIXI Stage Component", function() {
     var TestFixtureWithContext = createReactClass({
       displayName:'TestFixtureWithContext',
       childContextTypes: {
-	x_context: React.PropTypes.any,
-	y_context: React.PropTypes.any
+	x_context: PropTypes.any,
+	y_context: PropTypes.any
       },
       getChildContext: function() {
 	return {

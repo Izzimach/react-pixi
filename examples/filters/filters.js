@@ -4,6 +4,7 @@
 
 /* jshint strict: false */
 /* global React : false */
+/* global PropTypes : false */
 /* global ReactPIXI : false */
 /* global PIXI : false */
 /* global createReactClass : false */
@@ -35,8 +36,8 @@ var CupcakeComponent = createReactClass({
     'pink' : assetpath('creamPink.png'),
   },
   propTypes: {
-    xposition: React.PropTypes.number.isRequired,
-    topping: React.PropTypes.string.isRequired,
+    xposition: PropTypes.number.isRequired,
+    topping: PropTypes.string.isRequired,
   },
 
   render : function () {
@@ -68,9 +69,9 @@ var BlurredCupcakeComponent = createReactClass({
   },
 
   propTypes: {
-    xposition: React.PropTypes.number.isRequired,
-    topping: React.PropTypes.string.isRequired,
-    bluramount: React.PropTypes.number.isRequired
+    xposition: PropTypes.number.isRequired,
+    topping: PropTypes.string.isRequired,
+    bluramount: PropTypes.number.isRequired
   },
 
   render : function() {
