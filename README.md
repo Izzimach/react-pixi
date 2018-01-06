@@ -3,6 +3,8 @@ react-pixi
 
 Create/control a [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) canvas using [React](https://github.com/facebook/react).
 
+This library works with React 15. If you are using React 16, look at [react-pixi-fiber](https://github.com/michalochman/react-pixi-fiber).
+
 To control a 3D scene with React, see [react-three](https://github.com/Izzimach/react-three/)
 
 ![Applying blur with a PIXI filter](docs/blurexample.png)
