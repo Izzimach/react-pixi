@@ -1,9 +1,10 @@
 react-pixi
 ==========
 
-Create/control a [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) canvas using [React](https://github.com/facebook/react).
 
-This library works with React 15. If you are using React 16, look at [react-pixi-fiber](https://github.com/michalochman/react-pixi-fiber).
+*This library works with React 15*. If you are using React 16, look at [react-pixi-fiber](https://github.com/michalochman/react-pixi-fiber) or a newer version of [react-pixi](https://github.com/inlet/react-pixi).
+
+Create/control a [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) canvas using [React](https://github.com/facebook/react).
 
 To control a 3D scene with React, see [react-three](https://github.com/Izzimach/react-three/)
 
