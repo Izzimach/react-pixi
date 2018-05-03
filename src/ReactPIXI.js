@@ -152,6 +152,7 @@ var gStandardProps = {
   hitArea:null,
   interactive:false,
   mask:null,
+  name:null,
   // can't set parent!
   pivot:0,
   // position has special behavior
