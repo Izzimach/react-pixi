@@ -501,6 +501,10 @@ var PIXIStage = createReactClass({
       this._pixirenderer.backgroundColor = newProps.backgroundColor;
     }
 
+    if (typeof newProps.resolution === "number" && newProps.resolution !== oldProps.resolution) {
+      this.generateDefaultRenderer(newProps);
+    }
+
     //this.setApprovedDOMProperties(newProps);
     DisplayObjectMixin.applyDisplayObjectProps.call(this, oldProps, newProps);
 
