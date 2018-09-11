@@ -439,7 +439,8 @@ var PIXIStage = createReactClass({
     }
 
     var context = this._reactInternalInstance._context;
-    this._displayObject = new PIXI.Container();
+    var displayObjectClass = props.customStage || PIXI.Container
+    this._displayObject = new displayObjectClass();
     //this.setApprovedDOMProperties(props);
     DisplayObjectMixin.applyDisplayObjectProps.call(this,{},props);
 
