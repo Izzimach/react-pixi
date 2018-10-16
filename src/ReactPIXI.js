@@ -519,7 +519,9 @@ var PIXIStage = createReactClass({
     );
     ReactUpdates.ReactReconcileTransaction.release(transaction);
 
-    this.renderStage();
+    if (!newProps.skipUpdateRender) {
+      this.renderStage();
+    }
   },
 
   componentWillUnmount: function() {
